@@ -1,3 +1,7 @@
+/* Coded from examples on RandomNerdTutorials.com and LastMinuteEngineers.com
+ * Author: L Komandur
+ */
+
 /*********
   Rui Santos
   Complete project details at https://RandomNerdTutorials.com/esp-now-many-to-one-esp32/
