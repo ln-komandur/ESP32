@@ -3,7 +3,7 @@
 
 ## Master with Sensors
 
-One ESP32 acts as a client sending temperature and humidity data from a sensor to a server, without itself (client) being on any wifi network. It sends to the MAC address of the server using the ESP-NOW protocol.
+One ESP32 acts as a client sending temperature and humidity data from a sensor to a server, without itself being on any wifi network. It sends to the MAC address of the server using the ESP-NOW protocol. Since it is the one pushing the data to the server, it is considered as the Master. 
 
 Code is as in https://github.com/ln-komandur/ESP32/blob/master/ESP-NOW%20and%20Webserver/ESP32NOW_PeerMaster_DHT11DataSender.ino
 
@@ -13,7 +13,7 @@ Code is as in https://github.com/ln-komandur/ESP32/blob/master/ESP-NOW%20and%20W
 
 ## Slave hosting a Webserver
 
-Another ESP32 microcontroller acts as the server. It receives data from multiple clients - only one in this example, connects  to the home wifi intranet, runs its own Webserver to publish  the data through a basic website and lets devices in the home wifi network access the data.
+Another ESP32 microcontroller acts as the server. It receives data from multiple clients (Masters) - only one in this example, connects  to the home wifi intranet, runs its own Webserver to publish the data through a basic website and lets devices in the home wifi network access the data. Since it does not request data from clients, and receives them only as they come, it is considered the Slave.
 
 Code is as in https://github.com/ln-komandur/ESP32/blob/master/ESP-NOW%20and%20Webserver/ESP32NOW_PeerSlave_Receiver_WebServer.ino
 
