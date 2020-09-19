@@ -106,7 +106,7 @@ void setup() {
   Serial.begin(115200);
   
   //Set device as a Wi-Fi Station
-  WiFi.mode(WIFI_STA); 
+  WiFi.mode(WIFI_AP_STA); 
   
   // Modified to integrate the example on https://lastminuteengineers.com/esp32-dht11-dht22-web-server-tutorial/
   connectToWifiAndStartWebserver();
