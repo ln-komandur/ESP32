@@ -105,7 +105,7 @@ void setup() {
   //Initialize Serial Monitor
   Serial.begin(115200);
   
-  //Set device as a Wi-Fi Station
+  //Set device as a Wi-Fi Access Point and Station (i.e. Both mode)
   WiFi.mode(WIFI_AP_STA); 
   
   // Modified to integrate the example on https://lastminuteengineers.com/esp32-dht11-dht22-web-server-tutorial/
