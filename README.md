@@ -71,8 +71,8 @@ Logout and Log back in. Or restart the system with `shutdown -r now`
 1. Install it by running `. ./install.sh` and then `. ./export.sh` . The https://medium.com/@prabhakarpanday/programming-esp32-using-esp-idf-for-tensorflow-lite-f173eec91c01 site is a good reference
 1. Follow the instructions in https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md to complete the installation from within Eclipse
 
-
-
+## Other ESP32 references
+1. https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html#get-started-start-project
 
 
 
