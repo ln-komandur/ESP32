@@ -75,9 +75,7 @@ Create a symbolic link to the eclipse executable file with
 
 `sudo ln -s $HOME/eclipse-installation/eclipse /usr/local/bin/`
 
-Also test if the executable file can be called from any directory with
-
-`eclipse`
+Also test if the executable file can be called from any directory with `eclipse` at the terminal and close it.
 
 Now, create a .desktop file to be able to start eclipse from GUI menu's in the desktop with
 
@@ -109,20 +107,22 @@ Logout and Log back in. Or restart the system with `shutdown -r now`
 1. Start eclipse after login either from the desktop menu (preferrable) or the terminal window with `eclipse`
 1. Select a workspace and then go with the prompts from there
 
-## Installing support for Arduino within Eclipse
-
-1. Click "Help -> Eclipse Marketplace"
-1. Find "sloeber"
-1. Install "The Arduino Eclipse Plugin named Sloeber (V4)" or "The Arduino Eclipse Plugin named Sloeber Product (V4)" and follow the prompts
-
 ## Installing support for ESP32 within Eclipse
-1. Obtain ESP-IDF 4.0 or above from https://github.com/espressif/esp-idf/releases , 
+1. Obtain ESP-IDF 4.0 or above from https://github.com/espressif/esp-idf/releases using the instructions on that page
 1. Install it by running `. ./install.sh` and then `. ./export.sh` . The https://medium.com/@prabhakarpanday/programming-esp32-using-esp-idf-for-tensorflow-lite-f173eec91c01 site is a good reference
 1. Follow the instructions in https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md to complete the installation from within Eclipse
 
 # Other ESP32 references
 1. https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html#get-started-start-project
 
+# Key Considerations
+1. Installing support for Arduino microcontrollers in the same instance of eclipse could cause conflicts shown as unresolved dependencies
+
+## Installing support for Arduino within Eclipse
+
+1. Click "Help -> Eclipse Marketplace"
+1. Find "sloeber"
+1. Install "The Arduino Eclipse Plugin named Sloeber (V4)" or "The Arduino Eclipse Plugin named Sloeber Product (V4)" and follow the prompts
 
 
 
