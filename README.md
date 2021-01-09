@@ -124,3 +124,4 @@ Logout and Log back in. Or restart the system with `shutdown -r now`
 1. Click "Help -> Eclipse Marketplace"
 1. Find "sloeber"
 1. Install "The Arduino Eclipse Plugin named Sloeber (V4)" (with the icon in a rectangular blue box)) and follow the prompts
+1. After installing the plugin, go to the menu "Arduino" and click "Preferences". Under "Arduino -> Platforms and Boards" drill down to "arduino -> Arduino AVR Boards-> 1.8.3" (for Arduino Mego 2560) and apply and close
