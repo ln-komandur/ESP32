@@ -1,15 +1,64 @@
-# Installing Eclipse C++ IDE on Linux (Lubuntu 20.04.1 LTS)
+# Installing Eclipse IDE for C++ Developers on Linux (Lubuntu 20.04.1 LTS)
+## Goal:
+To avoid using Arduino IDE altogether, and instead use Eclipse IDE for C++ Developers to program arduino microcontrollers, ESP32 microcontrollers 
 
+## Pre-requisites - Key installations
 Open the terminal with Ctrl + Alt + T
 
 Update and upgrade the system with 
 
 `sudo apt-get update && sudo apt-get upgrade`
 
-Install JRE 14 using this command
+Install JRE 14 using this command if not already installed
 
 `sudo apt install openjdk-14-jre-headless`
 
+The following were also used to satisfy pre-requisites
+
+```
+sudo apt-get install python-is-python3
+sudo apt install python3-pip
+
+```
+
+## Summary of all pre-requisites
+
+The below is the summary of all pre-requisites met by the steps that follow
+
+```
+$ java --version
+openjdk 14.0.2 2020-07-14
+OpenJDK Runtime Environment (build 14.0.2+12-Ubuntu-120.04)
+OpenJDK 64-Bit Server VM (build 14.0.2+12-Ubuntu-120.04, mixed mode, sharing)
+
+$ which git
+/usr/bin/git
+
+$ which python
+/usr/bin/python
+
+$ which python3
+/usr/bin/python3
+
+$ pip3 --version
+pip 20.0.2 from /usr/lib/python3/dist-packages/pip (python 3.8)
+
+$ lsb_release -a
+No LSB modules are available.
+Distributor ID: Ubuntu
+Description:    Ubuntu 20.04.1 LTS
+Release:        20.04
+Codename:       focal
+
+$ uname -r
+5.4.0-59-generic
+
+```
+
+
+
+
+## Downloading and Installing Eclipse IDE for C++ Developers
 Login as a User who has admin privilleges. This will be the user who will write ESP32 programs using Eclipse IDE 
 
 Download Eclipse for CPP for Linux x86_64 from https://www.eclipse.org/downloads/packages/ . On systems with default settings, the eclipse-cpp-2020-12-R-linux-gtk-x86_64.tar.gz will be downloaded in the $HOME/Downloads/ directory
@@ -55,23 +104,23 @@ Only the above will let this user write to the USB port to which the ESP32 (or a
 
 Logout and Log back in. Or restart the system with `shutdown -r now`
 
-# Start Eclipse
+### Start Eclipse
 
 1. Start eclipse after login either from the desktop menu (preferrable) or the terminal window with `eclipse`
 1. Select a workspace and then go with the prompts from there
 
-# Installing support for Arduino within Eclipse
+## Installing support for Arduino within Eclipse
 
 1. Click "Help -> Eclipse Marketplace"
 1. Find "sloeber"
 1. Install "The Arduino Eclipse Plugin named Sloeber (V4)" or "The Arduino Eclipse Plugin named Sloeber Product (V4)" and follow the prompts
 
-# Installing support for ESP32 within Eclipse
+## Installing support for ESP32 within Eclipse
 1. Obtain ESP-IDF 4.0 or above from https://github.com/espressif/esp-idf/releases , 
 1. Install it by running `. ./install.sh` and then `. ./export.sh` . The https://medium.com/@prabhakarpanday/programming-esp32-using-esp-idf-for-tensorflow-lite-f173eec91c01 site is a good reference
 1. Follow the instructions in https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md to complete the installation from within Eclipse
 
-## Other ESP32 references
+# Other ESP32 references
 1. https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html#get-started-start-project
 
 
