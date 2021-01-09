@@ -112,17 +112,15 @@ Logout and Log back in. Or restart the system with `shutdown -r now`
 1. Install it by running `. ./install.sh` and then `. ./export.sh` . The https://medium.com/@prabhakarpanday/programming-esp32-using-esp-idf-for-tensorflow-lite-f173eec91c01 site is a good reference
 1. Follow the instructions in https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md to complete the installation from within Eclipse
 
+## Semantic errors
+1. When trying examples like "Hello World", it is likely that Eclipse compiles successfully but still gives semantic errors. In that case, in the Preferences of the selected project inside Eclipse, go to C/C++ General -> Code Analysis -> Launching. Make sure that both check boxes are unchecked. Close and reopen the project or restart eclipse and rebuild the project.
+
 # Other ESP32 references
 1. https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html#get-started-start-project
-
-# Key Considerations
-1. Installing support for Arduino microcontrollers in the same instance of eclipse could cause conflicts shown as unresolved dependencies
+1. https://stackoverflow.com/questions/16786555/eclipse-compiles-successfully-but-still-gives-semantic-errors/16891713
 
 ## Installing support for Arduino within Eclipse
 
 1. Click "Help -> Eclipse Marketplace"
 1. Find "sloeber"
-1. Install "The Arduino Eclipse Plugin named Sloeber (V4)" or "The Arduino Eclipse Plugin named Sloeber Product (V4)" and follow the prompts
-
-
-
+1. Install "The Arduino Eclipse Plugin named Sloeber (V4)" (with the icon in a rectangular blue box)) and follow the prompts
