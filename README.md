@@ -130,4 +130,5 @@ Logout and Log back in. Or restart the system with `shutdown -r now`
 1. After installing the plugin, go to the menu "Arduino" and click "Preferences". Under "Arduino -> Platforms and Boards" drill down to "arduino -> Arduino AVR Boards-> 1.8.3" (for Arduino Mego 2560) and apply and close
 
 ## Key points for ESP32 and Arduino support to co-exist in the same eclipse instance
-1. Create exclusive workspaces in Eclipse for ESP32 Projects and Arduino Projects. This helps maintaining build configurations exclusive to each microcontroller, without stepping over onto the other's
+1. Create exclusive workspaces in Eclipse for ESP32 Projects and Arduino Projects. This helps maintaining build configurations exclusive to each microcontroller, without stepping over onto the other's. 
+1. Be mindful that these 2 microcontroller families are compiled (built) and flashed differently from within Eclipse, as also how the port names for their respective launch targets are managed.
