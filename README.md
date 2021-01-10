@@ -108,20 +108,26 @@ Logout and Log back in. Or restart the system with `shutdown -r now`
 1. Select a workspace and then go with the prompts from there
 
 ## Installing support for ESP32 within Eclipse
+1. First and foremost, create a separate workspace in Eclipse for ESP32 Projects.  
 1. Obtain ESP-IDF 4.0 or above from https://github.com/espressif/esp-idf/releases using the instructions on that page
 1. Install it by running `. ./install.sh` and then `. ./export.sh` . The https://medium.com/@prabhakarpanday/programming-esp32-using-esp-idf-for-tensorflow-lite-f173eec91c01 site is a good reference
 1. Follow the instructions in https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md to complete the installation from within Eclipse
+1. 
 
 ## Semantic errors
 1. When trying examples like "Hello World", it is likely that Eclipse compiles successfully but still gives semantic errors. In that case, in the Preferences of the selected project inside Eclipse, go to C/C++ General -> Code Analysis -> Launching. Make sure that both check boxes are unchecked. Close and reopen the project or restart eclipse and rebuild the project.
 
-# Other ESP32 references
+## Other ESP32 references
 1. https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html#get-started-start-project
 1. https://stackoverflow.com/questions/16786555/eclipse-compiles-successfully-but-still-gives-semantic-errors/16891713
 
 ## Installing support for Arduino within Eclipse
 
+1. First and foremost, create a separate workspace in Eclipse for Arduino Projects
 1. Click "Help -> Eclipse Marketplace"
 1. Find "sloeber"
 1. Install "The Arduino Eclipse Plugin named Sloeber (V4)" (with the icon in a rectangular blue box)) and follow the prompts
 1. After installing the plugin, go to the menu "Arduino" and click "Preferences". Under "Arduino -> Platforms and Boards" drill down to "arduino -> Arduino AVR Boards-> 1.8.3" (for Arduino Mego 2560) and apply and close
+
+## Key points for ESP32 and Arduino support to co-exist in the same eclipse instance
+1. Create exclusive workspaces in Eclipse for ESP32 Projects and Arduino Projects. This helps maintaining build configurations exclusive to each microcontroller, without stepping over onto the other's
