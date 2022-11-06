@@ -49,11 +49,10 @@ void scan_for_i2c_devices(void)
 
 		if (ret == ESP_OK)
 		{
-			printf("Found device at: 0x%2x\n", i);
 			int len = 24;
 			char buffer[len];
-			sprintf(buffer, "Found device at: 0x%2x\n", i); // this buffer is not converting to Hex properly
-
+			sprintf(buffer, "Found device at: 0x%2x\n", i); // Load into buffer
+			printf("%s", buffer);
 			ESP_LOG_BUFFER_HEX(TAG, buffer, 1);
 
 		}
