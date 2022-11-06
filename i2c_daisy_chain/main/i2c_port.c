@@ -1,3 +1,8 @@
+/*
+ * Manages (methods to initialise, check) i2c ports for ESP32
+ */
+
+
 #include "i2c_port.h"
 #include <stdio.h>
 #include "esp_log.h"
@@ -9,27 +14,27 @@ static const char *TAG = "i2c_PORT";
 //static esp_err_t i2c_master_init(void)
 esp_err_t i2c_master_init(void)
 {
-    int i2c_master_port = I2C_NUM_0;
+	int i2c_master_port = I2C_NUM_0;
 
-    i2c_config_t conf = {
-        .mode = I2C_MODE_MASTER,
-        .sda_io_num = GPIO_NUM_21,
-        .scl_io_num = GPIO_NUM_22,
-        .sda_pullup_en = GPIO_PULLUP_ENABLE,
-        .scl_pullup_en = GPIO_PULLUP_ENABLE,
-        .master.clk_speed = 400000, //  I2C fast mode 400KHz bus. Solves https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters
-    };
+	i2c_config_t conf = {
+		.mode = I2C_MODE_MASTER,
+		.sda_io_num = GPIO_NUM_21,
+		.scl_io_num = GPIO_NUM_22,
+		.sda_pullup_en = GPIO_PULLUP_ENABLE,
+		.scl_pullup_en = GPIO_PULLUP_ENABLE,
+		.master.clk_speed = 400000, //  I2C fast mode 400KHz bus. Solves https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters
+	};
 
-    i2c_param_config(i2c_master_port, &conf);
+	i2c_param_config(i2c_master_port, &conf);
 
-    return i2c_driver_install(i2c_master_port, conf.mode, 0, 0, 0);
+	return i2c_driver_install(i2c_master_port, conf.mode, 0, 0, 0);
 }
 
 
 void scan_for_i2c_devices(void)
 {
 	// Original code is from https://gist.github.com/herzig/8d4c13d8b81a77ac86481c6c1306bb12
-     	ESP_LOGI(TAG, "i2c scan:");
+	ESP_LOGI(TAG, "i2c scan:");
 
 	for (uint8_t i = 1; i < 127; i++)
 	{
