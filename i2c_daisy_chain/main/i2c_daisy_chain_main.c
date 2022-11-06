@@ -51,10 +51,9 @@ void blink_LEDs_by_bit_shift()
 		if (aByte == 0x00) {
 			aByte = 0x55;
 		}
-		ESP_LOGI(TAG, "Read byte from PCF8574 pins");
-
 		aFoundByte = read_byte_from_pins();
-		// printf("Read byte from PCF8574 pins: 0x%2x\n", aFoundByte);
+		ESP_LOGI(TAG, "Read byte from PCF8574 pins");
+		printf("Read byte from PCF8574 pins: 0x%2x\n", aFoundByte);
 		write_non_string_on_LCD(1, 0, aFoundByte); // display it on line 2 of the LCD though as decimal
 	}
 
