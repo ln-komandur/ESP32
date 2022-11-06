@@ -23,7 +23,7 @@ void write_string_on_LCD(int lineNo, int colNo, char *str)
 void write_non_string_on_LCD(int lineNo, int colNo, float num)
 {
 	char buffer[16];
-	sprintf(buffer, "%.11f", num); // display upto 11 digits after decimal point
+	sprintf(buffer, "%.0f", num); // display upto 0 digits after decimal point
 
 	lcd_put_cur(lineNo, colNo);
 	lcd_send_string(buffer);
@@ -43,6 +43,7 @@ void app_main(void)
 
     write_non_string_on_LCD(1, 0, 3.1415926536);
     uint8_t aByte = 0x55; //  binary of 0x55 is 01010101
+    uint8_t aFoundByte; //  used for storing what is read from PCF8574
     /*
      * 0x55 = 01010101, which,
      * when shifted left once, it gives 0xaa = 10101010, which
@@ -61,7 +62,11 @@ void app_main(void)
     	if (aByte == 0x00) {
     		aByte = 0x55;
     	}
-    	read_from_PCF8574_pins(); // when this function is modified to return the Byte, display it on Row 2 of LCD
+        ESP_LOGI(TAG, "Read byte from PCF8574 pins");
+
+    	aFoundByte = read_from_PCF8574_pins();
+	// printf("Read byte from PCF8574 pins: 0x%2x\n", aFoundByte);
+	write_non_string_on_LCD(1, 0, aFoundByte); // display it on line 2 of the LCD though as decimal
     }
 
 }
