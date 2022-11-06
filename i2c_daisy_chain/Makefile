@@ -3,6 +3,6 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := i2c-simple
+PROJECT_NAME := i2c-daisy-chain
 
 include $(IDF_PATH)/make/project.mk
