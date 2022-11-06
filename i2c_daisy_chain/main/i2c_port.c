@@ -29,10 +29,10 @@ esp_err_t i2c_master_init(void)
 void scan_for_i2c_devices(void)
 {
 	// Original code is from https://gist.github.com/herzig/8d4c13d8b81a77ac86481c6c1306bb12
+     	ESP_LOGI(TAG, "i2c scan:");
 
-	 printf("i2c scan: \n");
-	 for (uint8_t i = 1; i < 127; i++)
-	 {
+	for (uint8_t i = 1; i < 127; i++)
+	{
 		int ret;
 		i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 		i2c_master_start(cmd);
@@ -41,10 +41,18 @@ void scan_for_i2c_devices(void)
 		ret = i2c_master_cmd_begin(I2C_NUM_0, cmd, 100 / portTICK_RATE_MS);
 		i2c_cmd_link_delete(cmd);
 
+
 		if (ret == ESP_OK)
 		{
 			printf("Found device at: 0x%2x\n", i);
+			int len = 24;
+			char buffer[len];
+			sprintf(buffer, "Found device at: 0x%2x\n", i); // this buffer is not converting to Hex properly
+
+			ESP_LOG_BUFFER_HEX(TAG, buffer, 1);
+
 		}
+
 	}
 
 }
