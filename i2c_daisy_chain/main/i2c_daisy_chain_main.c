@@ -19,10 +19,10 @@ void write_string_on_LCD(int lineNo, int colNo, char *str)
 	lcd_send_string(str);
 }
 
-void write_non_string_on_LCD(int lineNo, int colNo, float num)
+void write_hex_on_LCD(int lineNo, int colNo, uint8_t hex)
 {
 	char buffer[16];
-	sprintf(buffer, "%.0f", num); // display upto 0 digits after decimal point
+	sprintf(buffer, "0x%02X", hex); // display hexadecimal
 
 	lcd_put_cur(lineNo, colNo);
 	lcd_send_string(buffer);
@@ -32,7 +32,7 @@ void write_non_string_on_LCD(int lineNo, int colNo, float num)
 void blink_LEDs_by_bit_shift()
 {
 	uint8_t aByte = 0x55; //  binary of 0x55 is 01010101
-	uint8_t aFoundByte; //  used for storing what is read from PCF8574
+	uint8_t aFoundByte[1]; //  used for storing what is read from PCF8574
 	/*
 	 * 0x55 = 01010101, which,
 	 * when shifted left once, it gives 0xaa = 10101010, which
@@ -51,10 +51,11 @@ void blink_LEDs_by_bit_shift()
 		if (aByte == 0x00) {
 			aByte = 0x55;
 		}
-		aFoundByte = read_byte_from_pins();
+		aFoundByte[0] = read_byte_from_pins();
 		ESP_LOGI(TAG, "Read byte from PCF8574 pins");
-		printf("Read byte from PCF8574 pins: 0x%2x\n", aFoundByte);
-		write_non_string_on_LCD(1, 0, aFoundByte); // display it on line 2 of the LCD though as decimal
+		ESP_LOG_BUFFER_HEX(TAG, aFoundByte , 1);
+
+		write_hex_on_LCD(1, 0, aFoundByte[0]); // display it on line 2 of the LCD though as decimal
 	}
 
 
@@ -70,8 +71,6 @@ void app_main(void)
 	lcd_clear();
 
 	write_string_on_LCD(0,0, "Hello ESP32 !!");
-
-	write_non_string_on_LCD(1, 0, 3.1415926536);
 	blink_LEDs_by_bit_shift();
 
 }
