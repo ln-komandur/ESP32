@@ -5,7 +5,7 @@
 #include "driver/i2c.h"
 #include "unistd.h"
 
-//#define LCD_SLAVE_ADDR 0x4E>>1 // change this according to ur setup
+//#define LCD_SLAVE_ADDR 0x4E>>1 // change this according to your device setup
 #define LCD_SLAVE_ADDR 0x27 // This is the same as 0x4E>>1
 
 
@@ -17,32 +17,32 @@ static const char *TAG = "LCD";
 
 void lcd_send_cmd (char cmd)
 {
-  	char data_u, data_l;
+  	char upper_nibble, lower_nibble;
 	uint8_t data_t[4];
-	data_u = (cmd&0xf0);
-	data_l = ((cmd<<4)&0xf0);
+	upper_nibble = (cmd&0xf0);
+	lower_nibble = ((cmd<<4)&0xf0);
 	// rs=0 is command register. Refer https://embeddedexpert.io/?p=600
 	// refer https://embeddedexpert.io/?p=655 for RS and EN pin
-	data_t[0] = data_u|0x0C;  //en=1, rs=0
-	data_t[1] = data_u|0x08;  //en=0, rs=0
-	data_t[2] = data_l|0x0C;  //en=1, rs=0
-	data_t[3] = data_l|0x08;  //en=0, rs=0
+	data_t[0] = upper_nibble|0x0C;  //en=1, rs=0
+	data_t[1] = upper_nibble|0x08;  //en=0, rs=0
+	data_t[2] = lower_nibble|0x0C;  //en=1, rs=0
+	data_t[3] = lower_nibble|0x08;  //en=0, rs=0
 	err = i2c_master_write_to_device(I2C_NUM, LCD_SLAVE_ADDR, data_t, 4, 1000);
-	if (err!=0) ESP_LOGI(TAG, "Error in sending command");
+	if (err!=0) ESP_LOGI(TAG, "Error writing command to LCD");
 }
 
 void lcd_send_data (char data)
 {
-	char data_u, data_l;
+	char upper_nibble, lower_nibble;
 	uint8_t data_t[4];
-	data_u = (data&0xf0);
-	data_l = ((data<<4)&0xf0);
-	data_t[0] = data_u|0x0D;  //en=1, rs=0
-	data_t[1] = data_u|0x09;  //en=0, rs=0
-	data_t[2] = data_l|0x0D;  //en=1, rs=0
-	data_t[3] = data_l|0x09;  //en=0, rs=0
+	upper_nibble = (data&0xf0);
+	lower_nibble = ((data<<4)&0xf0);
+	data_t[0] = upper_nibble|0x0D;  //en=1, rs=0
+	data_t[1] = upper_nibble|0x09;  //en=0, rs=0
+	data_t[2] = lower_nibble|0x0D;  //en=1, rs=0
+	data_t[3] = lower_nibble|0x09;  //en=0, rs=0
 	err = i2c_master_write_to_device(I2C_NUM, LCD_SLAVE_ADDR, data_t, 4, 1000);
-	if (err!=0) ESP_LOGI(TAG, "Error in sending data");
+	if (err!=0) ESP_LOGI(TAG, "Error writing data to LCD");
 }
 
 void lcd_clear (void)
