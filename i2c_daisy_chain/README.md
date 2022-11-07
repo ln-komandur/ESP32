@@ -11,8 +11,8 @@
 
 ## Photos of circuit
 
-### 1. ESP32 DevKitC-v4 connected to PCF8574 and Power Supply Module 
-![ESP32 DevKitC-v4 connected to PCF8574 and Power Supply Module](20221106_1845-1.jpg)
+### 1. ESP32 DevKitC-v4 connected to PCF8574 and HW-131 Power Supply Module 
+![ESP32 DevKitC-v4 connected to PCF8574 and HW-131 Power Supply Module](20221106_1845-1.jpg)
 
 
 ### 2. LCD1602 daisy-chained via i2c to PCF8574
