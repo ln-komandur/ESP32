@@ -32,14 +32,15 @@ void lcd_send_cmd (char cmd)
 	// RS=0 is to select command register. Refer https://embeddedexpert.io/?p=600
 	// refer https://embeddedexpert.io/?p=655 for RS and EN pin
 	/* Pin connection order in the notation LCD connection (to PCF8574 pin) is
-	 * D7(P7), D6(P6), D5(P5), D4(P4), VCC (P3), EN(P2), RW (P1), RS (P0)
+	 * D7(P7), D6(P6), D5(P5), D4(P4), VEE(P3), EN(P2), RW (P1), RS (P0)
 	 * Refer https://www.instructables.com/HD44780-LCD-to-I2C-adapter-board-for-the-Bus-Pirat/
+	 * The VEE pin regulates the display's contrast, via a changeable POT that can supply 0 to 5V. https://www.elprocus.com/lcd-16x2-pin-configuration-and-its-working/
 	 */
 
-	cmd_t[0] = u_cmd|0x0C;  // Lower 4 bits are 1100. VCC(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=0.
-	cmd_t[1] = u_cmd|0x08;  // Lower 4 bits are 1000. VCC(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=0
-	cmd_t[2] = l_cmd|0x0C;  // Lower 4 bits are 1100. VCC(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=0
-	cmd_t[3] = l_cmd|0x08;  // Lower 4 bits are 1000. VCC(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=0
+	cmd_t[0] = u_cmd|0x0C;  // Lower 4 bits are 1100. VEE(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=0.
+	cmd_t[1] = u_cmd|0x08;  // Lower 4 bits are 1000. VEE(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=0
+	cmd_t[2] = l_cmd|0x0C;  // Lower 4 bits are 1100. VEE(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=0
+	cmd_t[3] = l_cmd|0x08;  // Lower 4 bits are 1000. VEE(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=0
 
 
 	err = i2c_master_write_to_device(I2C_NUM, LCD_SLAVE_ADDR, cmd_t, 4, 1000);
@@ -54,13 +55,14 @@ void lcd_send_data (char data)
 	l_data = ((data<<4)&0xf0); // this will give a byte that begins with the lower 4 bits of data, and have the lower 4 bits as 0000
 	// RS=1 is to select data register. Refer https://exploreembedded.com/wiki/Interfacing_LCD_in_4-bit_mode_with_8051
 	/* Pin connection order in the notation LCD connection (to PCF8574 pin) is
-	 * D7(P7), D6(P6), D5(P5), D4(P4), VCC (P3), EN(P2), RW (P1), RS (P0)
+	 * D7(P7), D6(P6), D5(P5), D4(P4), VEE(P3), EN(P2), RW (P1), RS (P0)
+	 * The VEE pin regulates the display's contrast, via a changeable POT that can supply 0 to 5V. https://www.elprocus.com/lcd-16x2-pin-configuration-and-its-working/
 	 */
 
-	data_t[0] = u_data|0x0D;  // Lower 4 bits are 1101. VCC(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=1.
-	data_t[1] = u_data|0x09;  // Lower 4 bits are 1001. VCC(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=1.
-	data_t[2] = l_data|0x0D;  // Lower 4 bits are 1101. VCC(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=1.
-	data_t[3] = l_data|0x09;  // Lower 4 bits are 1001. VCC(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=1.
+	data_t[0] = u_data|0x0D;  // Lower 4 bits are 1101. VEE(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=1.
+	data_t[1] = u_data|0x09;  // Lower 4 bits are 1001. VEE(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=1.
+	data_t[2] = l_data|0x0D;  // Lower 4 bits are 1101. VEE(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=1.
+	data_t[3] = l_data|0x09;  // Lower 4 bits are 1001. VEE(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=1.
 
 	err = i2c_master_write_to_device(I2C_NUM, LCD_SLAVE_ADDR, data_t, 4, 1000);
 	if (err!=0) ESP_LOGI(TAG, "Error writing data to LCD");
