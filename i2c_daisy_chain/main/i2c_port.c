@@ -51,12 +51,9 @@ void scan_for_i2c_devices(void)
 		{
 			int len = 24;
 			char buffer[len];
-			sprintf(buffer, "Found device at: 0x%2x\n", i); // Load into buffer
+			sprintf(buffer, "Found device at: 0x%02X", i); // Load into buffer
 			printf("%s", buffer);
 			ESP_LOG_BUFFER_HEX(TAG, buffer, 1);
-
 		}
-
 	}
-
 }
