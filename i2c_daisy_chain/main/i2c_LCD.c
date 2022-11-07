@@ -36,10 +36,10 @@ void lcd_send_cmd (char cmd)
 	 * Refer https://www.instructables.com/HD44780-LCD-to-I2C-adapter-board-for-the-Bus-Pirat/
 	 */
 
-	cmd_t[0] = u_cmd|0x0C;  //EN=1, RS=0 // this will give the lower 4 bits as 1100. Note VCC (P3)=1, RW=0.
-	cmd_t[1] = u_cmd|0x08;  //EN=0, RS=0 // this will give the lower 4 bits as 1000. Note VCC (P3)=1, RW=0.
-	cmd_t[2] = l_cmd|0x0C;  //EN=1, RS=0 // this will give the lower 4 bits as 1100. Note VCC (P3)=1, RW=0.
-	cmd_t[3] = l_cmd|0x08;  //EN=0, RS=0 // this will give the lower 4 bits as 1000. Note VCC (P3)=1, RW=0.
+	cmd_t[0] = u_cmd|0x0C;  // Lower 4 bits are 1100. VCC(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=0.
+	cmd_t[1] = u_cmd|0x08;  // Lower 4 bits are 1000. VCC(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=0
+	cmd_t[2] = l_cmd|0x0C;  // Lower 4 bits are 1100. VCC(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=0
+	cmd_t[3] = l_cmd|0x08;  // Lower 4 bits are 1000. VCC(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=0
 
 
 	err = i2c_master_write_to_device(I2C_NUM, LCD_SLAVE_ADDR, cmd_t, 4, 1000);
@@ -57,10 +57,10 @@ void lcd_send_data (char data)
 	 * D7(P7), D6(P6), D5(P5), D4(P4), VCC (P3), EN(P2), RW (P1), RS (P0)
 	 */
 
-	data_t[0] = u_data|0x0D;  //EN=1, RS=1 // this will give the lower 4 bits as 1101. Note VCC (P3)=1, RW=0.
-	data_t[1] = u_data|0x09;  //EN=0, RS=1 // this will give the lower 4 bits as 1001. Note VCC (P3)=1, RW=0.
-	data_t[2] = l_data|0x0D;  //EN=1, RS=1 // this will give the lower 4 bits as 1101. Note VCC (P3)=1, RW=0.
-	data_t[3] = l_data|0x09;  //EN=0, RS=1 // this will give the lower 4 bits as 1001. Note VCC (P3)=1, RW=0.
+	data_t[0] = u_data|0x0D;  // Lower 4 bits are 1101. VCC(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=1.
+	data_t[1] = u_data|0x09;  // Lower 4 bits are 1001. VCC(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=1.
+	data_t[2] = l_data|0x0D;  // Lower 4 bits are 1101. VCC(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=1.
+	data_t[3] = l_data|0x09;  // Lower 4 bits are 1001. VCC(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=1.
 
 	err = i2c_master_write_to_device(I2C_NUM, LCD_SLAVE_ADDR, data_t, 4, 1000);
 	if (err!=0) ESP_LOGI(TAG, "Error writing data to LCD");
