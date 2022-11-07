@@ -11,21 +11,21 @@
 
 ## Photos of circuit
 
-### 1
-![Overall](20221106_1845-1.jpg)
+### 1. ESP32 DevKitC-v4 connected to PCF8574 and Power Supply Module 
+![ESP32 DevKitC-v4 connected to PCF8574 and Power Supply Module](20221106_1845-1.jpg)
 
 
-### 2
-![Overall](20221106_1845-2.jpg)
+### 2. LCD1602 daisy-chained via i2c to PCF8574
+![LCD1602 daisy-chained via i2c to PCF8574](20221106_1845-2.jpg)
 
 
-### 3
-![Overall](20221106_1845-3.jpg)
+### 3. 8-LEDs on common GND connected to VCC via separate 10k resistors
+![8-LEDs on common GND connected to VCC via separate 10k resistors](20221106_1845-3.jpg)
 
 
-### 4
-![Overall](20221106_1845-4.jpg)
+### 4. Closer look of resistors and VCC jumper wires from PCF8574 pinouts
+![Closer look of resistors and VCC jumper wires from PCF8574 pinouts](20221106_1845-4.jpg)
 
 
-### 5
-![Overall](20221106_1845-5.jpg)
+### 5. Working LCD1602 and string of LEDs
+![Working LCD1602 and string of LEDs](20221106_1845-5.jpg)
