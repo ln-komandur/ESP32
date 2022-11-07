@@ -1,4 +1,4 @@
-# i2c Daisy Chaining LCD1602 and 8 LED bulbs to PCF8574
+# i2c Daisy Chaining PCF8574 with 8 LEDs, and a LCD1602 
 
 
 
