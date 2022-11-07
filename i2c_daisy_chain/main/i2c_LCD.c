@@ -1,3 +1,11 @@
+/*
+ * The LCD 1602A is based on the Hitachi HD44780 LCD controller.
+ * Refer
+ * - https://mil.ufl.edu/3744/docs/lcdmanual/commands.html#Sda
+ * - https://exploreembedded.com/wiki/Interfacing_LCD_in_4-bit_mode_with_8051
+ *
+ */
+
 #include "i2c_port.h"
 #include "i2c_LCD.h"
 
@@ -17,30 +25,43 @@ static const char *TAG = "LCD";
 
 void lcd_send_cmd (char cmd)
 {
-  	char upper_nibble, lower_nibble;
-	uint8_t data_t[4];
-	upper_nibble = (cmd&0xf0);
-	lower_nibble = ((cmd<<4)&0xf0);
-	// rs=0 is command register. Refer https://embeddedexpert.io/?p=600
+  	char u_cmd, l_cmd;
+	uint8_t cmd_t[4];
+	u_cmd = (cmd&0xf0); // this will give a byte that begins with the upper 4 bits of cmd, and have the lower 4 bits as 0000
+	l_cmd = ((cmd<<4)&0xf0); // this will give a byte that begins with the lower 4 bits of cmd, and have the lower 4 bits as 0000
+	// RS=0 is to select command register. Refer https://embeddedexpert.io/?p=600
 	// refer https://embeddedexpert.io/?p=655 for RS and EN pin
-	data_t[0] = upper_nibble|0x0C;  //en=1, rs=0
-	data_t[1] = upper_nibble|0x08;  //en=0, rs=0
-	data_t[2] = lower_nibble|0x0C;  //en=1, rs=0
-	data_t[3] = lower_nibble|0x08;  //en=0, rs=0
-	err = i2c_master_write_to_device(I2C_NUM, LCD_SLAVE_ADDR, data_t, 4, 1000);
+	/* Pin connection order in the notation LCD connection (to PCF8574 pin) is
+	 * D7(P7), D6(P6), D5(P5), D4(P4), VCC (P3), EN(P2), RW (P1), RS (P0)
+	 * Refer https://www.instructables.com/HD44780-LCD-to-I2C-adapter-board-for-the-Bus-Pirat/
+	 */
+
+	cmd_t[0] = u_cmd|0x0C;  //EN=1, RS=0 // this will give the lower 4 bits as 1100. Note VCC (P3)=1, RW=0.
+	cmd_t[1] = u_cmd|0x08;  //EN=0, RS=0 // this will give the lower 4 bits as 1000. Note VCC (P3)=1, RW=0.
+	cmd_t[2] = l_cmd|0x0C;  //EN=1, RS=0 // this will give the lower 4 bits as 1100. Note VCC (P3)=1, RW=0.
+	cmd_t[3] = l_cmd|0x08;  //EN=0, RS=0 // this will give the lower 4 bits as 1000. Note VCC (P3)=1, RW=0.
+
+
+	err = i2c_master_write_to_device(I2C_NUM, LCD_SLAVE_ADDR, cmd_t, 4, 1000);
 	if (err!=0) ESP_LOGI(TAG, "Error writing command to LCD");
 }
 
 void lcd_send_data (char data)
 {
-	char upper_nibble, lower_nibble;
+	char u_data, l_data;
 	uint8_t data_t[4];
-	upper_nibble = (data&0xf0);
-	lower_nibble = ((data<<4)&0xf0);
-	data_t[0] = upper_nibble|0x0D;  //en=1, rs=0
-	data_t[1] = upper_nibble|0x09;  //en=0, rs=0
-	data_t[2] = lower_nibble|0x0D;  //en=1, rs=0
-	data_t[3] = lower_nibble|0x09;  //en=0, rs=0
+	u_data = (data&0xf0); // this will give a byte that begins with the upper 4 bits of data, and have the lower 4 bits as 0000
+	l_data = ((data<<4)&0xf0); // this will give a byte that begins with the lower 4 bits of data, and have the lower 4 bits as 0000
+	// RS=1 is to select data register. Refer https://exploreembedded.com/wiki/Interfacing_LCD_in_4-bit_mode_with_8051
+	/* Pin connection order in the notation LCD connection (to PCF8574 pin) is
+	 * D7(P7), D6(P6), D5(P5), D4(P4), VCC (P3), EN(P2), RW (P1), RS (P0)
+	 */
+
+	data_t[0] = u_data|0x0D;  //EN=1, RS=1 // this will give the lower 4 bits as 1101. Note VCC (P3)=1, RW=0.
+	data_t[1] = u_data|0x09;  //EN=0, RS=1 // this will give the lower 4 bits as 1001. Note VCC (P3)=1, RW=0.
+	data_t[2] = l_data|0x0D;  //EN=1, RS=1 // this will give the lower 4 bits as 1101. Note VCC (P3)=1, RW=0.
+	data_t[3] = l_data|0x09;  //EN=0, RS=1 // this will give the lower 4 bits as 1001. Note VCC (P3)=1, RW=0.
+
 	err = i2c_master_write_to_device(I2C_NUM, LCD_SLAVE_ADDR, data_t, 4, 1000);
 	if (err!=0) ESP_LOGI(TAG, "Error writing data to LCD");
 }
@@ -68,11 +89,10 @@ void lcd_put_cur(int row, int col)
 
 
 /*
- * The LCD 1602A is based on the Hitachi HD44780 LCD controller.
- * Its command set is a useful reference.
+ * The LCD 1602A is based on the Hitachi HD44780 LCD controller,
+ * whose command set is a useful reference.
  * The initialisation pattern is shown in page 46 of the datasheet at
  * https://www.sparkfun.com/datasheets/LCD/HD44780.pdf
- * Also refer https://mil.ufl.edu/3744/docs/lcdmanual/commands.html#Sda
  *
  */
 
