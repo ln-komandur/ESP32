@@ -18,6 +18,8 @@
 
 static const char *TAG = "PCF8574";
 
+esp_err_t err;
+
 uint8_t read_byte_from_pins()
 {
 
@@ -35,7 +37,6 @@ uint8_t read_byte_from_pins()
 
 void write_byte_to_pins(uint8_t data)
 {
-	esp_err_t err;
 	int len = 1;
 
 	uint8_t data_t[len];
