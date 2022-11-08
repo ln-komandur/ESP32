@@ -6,6 +6,7 @@
 #include <i2c_port.h>
 #include <i2c_LCD.h>
 #include <PCF8574.h>
+#include <i2c-matrix-keypad.h>
 #include <stdio.h>
 #include "esp_log.h"
 #include "driver/i2c.h"
@@ -61,6 +62,11 @@ void blink_LEDs_by_bit_shift()
 
 }
 
+void show_byte_with_LEDs(uint8_t aByte)
+{
+	write_byte_to_pins(aByte);
+	ESP_LOGI(TAG, "show_byte_with_LEDs");
+}
 
 void app_main(void)
 {
@@ -71,6 +77,17 @@ void app_main(void)
 	lcd_clear();
 
 	write_string_on_LCD(0,0, "Hello ESP32 !!");
-	blink_LEDs_by_bit_shift();
-
+	//write_to_keypad(0xff); // write 11111111
+	write_to_keypad(0xf0); // write 11110000
+	//write_to_keypad(0x0f); // write 00001111
+	while (true)
+	{
+		uint8_t aFoundByte[1]; //  used for storing what is read from PCF8574 keypad
+		aFoundByte[0] = read_keypad_pins();
+		ESP_LOGI(TAG, "Read byte from PCF8574 keypad ");
+		ESP_LOG_BUFFER_HEX(TAG, aFoundByte , 1);
+		show_byte_with_LEDs(aFoundByte[0]);
+		write_hex_on_LCD(1, 0, aFoundByte[0]); // display it on line 2 of the LCD though as decimal
+	}
+	//blink_LEDs_by_bit_shift();
 }
