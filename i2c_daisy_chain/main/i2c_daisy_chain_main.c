@@ -11,11 +11,16 @@
 #include "esp_log.h"
 #include "driver/i2c.h"
 
+#define DELAY_MS		1000
+
 static const char *TAG = "i2c-daisy-chain-example";
 
 
 void write_string_on_LCD(int lineNo, int colNo, char *str)
 {
+	lcd_put_cur(lineNo, colNo);
+	lcd_send_string("                "); // Erases the existing content fully
+
 	lcd_put_cur(lineNo, colNo);
 	lcd_send_string(str);
 }
@@ -27,7 +32,6 @@ void write_hex_on_LCD(int lineNo, int colNo, uint8_t hex)
 
 	lcd_put_cur(lineNo, colNo);
 	lcd_send_string(buffer);
-
 }
 
 void blink_LEDs_by_bit_shift()
@@ -58,8 +62,6 @@ void blink_LEDs_by_bit_shift()
 
 		write_hex_on_LCD(1, 0, aFoundByte[0]); // display it on line 2 of the LCD though as decimal
 	}
-
-
 }
 
 void show_byte_with_LEDs(uint8_t aByte)
@@ -76,18 +78,27 @@ void app_main(void)
 	lcd_init();
 	lcd_clear();
 
-	write_string_on_LCD(0,0, "Hello ESP32 !!");
-	//write_to_keypad(0xff); // write 11111111
-	write_to_keypad(0xf0); // write 11110000
-	//write_to_keypad(0x0f); // write 00001111
+	write_string_on_LCD(0,0, "Matrix keypad");
+
+	set_keypad_pins(0xf0); // write 11110000
+
 	while (true)
 	{
-		uint8_t aFoundByte[1]; //  used for storing what is read from PCF8574 keypad
-		aFoundByte[0] = read_keypad_pins();
-		ESP_LOGI(TAG, "Read byte from PCF8574 keypad ");
-		ESP_LOG_BUFFER_HEX(TAG, aFoundByte , 1);
-		show_byte_with_LEDs(aFoundByte[0]);
-		write_hex_on_LCD(1, 0, aFoundByte[0]); // display it on line 2 of the LCD though as decimal
+		char pressedKey; //  used for storing what is read from PCF8574 keypad
+		pressedKey = find_key();
+
+		if (pressedKey != 0)
+		{
+			ESP_LOGI(TAG, "Key Pressed on PCF8574 keypad ");
+			char buffer[16];
+			sprintf(buffer, "Pressed %c", pressedKey); // display hexadecimal
+			write_string_on_LCD(1, 0, buffer); // display it on line 2 of the LCD though as string
+		} else
+		{
+			ESP_LOGI(TAG, "Key NOT Pressed on PCF8574 keypad ");
+			write_string_on_LCD(1, 0, "None pressed "); // display it on line 2 of the LCD though as string
+		}
+		vTaskDelay(DELAY_MS/portTICK_RATE_MS); // Show the message on LCD for 1 second
 	}
 	//blink_LEDs_by_bit_shift();
 }
