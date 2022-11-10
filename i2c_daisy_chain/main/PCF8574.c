@@ -29,7 +29,7 @@ uint8_t read_byte_from_pins()
 
 	i2c_master_read_from_device(I2C_NUM_0, PCF8574_SLAVE_ADDR, rx_data, 1, TIMEOUT_MS/portTICK_RATE_MS);
 	ESP_LOG_BUFFER_HEX(TAG, rx_data, 1);
-	vTaskDelay(DELAY_MS/portTICK_RATE_MS);
+//	vTaskDelay(DELAY_MS/portTICK_RATE_MS); // I may need this delay for LCD. But I can move it to that function.
 	ESP_LOGI(TAG, "read_byte_from_pins");
 
 	return rx_data[0]; // there is only one element in this array. Return it.
@@ -43,7 +43,7 @@ void write_byte_to_pins(uint8_t data)
 	data_t[0] = data;
 	err = i2c_master_write_to_device(I2C_NUM_0, PCF8574_SLAVE_ADDR, data_t, len, 1000);
 
-	vTaskDelay(DELAY_MS/portTICK_RATE_MS);
+//	vTaskDelay(DELAY_MS/portTICK_RATE_MS); // I may need this delay for LCD. But I can move it to that function.
 	if (err!=0)
 		ESP_LOGI(TAG, "Error in sending data to PCF8574");
 	else
