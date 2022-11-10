@@ -70,6 +70,26 @@ void show_byte_with_LEDs(uint8_t aByte)
 	ESP_LOGI(TAG, "show_byte_with_LEDs");
 }
 
+void showKeyPressed(void) // this method may be called based on interrupt. Yet to explore
+{
+	char pressedKey; //  used for storing what is read from PCF8574 keypad
+	pressedKey = find_key();
+
+	if (pressedKey != 0) // this will go away when doing interrupts, as we come to this function only when the key is pressed
+	{
+		ESP_LOGI(TAG, "Key Pressed on PCF8574 keypad ");
+		char buffer[16];
+		sprintf(buffer, "Pressed %c", pressedKey); // display hexadecimal
+		write_string_on_LCD(1, 0, buffer); // display it on line 2 of the LCD though as string
+	} else // this will go away when doing interrupts, as we come to this function only when the key is pressed
+	{
+		ESP_LOGI(TAG, "Key NOT Pressed on PCF8574 keypad ");
+		write_string_on_LCD(1, 0, "None pressed "); // display it on line 2 of the LCD though as string
+	}
+
+
+}
+
 void app_main(void)
 {
 	ESP_ERROR_CHECK(i2c_master_init());
@@ -84,20 +104,7 @@ void app_main(void)
 
 	while (true)
 	{
-		char pressedKey; //  used for storing what is read from PCF8574 keypad
-		pressedKey = find_key();
-
-		if (pressedKey != 0)
-		{
-			ESP_LOGI(TAG, "Key Pressed on PCF8574 keypad ");
-			char buffer[16];
-			sprintf(buffer, "Pressed %c", pressedKey); // display hexadecimal
-			write_string_on_LCD(1, 0, buffer); // display it on line 2 of the LCD though as string
-		} else
-		{
-			ESP_LOGI(TAG, "Key NOT Pressed on PCF8574 keypad ");
-			write_string_on_LCD(1, 0, "None pressed "); // display it on line 2 of the LCD though as string
-		}
+		showKeyPressed();
 		vTaskDelay(DELAY_MS/portTICK_RATE_MS); // Show the message on LCD for 1 second
 	}
 	//blink_LEDs_by_bit_shift();
