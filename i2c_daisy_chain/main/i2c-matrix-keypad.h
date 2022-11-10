@@ -7,7 +7,8 @@
 
 
 
-uint8_t read_keypad_pins(void);
+uint8_t get_keypad_pins(void);
 
-void write_to_keypad(uint8_t data);
+void set_keypad_pins(uint8_t data);
 
+char find_key(void);
