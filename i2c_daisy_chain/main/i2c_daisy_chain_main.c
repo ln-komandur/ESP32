@@ -15,6 +15,7 @@
 
 static const char *TAG = "i2c-daisy-chain-example";
 
+static bool isKeyPressed = true;
 
 void write_string_on_LCD(int lineNo, int colNo, char *str)
 {
@@ -75,21 +76,21 @@ void showKeyPressed(void) // this method may be called based on interrupt. Yet t
 	char pressedKey; //  used for storing what is read from PCF8574 keypad
 	pressedKey = find_key();
 
-	if (pressedKey != 0) // this will go away when doing interrupts, as we come to this function only when the key is pressed
+	if (pressedKey != 0) // this will go away when fully handling interrupts, as we come to this function only when the key is pressed
 	{
 		ESP_LOGI(TAG, "Key Pressed on PCF8574 keypad ");
 		char buffer[16];
 		sprintf(buffer, "Pressed %c", pressedKey); // display hexadecimal
 		write_string_on_LCD(1, 0, buffer); // display it on line 2 of the LCD though as string
-	} else // this will go away when doing interrupts, as we come to this function only when the key is pressed
-	{
-		ESP_LOGI(TAG, "Key NOT Pressed on PCF8574 keypad ");
-		write_string_on_LCD(1, 0, "None pressed "); // display it on line 2 of the LCD though as string
 	}
-
-
+	vTaskDelay(DELAY_MS/portTICK_RATE_MS); // Show the key name on the LCD for a short time
 }
 
+void interruptTrigger() // this function will be called when interrupt happens.
+{
+	// set the flag to true.
+	isKeyPressed = true;
+}
 void app_main(void)
 {
 	ESP_ERROR_CHECK(i2c_master_init());
@@ -101,11 +102,18 @@ void app_main(void)
 	write_string_on_LCD(0,0, "Matrix keypad");
 
 	set_keypad_pins(0xf0); // write 11110000
-
 	while (true)
 	{
-		showKeyPressed();
-		vTaskDelay(DELAY_MS/portTICK_RATE_MS); // Show the message on LCD for 1 second
+		if (isKeyPressed) // this variable will be set if the interrupt has been signaled
+		{
+			//isKeyPressed = false; // first reset the variable to catch other interrupts if they occur
+			showKeyPressed();
+		}
+		else
+		{
+			ESP_LOGI(TAG, "Key NOT Pressed on PCF8574 keypad ");
+			write_string_on_LCD(1, 0, "None pressed "); // display it on line 2 of the LCD though as string
+		}
 	}
 	//blink_LEDs_by_bit_shift();
 }
