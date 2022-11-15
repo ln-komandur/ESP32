@@ -1,8 +1,7 @@
 /* i2c - Daisy chain example
+ * LCD	1602 display, 4x4 Matrix Keypad and 8 LED lights daisy-chained over I2C using PCF8574 GPIO expander
+ */
 
-   Simple I2C example showing 8 LED lights on PCF8574 and LCD1602 on PCF8574 daisy-chained over I2C
-
-*/
 #include <i2c_port.h>
 #include <i2c_LCD.h>
 #include <PCF8574.h>
@@ -18,23 +17,19 @@
 #include "driver/gpio.h"
 // the above are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
 
-// the below are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
-// the above are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
-
 #define DELAY_MS		1000
 
 // the below are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
 #define INPUT_PIN 15
-/* We have connected the interrupt from PCF8574 to GPIO15.
- * Therefore, we define a variable called ‘INPUT_PIN’ to hold the its number as 15.
- * This will be used later on in the code to read the digital input.
+/* The interrupt pin 'INT' from PCF8574 is connected to GPIO15 of ESP32.
+ * ‘INPUT_PIN’ is used to read the digital input from pin number 15.
  */
 
 // the above are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
 
 static const char *TAG = "i2c-daisy-chain-example";
 
-//static bool isKeyPressed = true;
+static bool isKeyBeingRead = false;
 
 // the below are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
 int state = 0;
@@ -49,11 +44,12 @@ xQueueHandle interruptQueue;
  */
 static void IRAM_ATTR gpio_interrupt_handler(void *args)
 {
-	// printf("In IRAM_ATTR ");
-	int pinNumber = (int)args;
-	xQueueSendFromISR(interruptQueue, &pinNumber, NULL);
+	if (!isKeyBeingRead) // if a key is not being read, then add an item to the queue
+	{
+		int pinNumber = (int)args;
+		xQueueSendFromISR(interruptQueue, &pinNumber, NULL);
+	}
 }
-
 
 void write_string_on_LCD(int lineNo, int colNo, char *str)
 {
@@ -113,15 +109,14 @@ void showKeyPressed(void) // this method may be called based on interrupt. Yet t
 {
 	char pressedKey; //  used for storing what is read from PCF8574 keypad
 	pressedKey = find_key();
-
-
-	//	ESP_LOGI(TAG, "Key Pressed on PCF8574 keypad ");
 	char buffer[16];
 	sprintf(buffer, "Pressed %c", pressedKey); // display hexadecimal
 	write_string_on_LCD(1, 0, buffer); // display it on line 2 of the LCD though as string
 
-	vTaskDelay(DELAY_MS/portTICK_RATE_MS); // Show the key name on the LCD for a short time
+	//vTaskDelay(DELAY_MS/portTICK_RATE_MS); // Show the key name on the LCD for a short time
 }
+
+
 
 /* Inside this function, we first create two integer variables ‘pinNumber’ and ‘count’ and
  * set their value to 0. Then inside the infinite while function, we check if an item is
@@ -150,9 +145,21 @@ void Key_Ctrl_Task(void *params) // this function will be called when interrupt 
 	{
 		if (xQueueReceive(interruptQueue, &pinNumber, portMAX_DELAY))
 		{
-			showKeyPressed();
-			ESP_LOGI(TAG, "Key Pressed on PCF8574 keypad ");
-			printf("GPIO %d was pressed %d times. The state is %d\n", pinNumber, count++, gpio_get_level(INPUT_PIN));
+			int pinState = gpio_get_level(INPUT_PIN);
+			printf("GPIO%d state is %d. isKeyBeingRead %d\n", pinNumber, pinState, isKeyBeingRead);
+
+
+			if (pinState == 0) // only when pin goes down (Falling edge)
+			{
+				isKeyBeingRead = true; // block more items from being added to the queue until this key is found
+				printf("isKeyBeingRead is blocked %d\n", isKeyBeingRead);
+
+				ESP_LOGI(TAG, "Key Pressed on PCF8574 keypad ");
+				showKeyPressed(); // call show key only if not already working on it
+				isKeyBeingRead = false; // reset flag so that the next key press can be added to the queue
+				printf("GPIO%d was pressed %d times. Pin state is %d. isKeyBeingRead is released %d\n", pinNumber, ++count, pinState, isKeyBeingRead);
+
+			}
 		}
 		else
 		{
@@ -160,9 +167,12 @@ void Key_Ctrl_Task(void *params) // this function will be called when interrupt 
 			write_string_on_LCD(1, 0, "None pressed "); // display it on line 2 of the LCD though as string
 		}
 	}
-	vTaskDelete(NULL); // added per https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32
+	//vTaskDelete(NULL); // added per https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32
 
 }
+
+
+
 
 void app_main(void)
 {
@@ -211,13 +221,13 @@ void app_main(void)
 
 	gpio_set_intr_type(INPUT_PIN, GPIO_INTR_NEGEDGE);
 
-	/*
-	 *
+	/* Create a queue that can hold 10 elements, each of size int.
+	 * Then create a task using xTaskCreate with necessary arguments. Refer https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
 	 */
 	interruptQueue = xQueueCreate(10, sizeof(int));
 	xTaskCreate(Key_Ctrl_Task, "Key_Ctrl_Task", 2048, NULL, 1, NULL);
-	/*
-	 *
+	/* Install the interrupt service routine with the flags for interrupt allocation
+	 * Add the ISR handler for the INPUT_PIN using gpio_isr_handler_add()
 	 */
 	gpio_install_isr_service(0);
 	gpio_isr_handler_add(INPUT_PIN, gpio_interrupt_handler, (void *)INPUT_PIN);
