@@ -1,14 +1,7 @@
-// Refer - https://embeddedexplorer.com/esp32-i2c-tutorial/
+// Good reference - https://embeddedexplorer.com/esp32-i2c-tutorial/
 
-
-#include <stdio.h>
-#include "esp_log.h"
 #include "driver/i2c.h"
 
+xQueueHandle keyQueue; // used for storing what is read from PCF8574 keypad
 
-
-uint8_t get_keypad_pins(void);
-
-void set_keypad_pins(uint8_t data);
-
-char find_key(void);
+void setup_keypad(); // this will initialize data pins as well as interrupt pin
