@@ -1,7 +1,5 @@
 // Refer - https://embeddedexplorer.com/esp32-i2c-tutorial/
 
-// Yet to be implemented
-
 #include <stdio.h>
 #include "i2c-matrix-keypad.h"
 #include "esp_log.h"
@@ -31,8 +29,8 @@ uint8_t get_keypad_pins() {
 
 	i2c_master_read_from_device(I2C_NUM_0, PCF8574_SLAVE_KPD_ADDRESS, rx_data, 5, TIMEOUT_MS/portTICK_RATE_MS);
 
-	ESP_LOGI(TAG, "get_keypad_pins");
-	ESP_LOG_BUFFER_HEX(TAG, rx_data, 1);
+	//ESP_LOGI(TAG, "get_keypad_pins");
+	//ESP_LOG_BUFFER_HEX(TAG, rx_data, 1);
 
 	return rx_data[0]; // there is only one element in this array. Return it.
 }
@@ -44,11 +42,10 @@ void set_keypad_pins(uint8_t data)
 	uint8_t data_t[len];
 	data_t[0] = data;
 	err = i2c_master_write_to_device(I2C_NUM_0, PCF8574_SLAVE_KPD_ADDRESS, data_t, len, 1000);
-	if (err!=0)
-		ESP_LOGI(TAG, "Error in sending data to PCF8574 keypad");
-	else
+	if (err!=0)	ESP_LOGI(TAG, "Error in sending data to PCF8574 keypad");
+/*	else
 		ESP_LOGI(TAG, "set_keypad_pins successful");
-
+*/
 }
 
 char find_key(){
@@ -56,7 +53,7 @@ char find_key(){
 	uint8_t byteOfColumns; //  used for storing what is read from PCF8574 keypad
 	uint8_t bitSetOnColumn = 0;
 	int col = 0;
-
+	// ESP_LOGI(TAG, "byteOfColumns = get_keypad_pins()");
 	byteOfColumns = get_keypad_pins();
 	// find the column
 	bitSetOnColumn = (255 - byteOfColumns)&0xf0;
@@ -71,12 +68,12 @@ char find_key(){
 		case 16: 	// bitSetOnColumn = 0x10: 00010000. byteOfColumns = 11100000 = 224 = 0xe0
 			col = 4; break;
 	}
-
+	// ESP_LOGI(TAG, "set_keypad_pins(0x0f) - set all row pins high now");
 	set_keypad_pins(0x0f); // set all row pins high now
 
 	// find the row
 	uint8_t byteOfRows; //  used for storing what is read from PCF8574 keypad
-
+	// ESP_LOGI(TAG, "byteOfRows = get_keypad_pins()");
 	byteOfRows = get_keypad_pins();
 
 	uint8_t bitSetOnRow;
@@ -92,6 +89,7 @@ char find_key(){
 		case 1: 	// bitSetOnRow = 0x01: 00000001. byteOfRows = 00001110 = 14 = 0x0e
 			keyPressed = keys[col-1][3];break;
 	}
+	// ESP_LOGI(TAG, "set_keypad_pins(0xf0)");
 	set_keypad_pins(0xf0); // write 11110000 and re-initialize the keypad as both the column and the row are found by now
 	return keyPressed;
 }
