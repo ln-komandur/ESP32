@@ -8,6 +8,9 @@
 #include "esp_log.h"
 #include "driver/i2c.h"
 
+// I2C Clock Speed - standard mode: 100 kbit/s, full speed: 400 kbit/s,... per https://www.i2c-bus.org/speed/
+#define MSTR_CLK_SPD		100000 //  400KHz solve'D' https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters
+
 static const char *TAG = "i2c_PORT";
 
 
@@ -22,7 +25,7 @@ esp_err_t i2c_master_init(void)
 		.scl_io_num = GPIO_NUM_22,
 		.sda_pullup_en = GPIO_PULLUP_ENABLE,
 		.scl_pullup_en = GPIO_PULLUP_ENABLE,
-		.master.clk_speed = 400000, //  I2C fast mode 400KHz bus. Solves https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters
+		.master.clk_speed = MSTR_CLK_SPD,
 	};
 
 	i2c_param_config(i2c_master_port, &conf);
