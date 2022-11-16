@@ -20,6 +20,11 @@ static const char *TAG = "PCF8574";
 
 esp_err_t err;
 
+uint8_t aByte;
+
+int64_t lastBlink;
+long blinkDuration = 500000; // 500000 is in microseconds for 0.5 seconds
+
 uint8_t read_byte_from_pins()
 {
 
@@ -47,5 +52,50 @@ void write_byte_to_pins(uint8_t data)
 		ESP_LOGI(TAG, "Error in sending data to PCF8574");
 	else
 		ESP_LOGI(TAG, "Write_bytes_to_pins successful");
+
+}
+
+void show_byte_with_LEDs(uint8_t aByte)
+{
+	write_byte_to_pins(aByte);
+	ESP_LOGI(TAG, "show_byte_with_LEDs");
+}
+void blink_LEDs_Task(void *params)
+{
+	lastBlink = esp_timer_get_time();
+
+	while (true)
+	{
+	    int64_t callTime = esp_timer_get_time();
+
+		/*
+		 * 0x55 = 01010101, which,
+		 * when shifted left once, it gives 0xaa = 10101010, which
+		 * when shifted left once, it gives 0x54 = 01010100, which
+		 * when shifted left once, it gives 0xa8 = 10101000, which
+		 * when shifted left once, it gives 0x50 = 01010000, which
+		 * when shifted left once, it gives 0xa0 = 10100000, which
+		 * when shifted left once, it gives 0x40 = 01000000, which
+		 * when shifted left once, it gives 0x80 = 10000000, which
+		 * when shifted left once, it gives 0x00 = 00000000, when the byte is reset to 0x55
+		 */
+		if (callTime - lastBlink > blinkDuration)
+		{
+			write_byte_to_pins(aByte);
+			aByte = aByte << 1;
+			if (aByte == 0x00) {
+				aByte = 0x55;
+			}
+			lastBlink = callTime;
+		}
+	}
+}
+
+
+void init_LED_Byte(uint8_t startByte)
+{
+	xTaskCreate(blink_LEDs_Task, "blink_LEDs_Task", 2048, NULL, 1, NULL);
+
+	aByte = startByte;
 
 }
