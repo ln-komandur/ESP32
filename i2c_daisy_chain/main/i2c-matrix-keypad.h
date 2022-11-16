@@ -4,4 +4,4 @@
 
 xQueueHandle keyQueue; // used for storing what is read from PCF8574 keypad
 
-void setup_keypad(); // this will initialize data pins as well as interrupt pin
+void init_keypad(); // this will initialize data pins as well as interrupt pin
