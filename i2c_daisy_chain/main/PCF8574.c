@@ -23,7 +23,7 @@ esp_err_t err;
 uint8_t aByte;
 
 int64_t lastBlink;
-long blinkDuration = 500000; // 500000 is in microseconds for 0.5 seconds
+long blinkDuration; // in microseconds
 
 uint8_t read_byte_from_pins()
 {
@@ -48,11 +48,10 @@ void write_byte_to_pins(uint8_t data)
 	data_t[0] = data;
 	err = i2c_master_write_to_device(I2C_NUM_0, PCF8574_SLAVE_ADDR, data_t, len, 1000);
 
-	if (err!=0)
-		ESP_LOGI(TAG, "Error in sending data to PCF8574");
-	else
+	if (err!=0) ESP_LOGI(TAG, "Error in sending data to PCF8574");
+	/* else
 		ESP_LOGI(TAG, "Write_bytes_to_pins successful");
-
+	*/
 }
 
 void show_byte_with_LEDs(uint8_t aByte)
@@ -92,10 +91,10 @@ void blink_LEDs_Task(void *params)
 }
 
 
-void init_LED_Byte(uint8_t startByte)
+void init_LED(uint8_t startByte, long duration)
 {
 	xTaskCreate(blink_LEDs_Task, "blink_LEDs_Task", 2048, NULL, 1, NULL);
-
+	blinkDuration = duration;
 	aByte = startByte;
 
 }
