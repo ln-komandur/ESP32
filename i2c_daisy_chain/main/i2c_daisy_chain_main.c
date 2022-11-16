@@ -14,7 +14,7 @@
 
 static const char *TAG = "i2c-daisy-chain-example";
 
-long blinkDuration = 2000000; // 500000 is in microseconds for 0.5 seconds
+long blinkDuration = 500000; // 500000 is in microseconds for 0.5 seconds
 
 void app_main(void)
 {
@@ -29,7 +29,7 @@ void app_main(void)
 
 	init_keypad();
 
-	init_LCD(keyQueue);
+	attach_queue_to_LCD(keyQueue);
 
 	init_LED(0x55, blinkDuration); //  binary of 0x55 is 01010101
 }
