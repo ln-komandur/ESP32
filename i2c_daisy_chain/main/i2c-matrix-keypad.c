@@ -192,7 +192,7 @@ void Key_Ctrl_Task(void *params) // this function will be called when interrupt 
 }
 
 
-void setup_keypad()
+void init_keypad()
 {
 	set_keypad_pins(0xf0); // write 11110000
 
