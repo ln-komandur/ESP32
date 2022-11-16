@@ -13,6 +13,13 @@
 #include "driver/i2c.h"
 #include "unistd.h"
 
+// the below are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/queue.h"
+// #include "driver/gpio.h"
+
+
 //#define LCD_SLAVE_ADDR 0x4E>>1 // change this according to your device setup
 #define LCD_SLAVE_ADDR 0x27 // This is the same as 0x4E>>1
 
@@ -22,6 +29,9 @@ esp_err_t err;
 #define I2C_NUM I2C_NUM_0
 
 static const char *TAG = "LCD";
+
+xQueueHandle characterQueue;
+
 
 void lcd_send_cmd (char cmd)
 {
@@ -76,17 +86,16 @@ void lcd_clear (void)
 
 void lcd_put_cur(int row, int col)
 {
-    	switch (row)
-    	{
-		case 0:
-		    col |= 0x80;
-		    break;
-		case 1:
-		    col |= 0xC0;
-		    break;	
+	switch (row)
+	{
+	case 0:
+		col |= 0x80;
+		break;
+	case 1:
+		col |= 0xC0;
+		break;
 	}
-
-    	lcd_send_cmd (col);
+	lcd_send_cmd (col);
 }
 
 
@@ -130,3 +139,48 @@ void lcd_send_string (char *str)
 {
 	while (*str) lcd_send_data (*str++);
 }
+
+void write_string_on_LCD(int lineNo, int colNo, char *str)
+{
+	lcd_put_cur(lineNo, colNo);
+	lcd_send_string("				"); // Erases the existing content fully
+
+	lcd_put_cur(lineNo, colNo);
+	lcd_send_string(str);
+}
+
+void write_hex_on_LCD(int lineNo, int colNo, uint8_t hex)
+{
+	char buffer[16];
+	sprintf(buffer, "0x%02X", hex); // display hexadecimal
+
+	lcd_put_cur(lineNo, colNo);
+	lcd_send_string(buffer);
+}
+
+
+void LCD_Receiver_Task(void *params)
+{
+	while (true)
+	{
+		char keyPressed = 0;
+
+		xQueueReceive(characterQueue, &keyPressed, ( portTickType ) 0); // put the key found in the queue
+		if (keyPressed != 0)
+		{
+			char buffer[16];
+			sprintf(buffer, "Last pressed %c", keyPressed); // display hexadecimal
+			write_string_on_LCD(1, 0, buffer); // display it on line 2 of the LCD though as string
+		}
+
+	}
+
+}
+
+
+void init_LCD(xQueueHandle keyQueue)
+{
+	xTaskCreate(LCD_Receiver_Task, "LCD_Receiver_Task", 2048, NULL, 1, NULL);
+	characterQueue = keyQueue; // this queue holds the keys pressed. Its size as 32, is the total number of characters on a 1602 LCD display
+}
+
