@@ -9,13 +9,12 @@
 #include <stdio.h>
 #include "esp_log.h"
 #include "driver/i2c.h"
-#include "esp_timer.h"
 
 #define DELAY_MS		1000
 
 static const char *TAG = "i2c-daisy-chain-example";
 
-
+long blinkDuration = 2000000; // 500000 is in microseconds for 0.5 seconds
 
 void app_main(void)
 {
@@ -28,9 +27,9 @@ void app_main(void)
 
 	write_string_on_LCD(0,0, "Matrix keypad");
 
-	setup_keypad();
+	init_keypad();
 
 	init_LCD(keyQueue);
 
-	init_LED_Byte(0x55); //  binary of 0x55 is 01010101
+	init_LED(0x55, blinkDuration); //  binary of 0x55 is 01010101
 }
