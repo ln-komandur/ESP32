@@ -178,7 +178,7 @@ void LCD_Receiver_Task(void *params)
 }
 
 
-void init_LCD(xQueueHandle keyQueue)
+void attach_queue_to_LCD(xQueueHandle keyQueue)
 {
 	xTaskCreate(LCD_Receiver_Task, "LCD_Receiver_Task", 2048, NULL, 1, NULL);
 	characterQueue = keyQueue; // this queue holds the keys pressed. Its size as 32, is the total number of characters on a 1602 LCD display
