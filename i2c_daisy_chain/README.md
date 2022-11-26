@@ -9,10 +9,10 @@
 1.  Build the new project.
 
 ## Fritzing circuit image
-![Three i2c devices on PCF8574_bb](Three%20%i2c%20%devices%20%on%20%PCF8574_bb.png)
+![Three i2c devices on PCF8574_bb](Three%20i2c%20devices%20on%20PCF8574_bb.png)
 
 
-## Photos of circuit
+## Photos of circuit without 4x4 membrane matrix keypad
 
 ### 1. ESP32 DevKitC-v4 connected to PCF8574 and HW-131 Power Supply Module 
 ![ESP32 DevKitC-v4 connected to PCF8574 and HW-131 Power Supply Module](20221106_1845-1.jpg)
