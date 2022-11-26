@@ -1,4 +1,4 @@
-# i2c Daisy Chaining PCF8574 with 8 LEDs, and a LCD1602 
+# i2c Daisy Chaining PCF8574 with 8 LEDs, a 4x4 membrane matrix keypad and a LCD1602 
 
 
 
@@ -7,6 +7,9 @@
 1.  Download the contents of the "i2c_daisy_chain" folder from github as a zip file. The parent level should have this "ReadMe.md" file, "Makefile" and a "CMakeLists.txt". The "main" folder with 11 files (.c , .h and others) should be a sub-folder under the parent fine
 1.  Create a new "Espressif IDF Project" in Eclipse. Import the contents of zip file into this project and agree to overwrite all contents.
 1.  Build the new project.
+
+## Fritzing circuit image
+![Three i2c devices on PCF8574_bb](Three%20%i2c%20%devices%20%on%20%PCF8574_bb.png)
 
 
 ## Photos of circuit
