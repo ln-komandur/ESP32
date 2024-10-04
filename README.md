@@ -65,26 +65,24 @@ Download Eclipse for CPP for Linux x86_64 from https://www.eclipse.org/downloads
 
 Extract the tar installable to the home directory of the logged in user with
 
-`tar xvf $HOME/Downloads/eclipse-cpp-2020-12-R-linux-gtk-x86_64.tar.gz -C $HOME`
+`tar xvf ~/Downloads/eclipse-cpp-2020-12-R-linux-gtk-x86_64.tar.gz -C ~`
 
 Rename the eclipse directory as below to help easily distinguish from the workspace directory to be created later when starting eclipse
 
-`mv $HOME/eclipse $HOME/eclipse-installation`
+`mv ~/eclipse ~/eclipse-installation`
 
 Create a symbolic link to the eclipse executable file with
 
-`sudo ln -s $HOME/eclipse-installation/eclipse /usr/local/bin/`
+`sudo ln -s ~/eclipse-installation/eclipse /usr/local/bin/`
 
 Also test if the executable file can be called from any directory with `eclipse` at the terminal and close it.
 
 Now, create a .desktop file to be able to start eclipse from GUI menu's in the desktop with
 
-`sudo nano /usr/share/applications/eclipse.desktop`
-
-Add the following lines to this file and save it
+Create a desktop icon for Eclipse-IDE
 
 ```
-[Desktop Entry]
+echo '[Desktop Entry]
 Version = 2020‑12
 Type = Application
 Terminal = false
@@ -92,6 +90,7 @@ Name = Eclipse C/C++
 Exec = /usr/local/bin/eclipse
 Icon = /home/the_actual_user_name/eclipse-installation/icon.xpm
 Categories = Education;
+' | sudo tee /usr/share/applications/eclipse.desktop # Create a desktop icon for Eclipse-IDE
 ```
 
 Now add the current user to the 'dialout' group with
@@ -112,7 +111,6 @@ Logout and Log back in. Or restart the system with `shutdown -r now`
 1. Obtain ESP-IDF 4.0 or above from https://github.com/espressif/esp-idf/releases using the instructions on that page
 1. Install it by running `. ./install.sh` and then `. ./export.sh` . The https://medium.com/@prabhakarpanday/programming-esp32-using-esp-idf-for-tensorflow-lite-f173eec91c01 site is a good reference
 1. Follow the instructions in https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md to complete the installation from within Eclipse
-1. 
 
 ## Semantic errors
 1. When trying examples like "Hello World", it is likely that Eclipse compiles successfully but still gives semantic errors. In that case, in the Preferences of the selected project inside Eclipse, go to C/C++ General -> Code Analysis -> Launching. Make sure that both check boxes are unchecked. Close and reopen the project or restart eclipse and rebuild the project.
