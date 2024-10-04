@@ -32,3 +32,11 @@ Categories = Education;
 
 `cd Espressif-IDE/`
 
+
+
+
+
+
+### Dialout
+
+`sudo usermod -a -G dialout $USER`
