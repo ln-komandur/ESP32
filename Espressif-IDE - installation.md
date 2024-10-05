@@ -18,12 +18,16 @@ $ which python
 
 $ which python3
 /usr/bin/python3
-
 ```
 
-The below is the **summary of all pre-requisites met** by the steps that follow
+The below are **python and pip requirements** for the steps that follow
+
+`sudo nala install python3-pip # This may already be met`
 
 `sudo nala install python-is-python3 # Install this. But not sure if this is required`
+
+
+The below is the **summary of all pre-requisites met** by the steps that follow
 
 ```
 $ java --version
@@ -43,7 +47,6 @@ Codename:	jammy
 
 $ uname -r
 6.8.0-45-generic
-
 ```
 
 
