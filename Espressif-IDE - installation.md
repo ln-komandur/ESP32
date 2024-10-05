@@ -3,10 +3,15 @@
 
 ## Extract the tar gunzip file in the home directory`
 `tar xvf ~/Downloads/Espressif-IDE-*.tar.gz -C ~ # Extract the tar gunzip file in the home directory`
+
+**Note:** `Espressif-IDE-3.0.0-linux.gtk.x86_64.tar.gz` was used for this installation
+
 ## Create a symbolic link
 `sudo ln -s ~/Espressif-IDE/espressif-ide /usr/local/bin/ # Create a symbolic link`
 
 ## Create a desktop entry for Espressif-IDE
+
+Edit the path correctly in `Icon = /home/<user-who-installed-Espressif>`
 
 ```
 echo '[Desktop Entry]
@@ -30,7 +35,7 @@ Categories = Education;' | sudo tee /usr/share/applications/Espressif-IDE.deskto
 
 ### 1-Open Espressif-IDF and select a separate directory for the ESP32's workspace
 
-### 2-Check for updates
+### 2-Check and install updates
 
 ![Click Help -> Check for updates](1-Check%20for%20updates.png "Click Help -> Check for updates")
 
