@@ -49,7 +49,7 @@ Categories = Education;' | sudo tee /usr/share/applications/Espressif-IDE.deskto
 
 ### Handle rules
 
-If you get "Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command"
+If you get "[Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command](https://github.com/espressif/idf-eclipse-plugin/issues/777#issuecomment-1574885512)", copy [this 60-openocd.rules file](https://github.com/espressif/openocd-esp32/blob/master/contrib/60-openocd.rules) to `/etc/udev/rules.d/` manually
 
 
 
