@@ -47,9 +47,26 @@ Categories = Education;' | sudo tee /usr/share/applications/Espressif-IDE.deskto
 ### 5-Download ESP-IDF
 ![Download ESP-IDF](4-Download%20ESP-IDF.png "Click Add ESP-IDF, Select Version and Directory to download")
 
-### Handle rules
+View the progress of the download should in the Progress tab
 
-If you get "[Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command](https://github.com/espressif/idf-eclipse-plugin/issues/777#issuecomment-1574885512)", copy [this 60-openocd.rules file](https://github.com/espressif/openocd-esp32/blob/master/contrib/60-openocd.rules) to `/etc/udev/rules.d/` manually
+![ESP-IDF Download progressing](4a-Downloading.png "ESP-IDF Download progressing")
+
+
+### Handle rule errors
+
+If you get "[Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command](https://github.com/espressif/idf-eclipse-plugin/issues/777#issuecomment-1574885512)", 
+
+![Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command](4b-OpenOCD%20error.png "Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command")
+
+Copy [this 60-openocd.rules file](https://github.com/espressif/openocd-esp32/blob/master/contrib/60-openocd.rules) to `/etc/udev/rules.d/` manually after changing its owner and group to `root:root`
+
+### 6-Create New Espressif IDF project
+
+![File -> New -> Espressif Project](5-New%20Espressif%20IDF-Project.png "File -> New -> Espressif Project")
+
+
+![New IDF Project dialog](5a-New%20IDF%20Project%20dialog.png "New IDF Project dialog")
+
 
 
 
