@@ -5,8 +5,29 @@
 ## Steps to import into Eclipse "Espressif IDF Project"
 
 1.  Download the contents of the "i2c_daisy_chain" folder from github as a zip file. The parent level should have this "ReadMe.md" file, "Makefile" and a "CMakeLists.txt". The "main" folder with 11 files (.c , .h and others) should be a sub-folder under the parent fine
-1.  Create a new "Espressif IDF Project" in Eclipse. Import the contents of zip file into this project and agree to overwrite all contents.
-1.  Build the new project.
+  
+![Zip file to import](zip%20file%20to%20import.png)
+
+2.  Create a new "Espressif IDF Project" in Eclipse
+
+![New Imported Project](New%20Imported%20Project.png)
+
+3.  Import the contents of zip file into this project
+
+![Import Archive to Project](Import%20Archive%20to%20Project.png)
+
+4.  Agree to overwrite CMakeLists.txt and all contents by clicking **Yes To All**
+
+![Overwrite CMakeLists_txt](Overwrite%20CMakeLists_txt.png)
+
+5.  Build the new project
+
+![Build Project](Build%20Project.png)
+
+
+
+
+
 
 ## Fritzing circuit image
 ![Three i2c devices on PCF8574_bb](Three%20i2c%20devices%20on%20PCF8574_bb.png)
