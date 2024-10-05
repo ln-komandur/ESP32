@@ -1,3 +1,53 @@
+# Why these instructions
+
+The [ESP-IDF Eclipse Plugin (Espressif-IDE) installation](https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md#Installation) page provides anywhere between **minimal to no instructions** on installing **Espressif-IDE instead of the Eclipse CDT + IEP Plugin update approach** and especially for *Linux*. All screenshots they provide are for the *Eclipse CDT + IEP Plugin update approach* and that too with some dated ones on *Help > Install New Software* for Mac. The [Espressif-IDE](https://github.com/espressif/idf-eclipse-plugin/blob/master/docs_readme/Espressif-IDE.md) page provides no more than a [Download](https://github.com/espressif/idf-eclipse-plugin/blob/master/docs_readme/Espressif-IDE.md#downloads) link to the latest [Espressif-IDE-linux.gtk.x86_64](https://dl.espressif.com/dl/idf-eclipse-plugin/ide/Espressif-IDE-linux.gtk.x86_64/latest) release or for *Installing Espressif-IDE by Windows Offline Installer*
+
+
+## Pre-requisites
+
+
+```
+$ which java
+/usr/bin/java
+
+$ which git
+/usr/bin/git
+
+$ which python
+/usr/bin/python
+
+$ which python3
+/usr/bin/python3
+
+```
+
+The below is the **summary of all pre-requisites met** by the steps that follow
+
+`sudo nala install python-is-python3 # Install this. But not sure if this is required`
+
+```
+$ java --version
+openjdk 19.0.2 2023-01-17
+OpenJDK Runtime Environment (build 19.0.2+7-Ubuntu-0ubuntu322.04)
+OpenJDK 64-Bit Server VM (build 19.0.2+7-Ubuntu-0ubuntu322.04, mixed mode, sharing)
+
+$ pip3 --version
+pip 23.3.2 from /usr/local/lib/python3.10/dist-packages/pip (python 3.10)
+
+$ lsb_release -a
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.5 LTS
+Release:	22.04
+Codename:	jammy
+
+$ uname -r
+6.8.0-45-generic
+
+```
+
+
+
 
 ## Download [the latest Espressid-IDE for Linux](https://dl.espressif.com/dl/idf-eclipse-plugin/ide/Espressif-IDE-linux.gtk.x86_64/latest)
 
@@ -73,6 +123,33 @@ Copy [this 60-openocd.rules file](https://github.com/espressif/openocd-esp32/blo
 ![New IDF Project dialog](5a-New%20IDF%20Project%20dialog.png "New IDF Project dialog")
 
 
+## How to uninstall?
+
+This approach assumes the users home to be the location of the Espressif_IDE or Eclipse IDE installation
+
+**Note:** Close Espressif-IDE or Eclipse IDE prior to uninstallation. 
+
+`ls -al ~ # List all folder and files including hidden ones under the user's home`
+
+`rm -rf ~/esp-idf* # Remove the esp idf such as esp-idf-v5.3.1`
+
+`rm -rf ~/.espressif/  # Remove the espressif hidden folder`
+
+`rm -rf ~/ESP32-workspace/ # Remove the ESP32 workspace if needed`
+
+### If Espressif-IDE needs to be uninstalled
+`rm -rf ~/Espressif-IDE/ # Remove the Espressif IDE`
+
+`sudo rm /usr/share/applications/Espressif-IDE.desktop # Remove the Espressif IDE desktop file`
+
+`ls -l /usr/local/bin/espressif-ide # Remove the symbolic link to the Espressif IDE desktop file`
+
+### If Eclipse-IDE needs to be uninstalled
+`rm -rf eclipse-installation/ # Remove the Eclipse IDE if Eclipse needs to be removed`
+
+`sudo rm /usr/share/applications/eclipse.desktop # Remove the Eclipse IDE desktop file if Eclipse needs to be removed`
+
+`ls -l /usr/local/bin/eclipse-ide # Remove the symbolic link to the Eclipse IDE desktop file if Eclipse needs to be removed`
 
 
 
