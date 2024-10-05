@@ -88,6 +88,8 @@ Categories = Education;' | sudo tee /usr/share/applications/Espressif-IDE.deskto
 
 ### 1-Open Espressif-IDF and select a separate directory for the ESP32's workspace
 
+![Select a separate directory for ESP32 workspace](0-Select%20workspace.png "Select a separate directory for ESP32 workspace")
+
 ### 2-Check and install updates
 
 ![Click Help -> Check for updates](1-Check%20for%20updates.png "Click Help -> Check for updates")
