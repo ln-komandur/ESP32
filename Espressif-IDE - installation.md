@@ -22,26 +22,36 @@ Categories = Education;' | sudo tee /usr/share/applications/Espressif-IDE.deskto
 ## Install cmake
 `sudo nala install cmake # Install cmake`
 
- ## Clone esp-idf from git
-
- `cd # Go to the home directory`
- 
- `git clone -b v5.2.3 --recursive https://github.com/espressif/esp-idf.git esp-idf-v5.2.3 # Clone esp-idf from git`
-
- ## Get into the esp-idf directory and execute scripts
- `cd esp-idf-v5.2.3/ # Get into the esp-idf directory`
- 
- `. ./install.sh # Execute the install shell script`
- 
- `. ./export.sh # Execute the export shell script`
-
-`cd Espressif-IDE/`
-
-
-
-
-
-
 ## Allow dialout
 
 `sudo usermod -a -G dialout $USER`
+
+## Configure Espressif-IDF
+
+### 1-Open Espressif-IDF and select a separate directory for the ESP32's workspace
+
+### 2-Check for updates
+
+![Click Help -> Check for updates](1-Check%20for%20updates.png "Click Help -> Check for updates")
+
+### 3-Restart to apply updates
+
+![Restart to apply updates. And close the Welcome tab](2-Restart%20to%20apply%20updates.png "Restart to apply updates. And close the Welcome tab")
+
+### 4-Open ESP-IDF Manager
+
+**First close the Welcome tab**. Else it will completely hide the ESP-IDF Manager tab / tile
+
+![Open Espressif -> ESP-IDF Manager](3-Open%20ESP-IDF%20Manager.png "Open Espressif -> ESP-IDF Manager")
+
+### 5-Download ESP-IDF
+![Download ESP-IDF](4-Download%20ESP-IDF.png "Click Add ESP-IDF, Select Version and Directory to download")
+
+### Handle rules
+
+If you get "Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command"
+
+
+
+
+
