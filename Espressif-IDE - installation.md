@@ -130,7 +130,7 @@ Copy [this 60-openocd.rules file](https://github.com/espressif/openocd-esp32/blo
 
 ## How to uninstall?
 
-This approach assumes the users home to be the location of the Espressif_IDE or Eclipse IDE installation
+This approach ***assumes the user's home to be the location*** of the Espressif_IDE or Eclipse IDE installation
 
 **Note:** Close Espressif-IDE or Eclipse IDE prior to uninstallation. 
 
