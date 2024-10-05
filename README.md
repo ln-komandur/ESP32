@@ -1,3 +1,7 @@
+# Try [Espressif-IDE - installation](Espressif-IDE%20-%20installation.md) first
+
+# The below might be obsolete and circuitous
+
 # Installing Eclipse IDE for C++ Developers on Linux (Lubuntu 20.04.1 LTS)
 ## Goal:
 To avoid using Arduino IDE altogether, and instead use Eclipse IDE for C++ Developers to program arduino microcontrollers, ESP32 microcontrollers 
