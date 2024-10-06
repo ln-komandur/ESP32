@@ -13,8 +13,7 @@ $ which java
 $ which git
 /usr/bin/git
 
-$ which python
-/usr/bin/python
+$ which python # This will show an empty result, which is good
 
 $ which python3
 /usr/bin/python3
@@ -24,7 +23,10 @@ The below are **python and pip requirements** for the steps that follow
 
 `sudo nala install python3-pip # This may already be met`
 
-`sudo nala install python-is-python3 # Install this. But not sure if this is required`
+`# sudo nala install python-is-python3 # This is not required` **Do not install python-is-python3**
+
+`# sudo nala install cmake # This is not required` **Do not install cmake**
+
 
 
 The below is the **summary of all pre-requisites met** by the steps that follow
@@ -77,9 +79,6 @@ Icon = /home/<user-who-installed-Espressif>/Espressif-IDE/icon.xpm
 Categories = Education;' | sudo tee /usr/share/applications/Espressif-IDE.desktop # Create a desktop entry for Espressif-IDE
 ```
 
-## Install cmake
-`sudo nala install cmake # Install cmake`
-
 ## Allow dialout
 
 `sudo usermod -a -G dialout $USER`
@@ -114,11 +113,20 @@ View the progress of the download should in the Progress tab
 
 ### Handle rule errors
 
-If you get "[Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command](https://github.com/espressif/idf-eclipse-plugin/issues/777#issuecomment-1574885512)", 
+#### If you get "[Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command](https://github.com/espressif/idf-eclipse-plugin/issues/777#issuecomment-1574885512)", 
 
 ![Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command](4b-OpenOCD%20error.png "Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command")
 
 Copy [this 60-openocd.rules file](https://github.com/espressif/openocd-esp32/blob/master/contrib/60-openocd.rules) to `/etc/udev/rules.d/` manually after changing its owner and group to `root:root`
+
+#### If this OpenOCD rules file exists, for this warning click "No" to not overwrite it
+
+![Warning asking to overwrite existing OpenOCD rules file](4c-OpenOCD%20rules%20file%20exists.png "Warning asking to overwrite existing OpenOCD rules file")
+
+And after clicking **No** the Tool will be activated with the existing OpenOCD rules file
+
+![Tool Activated with the existing OpenOCD rules file](4d-Tool%20activated%20with%20existing%20OpenOCD%20rules.png "Tool Activated with the existing OpenOCD rules file")
+
 
 ### 6-Create New Espressif IDF project
 
