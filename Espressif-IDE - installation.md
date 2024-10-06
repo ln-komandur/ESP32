@@ -117,7 +117,7 @@ View the progress of the download should in the Progress tab
 
 ![Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command](4b-OpenOCD%20error.png "Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command")
 
-Copy [this 60-openocd.rules file](https://github.com/espressif/openocd-esp32/blob/master/contrib/60-openocd.rules) to `/etc/udev/rules.d/` manually after changing its owner and group to `root:root`
+Copy [this 60-openocd.rules file](https://github.com/espressif/openocd-esp32/blob/master/contrib/60-openocd.rules) to `/etc/udev/rules.d/` manually after changing its owner and group to `root:root` . A copy is also [available in this repo](./60-openocd.rules)
 
 #### If this OpenOCD rules file exists, for this warning click "No" to not overwrite it
 
