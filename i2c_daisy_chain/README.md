@@ -53,3 +53,16 @@
 
 ### 5. Working LCD1602 and string of LEDs
 ![Working LCD1602 and string of LEDs](20221106_1845-5.jpg)
+
+## References to upgrading versions
+### ESP-IDF - from 4.4 to 5.0
+[ESP-IDF » Migration Guides » Migration from 4.4 to 5.0 » Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/migration-guides/release-5.x/5.0/build-system.html)  
+
+### FreeRTOS - from FreeRTOS V7.x.x to V8.x.x
+[New FreeRTOS Defined typedefs Names](https://freertos.org/Documentation/04-Roadmap-and-release-note/02-Release-notes/01-FreeRTOS-V8#new-freertos-defined-typedefs-names)
+
+### CMakeLists.txt related
+[C++ multiple definition linker issue with ESP-IDF](https://stackoverflow.com/questions/77633054/c-multiple-definition-linker-issue-with-esp-idf)
+
+### Compiler error when adding code into 'components'.
+[fatal error: driver/i2c.h: No such file or directory | #include <driver/i2c.h>](https://esp32.com/viewtopic.php?t=29660)
