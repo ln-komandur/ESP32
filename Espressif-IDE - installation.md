@@ -165,5 +165,10 @@ This approach ***assumes the user's home to be the location*** of the Espressif_
 `ls -l /usr/local/bin/eclipse-ide # Remove the symbolic link to the Eclipse IDE desktop file if Eclipse needs to be removed`
 
 
+## References
+
+### Eclipse with GitHub
+[Tutorial on how to use Eclipse with GitHub](https://github.com/maxkratz/How-to-Eclipse-with-Github)
+
 
 
