@@ -62,11 +62,47 @@
 ### ESP-IDF - from 4.4 to 5.0
 [ESP-IDF » Migration Guides » Migration from 4.4 to 5.0 » Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/migration-guides/release-5.x/5.0/build-system.html)  
 
+Add `#include "esp_timer.h"` wherever needed
+
+Change `gpio_pad_select_gpio` to `esp_rom_gpio_pad_select_gpio`
+
+#### CMakeLists.txt related
+[C++ multiple definition linker issue with ESP-IDF](https://stackoverflow.com/questions/77633054/c-multiple-definition-linker-issue-with-esp-idf)
+
+Edit the `CMakeLists.txt` inside the `main` folder to address the following build / compilation errors
+```
+multiple definition of `err';
+multiple definition of `blinkDuration';
+multiple definition of `keyQueue'; 
+```
+
+```
+idf_component_register(
+	SRCS 
+		"i2c_daisy_chain_main.c" 
+		"i2c_port.c" 
+		"i2c_LCD.c" 
+		"PCF8574.c" 
+		"i2c-matrix-keypad.c"
+	INCLUDE_DIRS "."
+	REQUIRES esp_timer esp_driver_i2c 
+)
+```
+
 ### FreeRTOS - from FreeRTOS V7.x.x to V8.x.x
 [New FreeRTOS Defined typedefs Names](https://freertos.org/Documentation/04-Roadmap-and-release-note/02-Release-notes/01-FreeRTOS-V8#new-freertos-defined-typedefs-names)
 
-### CMakeLists.txt related
-[C++ multiple definition linker issue with ESP-IDF](https://stackoverflow.com/questions/77633054/c-multiple-definition-linker-issue-with-esp-idf)
+Add `#include "stdint.h"` to process `uint8_t` wherever needed
+
+Change `xQueueHandle` to `QueueHandle_t`
+
+Change `portTickType` to `TickType_t`
+
+Change `portTICK_RATE_MS` to `portTICK_PERIOD_MS`
+
+
+
+
 
 ### Compiler error when adding code into 'components'.
 [fatal error: driver/i2c.h: No such file or directory | #include <driver/i2c.h>](https://esp32.com/viewtopic.php?t=29660)
