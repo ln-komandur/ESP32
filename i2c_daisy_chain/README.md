@@ -8,19 +8,23 @@
   
 ![Zip file to import](zip%20file%20to%20import.png)
 
-2.  Create a new "Espressif IDF Project" in Eclipse
+2.  Create a new "Espressif IDF Project" in Eclipse and name it "i2c-daisy-chain"
 
 ![New Imported Project](New%20Imported%20Project.png)
 
-3.  Import the contents of zip file into this project
+3.  Click "File -> Import" and open the "Import Wizard"
+
+![Import Wizard](Import%20Wizard.png)
+
+4.  Import the contents of zip file into this project
 
 ![Import Archive to Project](Import%20Archive%20to%20Project.png)
 
-4.  Agree to overwrite CMakeLists.txt and all contents by clicking **Yes To All**
+5.  Agree to overwrite CMakeLists.txt and all contents by clicking **Yes To All**
 
 ![Overwrite CMakeLists_txt](Overwrite%20CMakeLists_txt.png)
 
-5.  Build the new project
+6.  Build the new project
 
 ![Build Project](Build%20Project.png)
 
