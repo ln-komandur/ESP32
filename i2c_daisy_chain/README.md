@@ -28,6 +28,11 @@
 
 ![Build Project](Build%20Project.png)
 
+6.1 Build Successful
+
+![Successful Build](Successful%20Build.png)
+
+
 7. Flash the binaries to the ESP32 chip
 
 7.1 Configure Serial port
