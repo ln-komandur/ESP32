@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include "esp_log.h"
 #include "driver/i2c.h"
+#include "portmacro.h"
 
 // I2C Clock Speed - standard mode: 100 kbit/s, full speed: 400 kbit/s,... per https://www.i2c-bus.org/speed/
 #define MSTR_CLK_SPD		100000 //  400KHz solve'D' https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters
@@ -46,7 +47,7 @@ void scan_for_i2c_devices(void)
 		i2c_master_start(cmd);
 		i2c_master_write_byte(cmd, (i << 1) | I2C_MASTER_WRITE, 1);
 		i2c_master_stop(cmd);
-		ret = i2c_master_cmd_begin(I2C_NUM_0, cmd, 100 / portTICK_RATE_MS);
+		ret = i2c_master_cmd_begin(I2C_NUM_0, cmd, 100 / portTICK_PERIOD_MS);
 		i2c_cmd_link_delete(cmd);
 
 
