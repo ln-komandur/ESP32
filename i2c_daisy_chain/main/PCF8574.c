@@ -18,12 +18,9 @@
 
 static const char *TAG = "PCF8574";
 
-esp_err_t err;
-
 uint8_t aByte;
 
 int64_t lastBlink;
-long blinkDuration; // in microseconds
 
 uint8_t read_byte_from_pins()
 {
@@ -32,7 +29,7 @@ uint8_t read_byte_from_pins()
 //  Reading from read_from_PCF8574_pins
 	uint8_t rx_data[1];
 
-	i2c_master_read_from_device(I2C_NUM_0, PCF8574_SLAVE_ADDR, rx_data, 1, TIMEOUT_MS/portTICK_RATE_MS);
+	i2c_master_read_from_device(I2C_NUM_0, PCF8574_SLAVE_ADDR, rx_data, 1, TIMEOUT_MS/portTICK_PERIOD_MS);
 	ESP_LOG_BUFFER_HEX(TAG, rx_data, 1);
 
 	ESP_LOGI(TAG, "read_byte_from_pins");
