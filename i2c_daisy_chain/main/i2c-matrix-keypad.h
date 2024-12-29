@@ -2,6 +2,8 @@
 
 #include "driver/i2c.h"
 
-xQueueHandle keyQueue; // used for storing what is read from PCF8574 keypad
+extern esp_err_t err;
+
+extern QueueHandle_t keyQueue; // used for storing what is read from PCF8574 keypad
 
 void init_keypad(); // this will initialize data pins as well as interrupt pin
