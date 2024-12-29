@@ -16,6 +16,8 @@ static const char *TAG = "i2c-daisy-chain-example";
 
 long blinkDuration = 500000; // 500000 is in microseconds for 0.5 seconds
 
+QueueHandle_t keyQueue;
+
 void app_main(void)
 {
 
