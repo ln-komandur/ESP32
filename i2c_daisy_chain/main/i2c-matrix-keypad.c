@@ -24,9 +24,6 @@
 #define PCF8574_SLAVE_KPD_ADDRESS 0x20 // No jumper set for keypad on PCF8574 expander
 
 #define TIMEOUT_MS		1000
-// #define DELAY_MS		1000
-
-esp_err_t err;
 
 static const char *TAG = "Matrix Keypad";
 
@@ -42,7 +39,7 @@ static bool isKeyBeingRead = false;
 
 // the below are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
 int state = 0;
-xQueueHandle interruptQueue;
+QueueHandle_t interruptQueue;
 
 
 /* Inside the interrupt service routine we will call the xQueueSendFromISR() function.
@@ -67,7 +64,7 @@ uint8_t get_keypad_pins() {
 	//  Reading from read_from_PCF8574_pins
 	uint8_t rx_data[1];
 
-	i2c_master_read_from_device(I2C_NUM_0, PCF8574_SLAVE_KPD_ADDRESS, rx_data, 5, TIMEOUT_MS/portTICK_RATE_MS);
+	i2c_master_read_from_device(I2C_NUM_0, PCF8574_SLAVE_KPD_ADDRESS, rx_data, 5, TIMEOUT_MS/portTICK_PERIOD_MS);
 
 	//ESP_LOGI(TAG, "get_keypad_pins");
 	//ESP_LOG_BUFFER_HEX(TAG, rx_data, 1);
@@ -129,7 +126,7 @@ void find_key(){
 		case 1: 	// bitSetOnRow = 0x01: 00000001. byteOfRows = 00001110 = 14 = 0x0e
 			keyPressed = keys[col-1][3];break;
 	}
-	xQueueSend(keyQueue, &keyPressed, ( portTickType ) 0); // after finding the key, put it in the queue
+	xQueueSend(keyQueue, &keyPressed, ( TickType_t ) 0); // after finding the key, put it in the queue
 
 	// ESP_LOGI(TAG, "set_keypad_pins(0xf0)");
 	set_keypad_pins(0xf0); // write 11110000 and re-initialize the keypad as both the column and the row are found by now
@@ -203,7 +200,7 @@ void init_keypad()
 	 *
 	 */
 	// We configure the INPUT_PIN as a GPIO and then set its direction as an input.
-	gpio_pad_select_gpio(INPUT_PIN);
+	esp_rom_gpio_pad_select_gpio(INPUT_PIN);
 	gpio_set_direction(INPUT_PIN, GPIO_MODE_INPUT);
 
 
