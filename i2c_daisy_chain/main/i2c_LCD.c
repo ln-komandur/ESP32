@@ -30,7 +30,7 @@ esp_err_t err;
 
 static const char *TAG = "LCD";
 
-xQueueHandle characterQueue;
+QueueHandle_t characterQueue;
 
 
 void lcd_send_cmd (char cmd)
@@ -165,7 +165,7 @@ void LCD_Receiver_Task(void *params)
 	{
 		char keyPressed = 0;
 
-		xQueueReceive(characterQueue, &keyPressed, ( portTickType ) 0); // put the key found in the queue
+		xQueueReceive(characterQueue, &keyPressed, ( TickType_t ) 0); // put the key found in the queue
 		if (keyPressed != 0)
 		{
 			char buffer[16];
@@ -178,7 +178,7 @@ void LCD_Receiver_Task(void *params)
 }
 
 
-void attach_queue_to_LCD(xQueueHandle keyQueue)
+void attach_queue_to_LCD(QueueHandle_t keyQueue)
 {
 	xTaskCreate(LCD_Receiver_Task, "LCD_Receiver_Task", 2048, NULL, 1, NULL);
 	characterQueue = keyQueue; // this queue holds the keys pressed. Its size as 32, is the total number of characters on a 1602 LCD display
