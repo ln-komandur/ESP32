@@ -31,19 +31,25 @@
 7. Flash the binaries to the ESP32 chip
 
 7.1 Configure Serial port
+
 If you clicked `Launch in Run mode` without configuring the serial port, you will get a `Serial port not found` error below
+
 ![Serial port not found](Serial%20port%20not%20found.png)
 
 7.2 Select ESP Target
+
 ![Select ESP Target](ESP%20Target.png)
 
 7.3 Select serial port
+
 ![Select serial port](Select%20serial%20port.png)
 
 7.4 Setup the ESP Target
+
 ![Setup the ESP Target](Setup%20the%20ESP%20Target.png)
 
 7.5 Flash the binaries to the ESP32 chip
+
 ![Flash Completed](Flash%20Completed.png)
 
 
