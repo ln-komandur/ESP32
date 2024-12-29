@@ -1,4 +1,4 @@
-
+#include "stdint.h"
 
 void lcd_init (void);   // initialize lcd
 
@@ -16,6 +16,4 @@ void write_string_on_LCD(int lineNo, int colNo, char *str);
 
 void write_hex_on_LCD(int lineNo, int colNo, uint8_t hex);
 
-void attach_queue_to_LCD(xQueueHandle keyQueue);
-
-
+void attach_queue_to_LCD(QueueHandle_t keyQueue);
