@@ -1,11 +1,17 @@
 # Steps to import source code into Espressif-IDE as "Espressif IDF Project"
 
-1.  Download the contents of the "i2c_daisy_chain" folder from github as a zip file. The parent level should have __this__ "ReadMe.md" file, a "CMakeLists.txt". The "main" folder with 11 files (.c , .h and others) should be a sub-folder under the parent fine.
-	- __Note :__ You have to download a bigger zip file of the repo and then remove unnecessary files from it to create this zip file.
-
+1.  Download the contents of the `i2c_daisy_chain` folder from github as a `zip` file. __Note :__ A bigger `zip` file of the repo should be downloaded at the 'repo level' and then unnecessary files removed from it, and the remaining  files moved up to create this `zip` file. Its contents should be 
+    - __this__ `ReadMe.md` file, a `CMakeLists.txt` and a `main` folder, many `.png` photos and other `.md` files
+    - The `main` folder with
+    	- 4 `.h` files
+    	- 5 `.c` files
+     	- 1 `CMakeLists.txt` file - this is edited for this project
+      	- 1 `component.mk file` (with only commented contents. i.e. no real use) - optional
+      	- 1 `Kconfig.projbuild` file
+    - There is no need to have a `Makefile` anywhere
 ![Zip file to import](zip%20file%20to%20import.png)
 
-2.  Create a new "Espressif IDF Project" in Eclipse and name it "i2c-daisy-chain"
+2.  Create a new `Espressif IDF Project` in Eclipse and name it `i2c-daisy-chain` with the target as `esp32`
 
 ![New Imported Project](New%20Imported%20Project.png)
 
