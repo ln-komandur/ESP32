@@ -1,4 +1,7 @@
-# Why these instructions
+# Espressif-IDE - installation
+
+
+## Why these instructions
 
 The [ESP-IDF Eclipse Plugin (Espressif-IDE) installation](https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md#Installation) page provides anywhere between **minimal to no instructions** on installing **Espressif-IDE instead of the Eclipse CDT + IEP Plugin update approach** and especially for *Linux*. All screenshots they provide are for the *Eclipse CDT + IEP Plugin update approach* and that too with some dated ones on *Help > Install New Software* for Mac. The [Espressif-IDE](https://github.com/espressif/idf-eclipse-plugin/blob/master/docs_readme/Espressif-IDE.md) page provides no more than a [Download](https://github.com/espressif/idf-eclipse-plugin/blob/master/docs_readme/Espressif-IDE.md#downloads) link to the latest [Espressif-IDE-linux.gtk.x86_64](https://dl.espressif.com/dl/idf-eclipse-plugin/ide/Espressif-IDE-linux.gtk.x86_64/latest) release or for *Installing Espressif-IDE by Windows Offline Installer*
 
@@ -59,7 +62,8 @@ $ uname -r
 ## Extract the tar gunzip file in the home directory`
 `tar xvf ~/Downloads/Espressif-IDE-*.tar.gz -C ~ # Extract the tar gunzip file in the home directory`
 
-**Note:** `Espressif-IDE-3.0.0-linux.gtk.x86_64.tar.gz` was used for this installation
+**Note:** `Espressif-IDE-3.0.0-linux.gtk.x86_64.tar.gz` was used for this installation, and later upgraded to version 3.1.0 from within the IDE
+
 
 ## Create a symbolic link
 `sudo ln -s ~/Espressif-IDE/espressif-ide /usr/local/bin/ # Create a symbolic link`
@@ -93,6 +97,8 @@ Categories = Education;' | sudo tee /usr/share/applications/Espressif-IDE.deskto
 
 ![Click Help -> Check for updates](1-Check%20for%20updates.png "Click Help -> Check for updates")
 
+Here is from where the IDE was upgraded to version 3.1.0
+
 ### 3-Restart to apply updates
 
 ![Restart to apply updates. And close the Welcome tab](2-Restart%20to%20apply%20updates.png "Restart to apply updates. And close the Welcome tab")
@@ -109,6 +115,8 @@ Categories = Education;' | sudo tee /usr/share/applications/Espressif-IDE.deskto
 View the progress of the download should in the Progress tab
 
 ![ESP-IDF Download progressing](4a-Downloading.png "ESP-IDF Download progressing")
+
+`esp-idf v5.3.1` was used for this installation and later upgraded to `esp-idf v5.3.2` from within the IDE
 
 
 ### Handle rule errors
