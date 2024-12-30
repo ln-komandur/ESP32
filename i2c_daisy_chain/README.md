@@ -10,6 +10,7 @@ This project __Daisy Chains__ the following devices with __PCF8574 / PCF8574T I/
 4. Uses TAGs and __Queues__
 	1. Uses a TAG as "Matrix Keypad" to capture key strokes on the matric keypad and send them to the LCD
  	2. Uses a TAG as "PCF8574" to push the 8-bit string to blick the LED lights every 0.5 second
+  	3. Handles __Tasks__
 5. Assigns addresses for each i2c devices and reads from / writes to them (see each assigned address as below)
 6. Blinks 8 LEDs of different colors
 	1. Does a shift left of the bit pattern "0x55" whose binary is "01010101" continously with a delay of 1/2 a second and refreshes it upon "00000000"
@@ -34,66 +35,18 @@ This project __Daisy Chains__ the following devices with __PCF8574 / PCF8574T I/
    - https://www.instructables.com/HD44780-LCD-to-I2C-adapter-board-for-the-Bus-Pirat/ - Pin connection order in the notation LCD connection (to PCF8574 pin) is D7(P7), D6(P6), D5(P5), D4(P4), VEE(P3), EN(P2), RW (P1), RS (P0)
    - https://www.elprocus.com/lcd-16x2-pin-configuration-and-its-working/ - The VEE pin regulates the display's contrast, via a changeable POT that can supply 0 to 5V
    - https://www.sparkfun.com/datasheets/LCD/HD44780.pdf - command set of the LCD 1602A which is based on the Hitachi HD44780 LCD controller. The initialisation pattern is shown in page 46 of the datasheet
-4. i2c Clock speed - https://www.i2c-bus.org/speed/
-5. i2c LCD Displaying Weird Characters - 400KHz SolveD - https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters
-6. Scanning for i2c devices - https://gist.github.com/herzig/8d4c13d8b81a77ac86481c6c1306bb12
-7. GPIO interrupts - https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
+3. i2c Clock speed - https://www.i2c-bus.org/speed/
+4. i2c LCD Displaying Weird Characters - 400KHz SolveD - https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters
+5. Scanning for i2c devices - https://gist.github.com/herzig/8d4c13d8b81a77ac86481c6c1306bb12
+6. GPIO interrupts - https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
+7. Using FreeRTOS tasks - https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32
+8. Enabling the pullup resistor and disabling the pulldown resistor on the input pin
+   - https://www.best-microcontroller-projects.com/pcf8574.html says enable pull-up
+   - https://www.mischianti.org/2019/01/02/pcf8574-i2c-digital-i-o-expander-fast-easy-usage/
+9. Triggering the interrupt on the _falling edge_ (HIGH to LOW)
+   - https://www.best-microcontroller-projects.com/pcf8574.html
+     
 
-
-## Steps to import into Eclipse "Espressif IDF Project"
-
-1.  Download the contents of the "i2c_daisy_chain" folder from github as a zip file. The parent level should have __this__ "ReadMe.md" file, a "CMakeLists.txt". The "main" folder with 11 files (.c , .h and others) should be a sub-folder under the parent fine.
-	- __Note :__ You have to download a bigger zip file of the repo and then remove unnecessary files from it to create this zip file.
-  
-![Zip file to import](zip%20file%20to%20import.png)
-
-2.  Create a new "Espressif IDF Project" in Eclipse and name it "i2c-daisy-chain"
-
-![New Imported Project](New%20Imported%20Project.png)
-
-3.  Click "File -> Import" and open the "Import Wizard"
-
-![Import Wizard](Import%20Wizard.png)
-
-4.  Import the contents of zip file into this project
-
-![Import Archive to Project](Import%20Archive%20to%20Project.png)
-
-5.  Agree to overwrite CMakeLists.txt and all contents by clicking **Yes To All**
-
-![Overwrite CMakeLists_txt](Overwrite%20CMakeLists_txt.png)
-
-6.  Build the new project
-
-![Build Project](Build%20Project.png)
-
-_6.1 Build Successful_
-
-![Successful Build](Successful%20Build.png)
-
-7.  Flash the binaries to the ESP32 chip
-
-_7.1 Configure Serial port_
-
-If you clicked `Launch in Run mode` without configuring the serial port, you will get a `Serial port not found` error below
-
-![Serial port not found](Serial%20port%20not%20found.png)
-
-_7.2 Select ESP Target_
-
-![Select ESP Target](ESP%20Target.png)
-
-_7.3 Select serial port_
-
-![Select serial port](Select%20serial%20port.png)
-
-_7.4 Setup the ESP Target_
-
-![Setup the ESP Target](Setup%20the%20ESP%20Target.png)
-
-_7.5 Flash the binaries to the ESP32 chip_
-
-![Flash Completed](Flash%20Completed.png)
 
 
 ## Fritzing circuit image
@@ -121,65 +74,8 @@ _7.5 Flash the binaries to the ESP32 chip_
 ### 5. Working LCD1602 and string of LEDs
 ![Working LCD1602 and string of LEDs](20221106_1845-5.jpg)
 
-## References to upgrading versions
-### ESP-IDF - from 4.4 to 5.0
-[ESP-IDF » Migration Guides » Migration from 4.4 to 5.0 » Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/migration-guides/release-5.x/5.0/build-system.html)  - This will work for esp-idf v5.3.1 or v5.3.2 as targets
+## More
 
-Add `#include "esp_timer.h"` wherever needed
+![Importing to Espressif-IDE as Espressif IDF Project](Importing%20to%20Espressif-IDE%20as%20Espressif%20IDF%20Project.md)
 
-Change `gpio_pad_select_gpio` to `esp_rom_gpio_pad_select_gpio`
-
-#### CMakeLists.txt related
-[C++ multiple definition linker issue with ESP-IDF](https://stackoverflow.com/questions/77633054/c-multiple-definition-linker-issue-with-esp-idf)
-
-Edit the `CMakeLists.txt` inside the `main` folder as below
-
-```
-# See the build system documentation in IDF programming guide
-# for more information about component CMakeLists.txt files.
-
-idf_component_register(
-    SRCS 
-    	# list the source files of this component
-       	i2c_daisy_chain_main.c 
-	i2c_port.c 
-	i2c_LCD.c 
-	PCF8574.c
-	i2c-matrix-keypad.c
-    INCLUDE_DIRS   .    # optional, add here public include directories
-    PRIV_INCLUDE_DIRS   # optional, add here private include directories
-    REQUIRES            # optional, list the public requirements (component names)
-    PRIV_REQUIRES       # optional, list the private requirements
-)
-```
-
-#### Header files `*.h`
-
-Declare the variables as `extern` in the various / respective header files to address the following build / compilation errors
-```
-multiple definition of `err';
-multiple definition of `blinkDuration';
-multiple definition of `keyQueue'; 
-```
-
-`extern esp_err_t err;`
-
-`extern long blinkDuration; // in microseconds`
-
-`extern QueueHandle_t keyQueue; // used for storing what is read from PCF8574 keypad`
-
-
-### FreeRTOS - from FreeRTOS V7.x.x to V8.x.x
-[New FreeRTOS Defined typedefs Names](https://freertos.org/Documentation/04-Roadmap-and-release-note/02-Release-notes/01-FreeRTOS-V8#new-freertos-defined-typedefs-names)
-
-Add `#include "stdint.h"` to process `uint8_t` wherever needed
-
-Change `xQueueHandle` to `QueueHandle_t`
-
-Change `portTickType` to `TickType_t`
-
-Change `portTICK_RATE_MS` to `portTICK_PERIOD_MS`
-
-
-### Compiler error when adding code into 'components'.
-[fatal error: driver/i2c.h: No such file or directory | #include <driver/i2c.h>](https://esp32.com/viewtopic.php?t=29660) - This was not required to be implemented in the `CMakeLists.txt`. Use this link only as a reference
+![Upgrading FreeRTOS and esp-idf](Upgrading%20FreeRTOS%20and%20esp-idf.md)
