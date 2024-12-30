@@ -67,35 +67,33 @@ This project __Daisy Chains__ the following devices with __PCF8574 / PCF8574T I/
 
 ![Build Project](Build%20Project.png)
 
-6.1 Build Successful
+_6.1 Build Successful_
 
 ![Successful Build](Successful%20Build.png)
 
+7.  Flash the binaries to the ESP32 chip
 
-7. Flash the binaries to the ESP32 chip
-
-7.1 Configure Serial port
+_7.1 Configure Serial port_
 
 If you clicked `Launch in Run mode` without configuring the serial port, you will get a `Serial port not found` error below
 
 ![Serial port not found](Serial%20port%20not%20found.png)
 
-7.2 Select ESP Target
+_7.2 Select ESP Target_
 
 ![Select ESP Target](ESP%20Target.png)
 
-7.3 Select serial port
+_7.3 Select serial port_
 
 ![Select serial port](Select%20serial%20port.png)
 
-7.4 Setup the ESP Target
+_7.4 Setup the ESP Target_
 
 ![Setup the ESP Target](Setup%20the%20ESP%20Target.png)
 
-7.5 Flash the binaries to the ESP32 chip
+_7.5 Flash the binaries to the ESP32 chip_
 
 ![Flash Completed](Flash%20Completed.png)
-
 
 
 ## Fritzing circuit image
@@ -144,10 +142,10 @@ idf_component_register(
     SRCS 
     	# list the source files of this component
        	i2c_daisy_chain_main.c 
-		i2c_port.c 
-		i2c_LCD.c 
-		PCF8574.c
-		i2c-matrix-keypad.c
+	i2c_port.c 
+	i2c_LCD.c 
+	PCF8574.c
+	i2c-matrix-keypad.c
     INCLUDE_DIRS   .    # optional, add here public include directories
     PRIV_INCLUDE_DIRS   # optional, add here private include directories
     REQUIRES            # optional, list the public requirements (component names)
