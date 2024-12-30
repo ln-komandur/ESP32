@@ -3,6 +3,8 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := i2c-daisy-chain
+# Commented out the only 2 valid lines below as they are obsolete.
 
-include $(IDF_PATH)/make/project.mk
+# PROJECT_NAME := i2c-daisy-chain
+
+# include $(IDF_PATH)/make/project.mk
