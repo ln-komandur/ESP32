@@ -17,9 +17,10 @@ This project __Daisy Chains__ the following devices with __PCF8574 / PCF8574T I/
  	2. At PCF8574_SLAVE_ADDR = __0x21__ _// A0 jumper to ground_
 7. Reads from a 4x4 membrane matrix keypad
 	1. At PCF8574_SLAVE_KPD_ADDRESS = __0x20__ _// No jumper set for keypad on PCF8574 expander_
- 	2. __uses interrupts__ to recognize key strokes
- 	3. uses some rudimentary logic to __debounce key strokes__
-  	4. reads which key is pressed by masking the keypad's rows and columns 
+ 	2. __uses interrupts__ to begin recognizing the key that is pressed
+  	3. Enables / disables __internal pullup / pulldown resistors__ available in the ESP32 for __certain GPIO pins__, and ties those pins to the interrupt pin of the PCF8574 in _the code_
+ 	4. uses some rudimentary logic to handle __debouncing key strokes__ by deciphering the key pressed as soon as and only after an interrupt has occured. After the key has been deciphered, the next interrupt is processed.
+  	5. reads which key is pressed by masking the keypad's rows and columns 
 8. Writes to an LCD1602
 	1. At LCD Address = __0x27__ _// The same as 0x4E>>1_
 	2. Writes a standard text on the first line
@@ -40,9 +41,10 @@ This project __Daisy Chains__ the following devices with __PCF8574 / PCF8574T I/
 5. Scanning for i2c devices - https://gist.github.com/herzig/8d4c13d8b81a77ac86481c6c1306bb12
 6. GPIO interrupts - https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
 7. Using FreeRTOS tasks - https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32
-8. Enabling the pullup resistor and disabling the pulldown resistor on the input pin
-   - https://www.best-microcontroller-projects.com/pcf8574.html says enable pull-up
-   - https://www.mischianti.org/2019/01/02/pcf8574-i2c-digital-i-o-expander-fast-easy-usage/
+8. Enabling the _internal_ __pullup resistor__ and disabling the  _internal_ __pulldown resistor__ on the input pin. The interrupt pin 'INT' from PCF8574 is connected to GPIO15 of ESP32. ‘INPUT_PIN’ is used to read the digital input from pin number 15 in _the code_.
+   - https://www.mischianti.org/2019/01/02/pcf8574-i2c-digital-i-o-expander-fast-easy-usage/ - _The interrupt open-drain output pin is active LOW.  It is normally pulled HIGH using a pull-up resistor and is driven low by the PCF8574 when any of the inputs change state. This signals the MCU to poll the part to see what is going on. If connecting this pin, enable the internal pull-up resistor on the MCU or add an external pull-up of 10K or so._
+   - https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/ - _As we have already configured a pulldown resistor on this GPIO, there is __no need to add a physical resistor__ ourselves._
+   - https://www.best-microcontroller-projects.com/pcf8574.html - _Warning: There are no internal pullups you have to supply your own resistors._
 9. Triggering the interrupt on the _falling edge_ (HIGH to LOW)
    - https://www.best-microcontroller-projects.com/pcf8574.html
 10. How to connect an LCD to PCF8574
