@@ -46,7 +46,7 @@ This project __Daisy Chains__ the following devices with __PCF8574 / PCF8574T I/
 9. Triggering the interrupt on the _falling edge_ (HIGH to LOW)
    - https://www.best-microcontroller-projects.com/pcf8574.html
 10. How to connect an LCD to PCF8574
-   - https://controllerstech.com/i2c-in-esp32-esp-idf-lcd-1602/
+    - https://controllerstech.com/i2c-in-esp32-esp-idf-lcd-1602/
      
 
 
