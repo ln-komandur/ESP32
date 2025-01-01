@@ -62,14 +62,21 @@ This project __Daisy Chains__ the following devices with __PCF8574 / PCF8574T I/
 __Note:__ In the above circuit, on GPIO15, an additional external pullup resistor is added inspite of enabling the internal pullup resistor via code
 
 
-## Photos of circuit without 4x4 membrane matrix keypad
+## Actual assembly with an LCD1602, a passive 4x4 matrix keypad and a string of 8 LEDs daisy-chained with 3 PCF8574's
 
-### 1. ESP32 DevKitC-v4 connected to PCF8574 and HW-131 Power Supply Module 
+### 1. Complete working circuit with ESP32 DevKitC-v4 connected to PCF8574 and HW-131 Power Supply Module
 ![ESP32 DevKitC-v4 connected to PCF8574 and HW-131 Power Supply Module](20221106_1845-1.jpg)
 
+__Note:__ 
+1. Jumpers set for different addresses on 2 PCF8574 modules
+2. The purple wire on the matrix keypad ribbon is a dummy
 
-### 2. LCD1602 daisy-chained via i2c to PCF8574
+
+### 2. 3 PCF8574's daisy chained and connected to the i2c bus
 ![LCD1602 daisy-chained via i2c to PCF8574](20221106_1845-2.jpg)
+
+__Note:__ 
+1. One PCF8574 is built into the LCD1602 at its back
 
 
 ### 3. 8-LEDs on common GND connected to VCC via separate 10k resistors
@@ -78,10 +85,14 @@ __Note:__ In the above circuit, on GPIO15, an additional external pullup resisto
 
 ### 4. Closer look of resistors and VCC jumper wires from PCF8574 pinouts
 ![Closer look of resistors and VCC jumper wires from PCF8574 pinouts](20221106_1845-4.jpg)
+__Note:__ 
+1. One side of the HW-131 power supply module has jumpers set for 5v and the other for 3.3v. However the -ve (GND) is interchangeable.
 
-
-### 5. Working LCD1602 and string of LEDs
+### 5. Closer look of an additional external pullup resistors on the GPIO15 pin used for the PCF8574 interrupt
 ![Working LCD1602 and string of LEDs](20221106_1845-5.jpg)
+
+__Note:__ 
+1. Internal pullup is enabled in the code as well
 
 ## More
 
