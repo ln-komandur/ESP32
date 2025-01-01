@@ -1,16 +1,14 @@
 /* i2c - Daisy chain example
  * LCD	1602 display, 4x4 Matrix Keypad and 8 LED lights daisy-chained over I2C using PCF8574 GPIO expander
+ * Refer - https://embeddedexplorer.com/esp32-i2c-tutorial/
  */
+
 
 #include <i2c_port.h>
 #include <i2c_LCD.h>
 #include <PCF8574.h>
 #include <i2c-matrix-keypad.h>
-#include <stdio.h>
-#include "esp_log.h"
-#include "driver/i2c.h"
-
-#define DELAY_MS		1000
+#include "esp_log.h" 
 
 static const char *TAG = "i2c-daisy-chain-example";
 
