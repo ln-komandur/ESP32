@@ -1,13 +1,10 @@
 /*
  * Manages (methods to initialise, check) i2c ports for ESP32
+ * Reference - https://embeddedexplorer.com/esp32-i2c-tutorial/ - The code here is originally from https://gist.github.com/herzig/8d4c13d8b81a77ac86481c6c1306bb12
  */
 
 
-#include "i2c_port.h"
-#include <stdio.h>
-#include "esp_log.h"
-#include "driver/i2c.h"
-#include "portmacro.h"
+#include <i2c_port.h>
 
 // I2C Clock Speed - standard mode: 100 kbit/s, full speed: 400 kbit/s,... per https://www.i2c-bus.org/speed/
 #define MSTR_CLK_SPD		100000 //  400KHz solve'D' https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters
@@ -29,7 +26,7 @@ esp_err_t i2c_master_init(void)
 		.master.clk_speed = MSTR_CLK_SPD,
 	};
 
-	i2c_param_config(i2c_master_port, &conf);
+	i2c_param_config(i2c_master_port, &conf); // configure the driver by calling i2c_param_config() function https://embeddedexplorer.com/esp32-i2c-tutorial/#Initialisation
 
 	return i2c_driver_install(i2c_master_port, conf.mode, 0, 0, 0);
 }
