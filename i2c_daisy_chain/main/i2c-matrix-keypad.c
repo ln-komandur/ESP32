@@ -180,8 +180,7 @@ void Key_Ctrl_Task(void *params) // this function will be called when interrupt 
 			ESP_LOGI(TAG, "Key NOT Pressed on PCF8574 keypad ");
 		}
 	}
-	//vTaskDelete(NULL); // added per https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32
-
+	vTaskDelete(NULL); // added per https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32 at the end of the function to gracefully end the task:
 }
 
 
