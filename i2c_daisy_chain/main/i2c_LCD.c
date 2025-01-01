@@ -164,7 +164,7 @@ void LCD_Receiver_Task(void *params)
 		}
 
 	}
-
+	vTaskDelete(NULL); // added per https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32 at the end of the function to gracefully end the task:
 }
 
 
@@ -173,4 +173,3 @@ void attach_queue_to_LCD(QueueHandle_t keyQueue)
 	xTaskCreate(LCD_Receiver_Task, "LCD_Receiver_Task", 2048, NULL, 1, NULL);
 	characterQueue = keyQueue; // this queue holds the keys pressed. Its size as 32, is the total number of characters on a 1602 LCD display
 }
-
