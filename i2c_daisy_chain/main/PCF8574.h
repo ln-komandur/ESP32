@@ -1,5 +1,7 @@
-#include <stdio.h>
-#include "esp_timer.h"
+#include <esp_err.h>
+#include <esp_log.h>
+#include <driver/i2c.h>
+#include <esp_timer.h>
 
 uint8_t read_byte_from_pins(void); // read byte from pins
 
