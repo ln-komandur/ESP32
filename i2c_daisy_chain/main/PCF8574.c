@@ -82,6 +82,7 @@ void blink_LEDs_Task(void *params)
 			lastBlink = callTime;
 		}
 	}
+	vTaskDelete(NULL); // added per https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32 at the end of the function to gracefully end the task:
 }
 
 
