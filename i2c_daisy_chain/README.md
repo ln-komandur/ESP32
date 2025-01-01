@@ -52,14 +52,14 @@ This project __Daisy Chains__ the following devices with __PCF8574 / PCF8574T I/
 13. [How to connect an LCD to PCF8574](https://controllerstech.com/i2c-in-esp32-esp-idf-lcd-1602/)
 14. FreeRTOS.org's most basic [__example__ of real-time scheduling is a real-time system that incorporates a keypad, LCD and control algorithm](https://freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals#example)
 15. [Using I2C with a 4×4 Matrix Keypad](https://www.makeriot2020.com/index.php/2020/10/05/using-i2c-with-a-4x4-matrix-keypad/)
-16. [Pull-up and pull-down resistors](https://www.electrosoftcloud.com/en/arduino-pull-up-pull-down-resistors/)
-17. Since the matrix keypad is a passive device (has not power supplied to it and only connects the masking bits applied to the columns and rows), a [button press is detected when it is pulled to low so configure the interrupt to trigger in falling edge](https://community.infineon.com/t5/PSOC-5-3-1/Matrix-keypad-component-interrupt-and-last-row-last-column-key-missing-problem/td-p/353688#.) (GPIO_INTR_NEGEDGE)
-     
-
+16. Since the matrix keypad is a passive device (has not power supplied to it and only connects the masking bits applied to the columns and rows), a [button press is detected when it is pulled to low so configure the interrupt to trigger in falling edge](https://community.infineon.com/t5/PSOC-5-3-1/Matrix-keypad-component-interrupt-and-last-row-last-column-key-missing-problem/td-p/353688#.) (GPIO_INTR_NEGEDGE)
+17. [Pull-up and pull-down resistors](https://www.electrosoftcloud.com/en/arduino-pull-up-pull-down-resistors/)  
 
 
 ## Fritzing circuit image
 ![Three i2c devices on PCF8574_bb](Three%20i2c%20devices%20on%20PCF8574_bb.png)
+
+__Note:__ In the above circuit, on GPIO15, an additional external pullup resistor is added inspite of enabling the internal pullup resistor via code
 
 
 ## Photos of circuit without 4x4 membrane matrix keypad
