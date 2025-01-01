@@ -1,4 +1,8 @@
-#include "stdint.h"
+#include <freertos/FreeRTOS.h>
+#include <esp_log.h>
+#include <driver/i2c.h>
+#include <unistd.h>
+
 
 void lcd_init (void);   // initialize lcd
 
