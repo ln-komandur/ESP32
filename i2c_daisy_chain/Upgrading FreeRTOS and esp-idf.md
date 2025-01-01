@@ -33,7 +33,7 @@ idf_component_register(
 
 ### Header files `*.h`
 
-![Declare the variables in the various / respective header files](https://stackoverflow.com/questions/57759461/multiple-definition-of-variables-esp32) as `extern` to address the following build / compilation errors
+[Declare the variables in the various / respective header files](https://stackoverflow.com/questions/57759461/multiple-definition-of-variables-esp32) as `extern` to address the following build / compilation errors
 ```
 multiple definition of `err';
 multiple definition of `blinkDuration';
