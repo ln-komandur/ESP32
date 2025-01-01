@@ -1,6 +1,9 @@
 // Good reference - https://embeddedexplorer.com/esp32-i2c-tutorial/
 
-#include "driver/i2c.h"
+#include <esp_err.h>
+#include <freertos/FreeRTOS.h>
+#include <esp_log.h>
+#include <driver/i2c.h>
 
 extern esp_err_t err;
 
