@@ -1,16 +1,12 @@
-// Refer - https://embeddedexplorer.com/esp32-i2c-tutorial/
-
-#include <stdio.h>
-#include "i2c-matrix-keypad.h"
-#include "esp_log.h"
-#include "driver/i2c.h"
+/* Refer 
+ * - https://embeddedexplorer.com/esp32-i2c-tutorial/
+ * - https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
+ */
 
 
-// the below are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/queue.h"
-#include "driver/gpio.h"
+#include <i2c-matrix-keypad.h>
+
+
 
 /* The interrupt pin 'INT' from PCF8574 is connected to GPIO15 of ESP32.
  * ‘INPUT_PIN’ is used to read the digital input from pin number 15.
