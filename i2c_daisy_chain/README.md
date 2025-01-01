@@ -48,9 +48,10 @@ This project __Daisy Chains__ the following devices with __PCF8574 / PCF8574T I/
    - [_As we have already configured a pulldown resistor on this GPIO, there is __no need to add a physical resistor__ ourselves._](https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/)
    - [_Warning: There are no internal pullups you have to supply your own resistors._](https://www.best-microcontroller-projects.com/pcf8574.html)
 11. [Triggering the interrupt on the _falling edge_ (HIGH to LOW)](https://www.best-microcontroller-projects.com/pcf8574.html)
-12. [How to connect an LCD to PCF8574](https://controllerstech.com/i2c-in-esp32-esp-idf-lcd-1602/)
-13. FreeRTOS.org's most basic [__example__ of real-time scheduling is a real-time system that incorporates a keypad, LCD and control algorithm](https://freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals#example)
-14. [Using I2C with a 4×4 Matrix Keypad](https://www.makeriot2020.com/index.php/2020/10/05/using-i2c-with-a-4x4-matrix-keypad/)
+12. [To use interrupts, it requires a separate pin to detect the __falling edge__](https://arduino.stackexchange.com/questions/85914/keypad-pin-as-an-interrupt-wiring-or-programming)
+13. [How to connect an LCD to PCF8574](https://controllerstech.com/i2c-in-esp32-esp-idf-lcd-1602/)
+14. FreeRTOS.org's most basic [__example__ of real-time scheduling is a real-time system that incorporates a keypad, LCD and control algorithm](https://freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals#example)
+15. [Using I2C with a 4×4 Matrix Keypad](https://www.makeriot2020.com/index.php/2020/10/05/using-i2c-with-a-4x4-matrix-keypad/)
      
 
 
