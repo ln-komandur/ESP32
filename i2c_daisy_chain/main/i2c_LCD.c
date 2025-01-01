@@ -3,22 +3,12 @@
  * Refer
  * - https://mil.ufl.edu/3744/docs/lcdmanual/commands.html#Sda
  * - https://exploreembedded.com/wiki/Interfacing_LCD_in_4-bit_mode_with_8051
+ * - https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
  *
  */
 
-#include "i2c_port.h"
-#include "i2c_LCD.h"
 
-#include "esp_log.h"
-#include "driver/i2c.h"
-#include "unistd.h"
-
-// the below are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/queue.h"
-// #include "driver/gpio.h"
-
+#include <i2c_LCD.h>
 
 //#define LCD_SLAVE_ADDR 0x4E>>1 // change this according to your device setup
 #define LCD_SLAVE_ADDR 0x27 // This is the same as 0x4E>>1
