@@ -6,14 +6,11 @@
 */
 
 #include <PCF8574.h>
-#include <stdio.h>
-#include "esp_log.h"
-#include "driver/i2c.h"
+
 
 #define PCF8574_SLAVE_ADDR 0x21 // A0 jumper to ground
 
 #define TIMEOUT_MS		1000
-#define DELAY_MS		1000
 
 
 static const char *TAG = "PCF8574";
