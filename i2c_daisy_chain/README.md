@@ -27,28 +27,27 @@ This project __Daisy Chains__ the following devices with __PCF8574 / PCF8574T I/
  	3. Writes the key strokes pressed on the second line
  
 ### References and courtesy credits
-1. Reading from PCF8574 pins / i2c Tutorial - https://embeddedexplorer.com/esp32-i2c-tutorial/
+1. [Reading from PCF8574 pins / i2c Tutorial](https://embeddedexplorer.com/esp32-i2c-tutorial/)
 2. The LCD 1602A is based on the Hitachi HD44780 LCD controller. Refer
    - https://mil.ufl.edu/3744/docs/lcdmanual/commands.html#Sda 
-   - https://exploreembedded.com/wiki/Interfacing_LCD_in_4-bit_mode_with_8051
-   - https://embeddedexpert.io/?p=600 RS=0 is to select command register
-   - https://embeddedexpert.io/?p=655 for RS and EN pin
-   - https://www.instructables.com/HD44780-LCD-to-I2C-adapter-board-for-the-Bus-Pirat/ - Pin connection order in the notation LCD connection (to PCF8574 pin) is D7(P7), D6(P6), D5(P5), D4(P4), VEE(P3), EN(P2), RW (P1), RS (P0)
-   - https://www.elprocus.com/lcd-16x2-pin-configuration-and-its-working/ - The VEE pin regulates the display's contrast, via a changeable POT that can supply 0 to 5V
-   - https://www.sparkfun.com/datasheets/LCD/HD44780.pdf - command set of the LCD 1602A which is based on the Hitachi HD44780 LCD controller. The initialisation pattern is shown in page 46 of the datasheet
-3. i2c Clock speed - https://www.i2c-bus.org/speed/
-4. i2c LCD Displaying Weird Characters - 400KHz SolveD - https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters
-5. Scanning for i2c devices - https://gist.github.com/herzig/8d4c13d8b81a77ac86481c6c1306bb12
-6. GPIO interrupts - https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
-7. Using FreeRTOS tasks - https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32
+   - [Interfacing LCD in 4-bit mode with 8051](https://exploreembedded.com/wiki/Interfacing_LCD_in_4-bit_mode_with_8051)
+   - [RS=0 is to select command register](https://blog.embeddedexpert.io/?p=600)
+   - In order to send data or command, we need to mask the two lines of the LCD which they are [EN line and RS line](https://blog.embeddedexpert.io/?p=655)
+   - [Pin connection order in the notation LCD connection (to PCF8574 pin) is D7(P7), D6(P6), D5(P5), D4(P4), VEE(P3), EN(P2), RW (P1), RS (P0)](https://www.instructables.com/HD44780-LCD-to-I2C-adapter-board-for-the-Bus-Pirat/)
+   - [The VEE pin regulates the display's contrast, via a changeable POT that can supply 0 to 5V](https://www.elprocus.com/lcd-16x2-pin-configuration-and-its-working/)
+   - [Command set of the LCD 1602A which is based on the Hitachi HD44780 LCD controller](https://www.sparkfun.com/datasheets/LCD/HD44780.pdf) - The initialisation pattern is shown in page 46 of the datasheet
+3. [i2c Clock speed](https://www.i2c-bus.org/speed/)
+4. [i2c LCD Displaying Weird Characters - 400KHz SolveD](https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters)
+5. [Scanning for i2c devices](https://gist.github.com/herzig/8d4c13d8b81a77ac86481c6c1306bb12)
+6. [GPIO interrupts](https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/)
+7. [Using FreeRTOS tasks](https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32)
 8. Enabling the _internal_ __pullup resistor__ and disabling the  _internal_ __pulldown resistor__ on the input pin. The interrupt pin 'INT' from PCF8574 is connected to GPIO15 of ESP32. ‘INPUT_PIN’ is used to read the digital input from pin number 15 in _the code_.
-   - https://www.mischianti.org/2019/01/02/pcf8574-i2c-digital-i-o-expander-fast-easy-usage/ - _The interrupt open-drain output pin is active LOW.  It is normally pulled HIGH using a pull-up resistor and is driven low by the PCF8574 when any of the inputs change state. This signals the MCU to poll the part to see what is going on. If connecting this pin, enable the internal pull-up resistor on the MCU or add an external pull-up of 10K or so._
-   - https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/ - _As we have already configured a pulldown resistor on this GPIO, there is __no need to add a physical resistor__ ourselves._
-   - https://www.best-microcontroller-projects.com/pcf8574.html - _Warning: There are no internal pullups you have to supply your own resistors._
-9. Triggering the interrupt on the _falling edge_ (HIGH to LOW)
-   - https://www.best-microcontroller-projects.com/pcf8574.html
-10. How to connect an LCD to PCF8574
-    - https://controllerstech.com/i2c-in-esp32-esp-idf-lcd-1602/
+   - [_The interrupt open-drain output pin is active LOW.  It is normally pulled HIGH using a pull-up resistor and is driven low by the PCF8574 when any of the inputs change state. This signals the MCU to poll the part to see what is going on. If connecting this pin, enable the internal pull-up resistor on the MCU or add an external pull-up of 10K or so._](https://www.mischianti.org/2019/01/02/pcf8574-i2c-digital-i-o-expander-fast-easy-usage/)
+   - [_As we have already configured a pulldown resistor on this GPIO, there is __no need to add a physical resistor__ ourselves._](https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/)
+   - [_Warning: There are no internal pullups you have to supply your own resistors._](https://www.best-microcontroller-projects.com/pcf8574.html)
+9. [Triggering the interrupt on the _falling edge_ (HIGH to LOW)](https://www.best-microcontroller-projects.com/pcf8574.html)
+10. [How to connect an LCD to PCF8574](https://controllerstech.com/i2c-in-esp32-esp-idf-lcd-1602/)
+11. FreeRTOS.org's most basic [__example__ of real-time scheduling is a real-time system that incorporates a keypad, LCD and control algorithm](https://freertos.org/Documentation/01-FreeRTOS-quick-start/01-Beginners-guide/01-RTOS-fundamentals#example)
      
 
 
