@@ -96,6 +96,6 @@ __Note:__
 
 ## More
 
-![Importing to Espressif-IDE as Espressif IDF Project](Importing%20to%20Espressif-IDE%20as%20Espressif%20IDF%20Project.md)
+[Importing to Espressif-IDE as Espressif IDF Project](Importing%20to%20Espressif-IDE%20as%20Espressif%20IDF%20Project.md)
 
-![Upgrading FreeRTOS and esp-idf](Upgrading%20FreeRTOS%20and%20esp-idf.md)
+[Upgrading FreeRTOS and esp-idf](Upgrading%20FreeRTOS%20and%20esp-idf.md)
