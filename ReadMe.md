@@ -6,12 +6,12 @@
 1.  The Espressif-IDE  comes pre-packaged with Eclipse and many essentials for Espressif. Its installation process is very polished (provided you know it) and so is its use. However [Espressif-IDE](https://github.com/espressif/idf-eclipse-plugin/blob/master/docs_readme/Espressif-IDE.md) page
     1.  provides no more than a [Download](https://github.com/espressif/idf-eclipse-plugin/blob/master/docs_readme/Espressif-IDE.md#downloads) link to the latest [Espressif-IDE-linux.gtk.x86_64](https://dl.espressif.com/dl/idf-eclipse-plugin/ide/Espressif-IDE-linux.gtk.x86_64/latest) release
     1.  only helps with *[Installing Espressif-IDE by Windows Offline Installer](https://github.com/espressif/idf-eclipse-plugin/blob/master/docs_readme/Espressif-IDE-Windows-Installer.md)* with screenshots
-1.  The [Eclipse CDT + ESP-IDF Eclipse Plugin (a.k.a. IEP plugin) installation approach](https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md#Installation) is clunky. This page provides
+1.  On the other hand the [Eclipse CDT + ESP-IDF Eclipse Plugin (a.k.a. IEP plugin) installation approach](https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md#Installation) is clunky. This page provides
     1.  anywhere between **minimal to no instructions** on installing **Espressif-IDE** as that is not their focus. All their screenshots are for the *Eclipse CDT + IEP Plugin update approach* and that too with some dated ones on *Help > Install New Software* for Mac.
     1.  A link they provide to the [Espressif-IDE documentation](https://docs.espressif.com/projects/espressif-ide/en/latest/) again doesn't address *Linux installations*
+1. [Installing Eclipse IDE for C++ Developers on Linux](Installing%20Eclipse%20IDE%20for%20C++%20Developers%20on%20Linux.md) was first tried out in 2020 and is old
 
-
-These instructions aim to bridge the gap for **Installing Espressif-IDE on Linux** . In this approach you only need to extract a `tar.gz` file, create a `symbolic link`, create a `desktop entry` and give `dialout permissions`. The only possible error you are likely to get is while *ESP-IDF Manager* tries to copy the `60-openocd.rules` file, and that can be easily solved as explained below.
+These instructions aim to bridge the gap for **Installing Espressif-IDE on Linux** . In this approach you only need to extract a `tar.gz` file, create a `symbolic link`, create a `desktop entry` and give `dialout permissions`. The only possible error you are likely to get is while *ESP-IDF Manager* tries to copy the `60-openocd.rules` file, and that can be easily resolved as explained below.
 
 ## Goals (of using Espressif-IDE):
 1. To avoid using Arduino IDE altogether
