@@ -1,6 +1,4 @@
-# Try [Espressif-IDE - installation](ReadMe.md) first
-
-# The below might be obsolete and circuitous
+# Try [Espressif-IDE - installation](ReadMe.md) first as the below might be obsolete and circuitous
 
 # Installing Eclipse IDE for C++ Developers on Linux (Lubuntu 20.04.1 LTS)
 ## Goal:
@@ -65,19 +63,19 @@ $ uname -r
 ## Downloading and Installing Eclipse IDE for C++ Developers
 Login as a User who has admin privilleges. This will be the user who will write ESP32 programs using Eclipse IDE 
 
-Download Eclipse for CPP for Linux x86_64 from https://www.eclipse.org/downloads/packages/ . On systems with default settings, the eclipse-cpp-2020-12-R-linux-gtk-x86_64.tar.gz will be downloaded in the $HOME/Downloads/ directory
+[Download Eclipse for CPP for Linux x86_64](https://www.eclipse.org/downloads/packages/) . On systems with default settings, the `eclipse-cpp-2020-12-R-linux-gtk-x86_64.tar.gz` will be downloaded in the `$HOME/Downloads/` directory
 
-Extract the tar installable to the home directory of the logged in user with
+Extract the tar installable to the home directory of the logged-in user with
 
-`tar xvf ~/Downloads/eclipse-cpp-2020-12-R-linux-gtk-x86_64.tar.gz -C ~`
+`tar xvf ~/Downloads/eclipse-cpp-2020-12-R-linux-gtk-x86_64.tar.gz -C ~ # Extract the tar installable to the home directory`
 
 Rename the eclipse directory as below to help easily distinguish from the workspace directory to be created later when starting eclipse
 
-`mv ~/eclipse ~/eclipse-installation`
+`mv ~/eclipse ~/eclipse-installation # Rename to help distinguish the installation directory and the workspace directory`
 
 Create a symbolic link to the eclipse executable file with
 
-`sudo ln -s ~/eclipse-installation/eclipse /usr/local/bin/`
+`sudo ln -s ~/eclipse-installation/eclipse /usr/local/bin/ # Create a symbolic link to the eclipse executable file`
 
 Also test if the executable file can be called from any directory with `eclipse` at the terminal and close it.
 
@@ -97,13 +95,18 @@ Categories = Education;
 ' | sudo tee /usr/share/applications/eclipse.desktop # Create a desktop icon for Eclipse-IDE
 ```
 
-Now add the current user to the 'dialout' group with
+## Allow dialout
 
-`sudo usermod -a -G dialout $USER`
+Add identified users to the `dialout` group. Only then will those users be allowed to write to the (USB) port to which the ESP32 (or any other microcontroller board like Arduino) will be connected for flashing
 
-Only the above will let this user write to the USB port to which the ESP32 (or any other microcontroller board like Arduino) will be connected for flashing
+`sudo usermod -a -G dialout $USER # Adds the super-user who is also the current user to the dialout group`
 
-Logout and Log back in. Or restart the system with `shutdown -r now`
+`sudo usermod -a -G dialout <named-user> # Adds the named-user who is NOT the current user to the dialout group`
+__Note:__ The above command will allow any named non super-user to also use the Espressif-IDE without any issues from their own login
+
+`shutdown -r now # Reboot or reinitiate the session (logout and log back in)`
+
+`id -Gn # Check that the logged in user is a member of the dialout group` 
 
 ### Start Eclipse
 
@@ -112,24 +115,24 @@ Logout and Log back in. Or restart the system with `shutdown -r now`
 
 ## Installing support for ESP32 within Eclipse
 1. First and foremost, create a separate workspace in Eclipse for ESP32 Projects.  
-1. Obtain ESP-IDF 4.0 or above from https://github.com/espressif/esp-idf/releases using the instructions on that page
-1. Install it by running `. ./install.sh` and then `. ./export.sh` . The https://medium.com/@prabhakarpanday/programming-esp32-using-esp-idf-for-tensorflow-lite-f173eec91c01 site is a good reference
-1. Follow the instructions in https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md to complete the installation from within Eclipse
+1. Obtain [ESP-IDF 4.0 or above](https://github.com/espressif/esp-idf/releases) using the [instructions](https://github.com/espressif/esp-idf/releases)
+1. Install it by running `. ./install.sh` and then `. ./export.sh` . [Refer](https://medium.com/@prabhakarpanday/programming-esp32-using-esp-idf-for-tensorflow-lite-f173eec91c01) as needed
+1. Follow [these instructions](https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md) to complete the installation from within Eclipse
 
 ## Semantic errors
-1. When trying examples like "Hello World", it is likely that Eclipse compiles successfully but still gives semantic errors. In that case, in the Preferences of the selected project inside Eclipse, go to C/C++ General -> Code Analysis -> Launching. Make sure that both check boxes are unchecked. Close and reopen the project or restart eclipse and rebuild the project.
+1. When trying examples like "Hello World", it is likely that Eclipse compiles successfully but still gives semantic errors. In that case, in the Preferences of the selected project inside Eclipse, go to _"C/C++ General -> Code Analysis -> Launching"_. Make sure that both check boxes are unchecked. Close and reopen the project or restart eclipse and rebuild the project.
 
 ## Other ESP32 references
-1. https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html#get-started-start-project
-1. https://stackoverflow.com/questions/16786555/eclipse-compiles-successfully-but-still-gives-semantic-errors/16891713
+1. [Espressif highly recommend installing the ESP-IDF through your favorite IDE](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html#ide)
+1. [Eclipse compiles successfully but still gives semantic errors](https://stackoverflow.com/questions/16786555/eclipse-compiles-successfully-but-still-gives-semantic-errors/16891713)
 
 ## Installing support for Arduino within Eclipse
 
-1. First and foremost, create a separate workspace in Eclipse for Arduino Projects
-1. Click "Help -> Eclipse Marketplace"
-1. Find "sloeber"
-1. Install "The Arduino Eclipse Plugin named Sloeber (V4)" (with the icon in a rectangular blue box)) and follow the prompts
-1. After installing the plugin, go to the menu "Arduino" and click "Preferences". Under "Arduino -> Platforms and Boards" drill down to "arduino -> Arduino AVR Boards-> 1.8.3" (for Arduino Mego 2560) and apply and close
+1. First and foremost, __create a separate workspace in Eclipse for Arduino Projects__
+1. Click _"Help -> Eclipse Marketplace"_
+1. Find _"sloeber"_
+1. Install _"The Arduino Eclipse Plugin named Sloeber (V4)"_ (with the icon in a rectangular blue box)) and follow the prompts
+1. After installing the plugin, go to the menu _"Arduino"_ and click _"Preferences". Under "Arduino -> Platforms and Boards"_ drill down to _"arduino -> Arduino AVR Boards-> 1.8.3"_ (for Arduino Mego 2560) and apply and close
 
 ## Key points for ESP32 and Arduino support to co-exist in the same eclipse instance
 1. Create exclusive workspaces in Eclipse for ESP32 Projects and Arduino Projects. This helps maintaining build configurations exclusive to each microcontroller, without stepping over onto the other's. 
