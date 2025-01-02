@@ -29,13 +29,15 @@ char keys [4][4] = {
 	{'4', '5', '6', 'B'},
 	{'7', '8', '9', 'C'},
 	{'*', '0', '#', 'D'}
-};
+}; // Reference - https://www.makeriot2020.com/index.php/2020/10/05/using-i2c-with-a-4x4-matrix-keypad/
 
 static bool isKeyBeingRead = false;
 
 // the below are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
 int state = 0;
 QueueHandle_t interruptQueue;
+
+i2c_port_t i2c_port_num;
 
 
 /* Inside the interrupt service routine we will call the xQueueSendFromISR() function.
@@ -60,7 +62,7 @@ uint8_t get_keypad_pins() {
 	//  Reading from read_from_PCF8574_pins
 	uint8_t rx_data[1];
 
-	i2c_master_read_from_device(I2C_NUM_0, PCF8574_SLAVE_KPD_ADDRESS, rx_data, 5, TIMEOUT_MS/portTICK_PERIOD_MS);
+	i2c_master_read_from_device(i2c_port_num, PCF8574_SLAVE_KPD_ADDRESS, rx_data, 5, TIMEOUT_MS/portTICK_PERIOD_MS);
 
 	//ESP_LOGI(TAG, "get_keypad_pins");
 	//ESP_LOG_BUFFER_HEX(TAG, rx_data, 1);
@@ -74,7 +76,7 @@ void set_keypad_pins(uint8_t data)
 
 	uint8_t data_t[len];
 	data_t[0] = data;
-	err = i2c_master_write_to_device(I2C_NUM_0, PCF8574_SLAVE_KPD_ADDRESS, data_t, len, 1000);
+	err = i2c_master_write_to_device(i2c_port_num, PCF8574_SLAVE_KPD_ADDRESS, data_t, len, 1000);
 	if (err!=0)	ESP_LOGI(TAG, "Error in sending data to PCF8574 keypad");
 /*	else
 		ESP_LOGI(TAG, "set_keypad_pins successful");
@@ -184,8 +186,9 @@ void Key_Ctrl_Task(void *params) // this function will be called when interrupt 
 }
 
 
-void init_keypad()
+void init_keypad(i2c_port_t port_num)
 {
+    i2c_port_num = port_num; 
 	set_keypad_pins(0xf0); // write 11110000
 
 	// the below are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
