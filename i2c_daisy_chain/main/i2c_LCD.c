@@ -13,10 +13,7 @@
 //#define LCD_SLAVE_ADDR 0x4E>>1 // change this according to your device setup
 #define LCD_SLAVE_ADDR 0x27 // This is the same as 0x4E>>1
 
-
 esp_err_t err;
-
-#define I2C_NUM I2C_NUM_0
 
 static const char *TAG = "LCD";
 
@@ -43,7 +40,7 @@ void lcd_send_cmd (char cmd)
 	cmd_t[3] = l_cmd|0x08;  // Lower 4 bits are 1000. VEE(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=0
 
 
-	err = i2c_master_write_to_device(I2C_NUM, LCD_SLAVE_ADDR, cmd_t, 4, 1000);
+	err = i2c_master_write_to_device(i2c_port_num, LCD_SLAVE_ADDR, cmd_t, 4, 1000);
 	if (err!=0) ESP_LOGI(TAG, "Error writing command to LCD");
 }
 
@@ -64,7 +61,7 @@ void lcd_send_data (char data)
 	data_t[2] = l_data|0x0D;  // Lower 4 bits are 1101. VEE(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=1.
 	data_t[3] = l_data|0x09;  // Lower 4 bits are 1001. VEE(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=1.
 
-	err = i2c_master_write_to_device(I2C_NUM, LCD_SLAVE_ADDR, data_t, 4, 1000);
+	err = i2c_master_write_to_device(i2c_port_num, LCD_SLAVE_ADDR, data_t, 4, 1000);
 	if (err!=0) ESP_LOGI(TAG, "Error writing data to LCD");
 }
 
@@ -97,9 +94,9 @@ void lcd_put_cur(int row, int col)
  *
  */
 
-void lcd_init (void)
+void lcd_init (i2c_port_t port_num)
 {
-
+	i2c_port_num = port_num;
 	// 4 bit initialisation
 	usleep(50000);  // wait for >40ms
 	lcd_send_cmd (0x30);
