@@ -1,4 +1,3 @@
-#include "hal/i2c_types.h"
 #include <esp_err.h>
 #include <esp_log.h>
 #include <driver/i2c.h>
