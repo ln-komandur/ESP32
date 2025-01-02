@@ -90,7 +90,7 @@ Add identified users to the `dialout` group. Only then will those users be allow
 `sudo usermod -a -G dialout $USER # Adds the super-user who is also the current user to the dialout group`
 
 `sudo usermod -a -G dialout <named-user> # Adds the named-user who is NOT the current user to the dialout group`
-__Note:__ The above command will allow any named non super-user to also use the Espressif-IDE without any issues from their own login
+__Note:__ The above command will allow any named non super-user to also use the Espressif-IDE without any issues from their own login, __if they are part of a group that belongs to a super-user__. This is because, though `~/Espressif-IDE/espressif-ide` reside in the super-user's `$HOME` directory after installation / extraction, its permissions are `-rwxr-xr-x`
 
 `shutdown -r now # Reboot or reinitiate the session (logout and log back in)`
 
