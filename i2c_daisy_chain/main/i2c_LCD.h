@@ -3,8 +3,9 @@
 #include <driver/i2c.h>
 #include <unistd.h>
 
+extern i2c_port_t i2c_port_num; 
 
-void lcd_init (void);   // initialize lcd
+void lcd_init (i2c_port_t i2c_port_num);   // initialize lcd at the I2C port number
 
 void lcd_send_cmd (char cmd);  // send command to the lcd
 
