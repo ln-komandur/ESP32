@@ -9,4 +9,4 @@ extern esp_err_t err;
 
 extern QueueHandle_t keyQueue; // used for storing what is read from PCF8574 keypad
 
-void init_keypad(); // this will initialize data pins as well as interrupt pin
+void init_keypad(i2c_port_t i2c_port_num); // this will assign the i2c port, and initialize data pins as well as interrupt pin
