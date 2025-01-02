@@ -85,15 +85,16 @@ Categories = Education;' | sudo tee /usr/share/applications/Espressif-IDE.deskto
 
 ## Allow dialout
 
+Add identified users to the `dialout` group. Only then will those users be allowed to write to the (USB) port to which the ESP32 (or any other microcontroller board like Arduino) will be connected for flashing
+
 `sudo usermod -a -G dialout $USER # Adds the super-user who is also the current user to the dialout group`
 
 `sudo usermod -a -G dialout <named-user> # Adds the named-user who is NOT the current user to the dialout group`
 __Note:__ The above command will allow any named non super-user to also use the Espressif-IDE without any issues from their own login
 
-`reboot # For the user to be added to the dialout group, reboot as sudo if required, or reinitiate the session (logout and login)`
+`shutdown -r now # Reboot or reinitiate the session (logout and log back in)`
 
 `id -Gn # Check that the logged in user is a member of the dialout group` 
-
 
 ## Configure Espressif-IDF
 
