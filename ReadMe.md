@@ -3,8 +3,23 @@
 
 ## Why these instructions
 
-The [ESP-IDF Eclipse Plugin (Espressif-IDE) installation](https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md#Installation) page provides anywhere between **minimal to no instructions** on installing **Espressif-IDE instead of the Eclipse CDT + IEP Plugin update approach** and especially for *Linux*. All screenshots they provide are for the *Eclipse CDT + IEP Plugin update approach* and that too with some dated ones on *Help > Install New Software* for Mac. The [Espressif-IDE](https://github.com/espressif/idf-eclipse-plugin/blob/master/docs_readme/Espressif-IDE.md) page provides no more than a [Download](https://github.com/espressif/idf-eclipse-plugin/blob/master/docs_readme/Espressif-IDE.md#downloads) link to the latest [Espressif-IDE-linux.gtk.x86_64](https://dl.espressif.com/dl/idf-eclipse-plugin/ide/Espressif-IDE-linux.gtk.x86_64/latest) release or for *Installing Espressif-IDE by Windows Offline Installer*
+1.  The Espressif-IDE  comes pre-packaged with Eclipse and many essentials for Espressif. Its installation process is very polished (provided you know it) and so is its use. However [Espressif-IDE](https://github.com/espressif/idf-eclipse-plugin/blob/master/docs_readme/Espressif-IDE.md) page
+    1.  provides no more than a [Download](https://github.com/espressif/idf-eclipse-plugin/blob/master/docs_readme/Espressif-IDE.md#downloads) link to the latest [Espressif-IDE-linux.gtk.x86_64](https://dl.espressif.com/dl/idf-eclipse-plugin/ide/Espressif-IDE-linux.gtk.x86_64/latest) release
+    1.  only helps with *[Installing Espressif-IDE by Windows Offline Installer](https://github.com/espressif/idf-eclipse-plugin/blob/master/docs_readme/Espressif-IDE-Windows-Installer.md)* with screenshots
+1.  The [Eclipse CDT + ESP-IDF Eclipse Plugin (a.k.a. IEP plugin) installation approach](https://github.com/espressif/idf-eclipse-plugin/blob/master/README.md#Installation) is clunky. This page provides
+    1.  anywhere between **minimal to no instructions** on installing **Espressif-IDE** as that is not their focus. All their screenshots are for the *Eclipse CDT + IEP Plugin update approach* and that too with some dated ones on *Help > Install New Software* for Mac.
+    1.  A link they provide to the [Espressif-IDE documentation](https://docs.espressif.com/projects/espressif-ide/en/latest/) again doesn't address *Linux installations*
 
+
+These instructions aim to bridge the gap for **Installing Espressif-IDE on Linux** . In this approach you only need to extract a `tar.gz` file, create a `symbolic link`, create a `desktop entry` and give `dialout permissions`. The only possible error you are likely to get is while *ESP-IDF Manager* tries to copy the `60-openocd.rules` file, and that can be easily solved as explained below.
+
+## Goals (of using Espressif-IDE):
+1. To avoid using Arduino IDE altogether
+1. To be able to directly leverage and use capabilities of FreeRTOS and esp-idf such as
+    1. Multi tasking (multi threading as threads are the same as tasks in the FreeRTOS context)
+    1. Queues
+    1. Interrupt handling
+1. To break free from the `setup()` and `loop()` methods in the Arduino IDE
 
 ## Pre-requisites
 
@@ -57,7 +72,7 @@ $ uname -r
 
 
 
-## Download [the latest Espressid-IDE for Linux](https://dl.espressif.com/dl/idf-eclipse-plugin/ide/Espressif-IDE-linux.gtk.x86_64/latest)
+## [Download](https://docs.espressif.com/projects/espressif-ide/en/latest/downloads.html#downloads) the [latest Espressid-IDE for Linux](https://dl.espressif.com/dl/idf-eclipse-plugin/ide/Espressif-IDE-linux.gtk.x86_64/latest)
 
 ## Extract the tar gunzip file in the home directory`
 `tar xvf ~/Downloads/Espressif-IDE-*.tar.gz -C ~ # Extract the tar gunzip file in the home directory`
@@ -121,6 +136,8 @@ Here is from where the IDE was upgraded to version 3.1.0
 ### 5-Download ESP-IDF
 ![Download ESP-IDF](4-Download%20ESP-IDF.png "Click Add ESP-IDF, Select Version and Directory to download")
 
+**Note:** ESP-IDF comes with a `60-openocd.rules` file which the *ESP-IDF Manager* will copy to `/etc/udev/rules.d/` 
+
 View the progress of the download should in the Progress tab
 
 ![ESP-IDF Download progressing](4a-Downloading.png "ESP-IDF Download progressing")
@@ -130,13 +147,14 @@ View the progress of the download should in the Progress tab
 
 ### Handle rule errors
 
-#### If you get "[Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command](https://github.com/espressif/idf-eclipse-plugin/issues/777#issuecomment-1574885512)", 
+#### If you get "Unable to copy rules for OpenOCD to system directory", 
 
-![Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command](4b-OpenOCD%20error.png "Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command")
+![Unable to copy rules for OpenOCD to system directory, try running the `espressif-ide` as `sudo espressif-ide`](4b-OpenOCD%20error.png "Unable to copy rules for OpenOCD to system directory, try running the eclipse with sudo command")
 
-Copy [this 60-openocd.rules file](https://github.com/espressif/openocd-esp32/blob/master/contrib/60-openocd.rules) to `/etc/udev/rules.d/` manually after changing its owner and group to `root:root` . A copy is also [available in this repo](./60-openocd.rules)
+1. [Try running the `espressif-ide` as `sudo espressif-ide`](https://github.com/espressif/idf-eclipse-plugin/issues/777#issuecomment-1574885512)", and then download ESP-IDF from the *ESP-IDF Manager*
+2. Copy [this 60-openocd.rules file](https://github.com/espressif/openocd-esp32/blob/master/contrib/60-openocd.rules) to `/etc/udev/rules.d/` manually after changing its owner and group to `root:root` . A copy is also [available in this repo](./60-openocd.rules)
 
-#### If this OpenOCD rules file exists, for this warning click "No" to not overwrite it
+#### If the correct OpenOCD rules file already exists from a prior version of esp-idf, click "No" for this warning to not overwrite it
 
 ![Warning asking to overwrite existing OpenOCD rules file](4c-OpenOCD%20rules%20file%20exists.png "Warning asking to overwrite existing OpenOCD rules file")
 
