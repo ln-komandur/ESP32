@@ -25,6 +25,23 @@ This project __Daisy Chains__ the following devices with __PCF8574 / PCF8574T I/
 	1. At LCD Address = __0x27__ _// The same as 0x4E>>1_
 	2. Writes a standard text on the first line
  	3. Writes the key strokes pressed on the second line
+
+
+## The 3 devices in this project
+1. A string of LED lights is connected to a PCF8574 IO Expander. The code that runs this device
+	1. runs an independent task which does not take any interrupts or uses any queues
+ 	1. to blink the LEDs at a certain frequency, the independent task does not use delay, wait or sleep. It instead compares the timestamp from the last blink to change the (new) byte to be written on to the LED.
+1. A 1602 LCD (16 characters on 2 rows) which has an inbuilt PCF8574 IO Expander. The code that runs this device runs 2 tasks and 1 queue (which it shares with the keypad)
+	1. An independent task that counts from 0 to 255 and displays it on the 1st row of the LCD. It uses `vTaskDelay()` to increment the counter
+ 	1. Another task that picks a key input on the keypad from a common queue and displays it on the 2nd row of the LCD.
+1. A passive (has no power of its own) membrane keypad that uses the interrupt pin on the PCF8574 IO Expander. The code that runs this device
+	1. Uses 2 queues
+ 		1. One interrupt queue to detect and record interrupts (triggered by key presses)
+     		1. One task to monitor the interrupt queue
+     		1. Functions to detect the key pressed after the interrupt. They use masking bytes to detect the row and columns pressed
+		1. One key queue into which the detected key press is put in, which it shares with the LCD
+
+
  
 ### References and courtesy credits
 1. [ESP32-DevKitC V4 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/v3.3/get-started/get-started-devkitc.html)
