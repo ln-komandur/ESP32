@@ -1,29 +1,37 @@
 /*
- * i2c_mast_handler.h
+ * i2c_matrix-keypad.h
  *
  *  Created on: Jan 1, 2025
  *      Author: Ln-Komandur
- *
- * Manages (methods to initialize, check) i2c ports for ESP32
- * Reference - https://embeddedexplorer.com/esp32-i2c-tutorial/ - The code here is originally from https://gist.github.com/herzig/8d4c13d8b81a77ac86481c6c1306bb12
+ * The LCD 1602A is based on the Hitachi HD44780 LCD controller.
+ * Good reference 
+ * - https://www.makeriot2020.com/index.php/2020/10/05/using-i2c-with-a-4x4-matrix-keypad/
+ * - https://embeddedexplorer.com/esp32-i2c-tutorial/
+ * - https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
  */
-
+ 
 
 #include <esp_err.h>
+#include <freertos/FreeRTOS.h>
 #include <esp_log.h>
 #include <driver/i2c_master.h>
-#include <freertos/FreeRTOS.h>
+#include <driver/gpio.h>
 
-#define MAX_NO_OF_I2C_DEVICES 128 // This is the maximum number of I2C devices that can be connected
+#ifndef HEADER_i2c_matrix_keypad_H_ // Include guard to prevent multiple inclusion
+#define HEADER_i2c_matrix_keypad_H_
 
+extern esp_err_t err;
 
-/*
- * Initializes an i2c bus at the given i2c port number and returns the bus handle
- */
-i2c_master_bus_handle_t get_i2c_bus_handle(int i2c_num);
+struct passive_Matrix_keyPad_Setup {
+	i2c_master_dev_handle_t device_handle;
+	int interruptPin;
+	QueueHandle_t keyQueue; // used for storing what is read from PCF8574 keypad
+};
 
+void init_keypad(struct passive_Matrix_keyPad_Setup kpd_Config); // this will assign the i2c port, and initialize data pins as well as interrupt pin
+uint8_t get_keypad_pins(struct passive_Matrix_keyPad_Setup kpdCfg);
+void set_keypad_pins(struct passive_Matrix_keyPad_Setup kpdCfg, uint8_t data);
+void find_key(struct passive_Matrix_keyPad_Setup kpdCfg);
+void Key_Ctrl_Task(void *params); // this function will be called when interrupt happens.
 
-/*
- * Returns a pointer to an array of i2c_device_addresses for the given bus handle
- */
-uint8_t* get_connected_i2c_device_addresses(i2c_master_bus_handle_t bus_handle);
+#endif
