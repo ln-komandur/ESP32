@@ -1,5 +1,5 @@
 /*
- * a_byte_of_LEDs.c
+ * a_byte_of_LEDs.h
  *
  *  Created on: Jan 1, 2025
  *      Author: Ln-Komandur
