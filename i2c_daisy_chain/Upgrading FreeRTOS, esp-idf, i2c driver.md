@@ -1,4 +1,4 @@
-## Upgrading FreeRTOS and esp-idf
+## Upgrading FreeRTOS, esp-idf, i2c driver
 
 ## ESP-IDF - from 4.4 to 5.0
 [ESP-IDF » Migration Guides » Migration from 4.4 to 5.0 » Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/migration-guides/release-5.x/5.0/build-system.html)  - This will work for esp-idf v5.3.1 or v5.3.2 as targets
@@ -61,3 +61,14 @@ Change `portTICK_RATE_MS` to `portTICK_PERIOD_MS`
 
 ## Compiler error when adding code into 'components'.
 [fatal error: driver/i2c.h: No such file or directory | #include <driver/i2c.h>](https://esp32.com/viewtopic.php?t=29660) - This was not required to be implemented in the `CMakeLists.txt`. Use this link only as a reference
+
+
+## Migrating from legacy i2c driver to the new i2c_master driver
+
+**Note:** Migrating from legacy`#include <driver/i2c.h>` to the new `#include <driver/i2c_master.h>` would apply based on the version of the `esp-idf` being used. For e.g. The following were performed for the application code to take advantage of the newer driver in `esp-idf v5.3.2`.
+
+1. Based on whether `I2C_NUM0` or `I2C_NUM1` are used on the ESP32 for the master bus, an `i2c bus handle` is obtained by providing more configuration settings such as `sda` and `scl` pin numnbers
+2. Various devices are configured with their `HEX addresses` and other appropriate settings and their `device handle` is obtained. The `device handle` is used to add the device to the `i2c bus` on its `i2c bus handle`
+3. Functions in various programs that use the devices are refactored to use either `bus handles` or `device handles` rather than directly use `I2c_NUM` or `HEX addresses of devices`
+4. Values are passed to functions as `struct` (to mimic an object like approach)
+5. Many settings such as `I2C_NUM0` or `I2C_NUM1`, `HEX addresses` of devices, `pin numbers` etc. are maintained in the main program (where the `app_main` function is present) from where buses and devices are configured and handled
