@@ -115,4 +115,4 @@ __Note:__
 
 [Importing to Espressif-IDE as Espressif IDF Project](Importing%20to%20Espressif-IDE%20as%20Espressif%20IDF%20Project.md)
 
-[Upgrading FreeRTOS and esp-idf](Upgrading%20FreeRTOS%20and%20esp-idf.md)
+[Upgrading FreeRTOS, esp-idf and i2c driver](Upgrading%20FreeRTOS%2C%20esp-idf%2C%20i2c%20driver.md)
