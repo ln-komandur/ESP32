@@ -1,4 +1,8 @@
 /*
+ * i2c_LCD.c
+ *
+ *  Created on: Jan 1, 2025
+ *      Author: Ln-Komandur
  * The LCD 1602A is based on the Hitachi HD44780 LCD controller.
  * Refer
  * - https://mil.ufl.edu/3744/docs/lcdmanual/commands.html#Sda
@@ -9,18 +13,13 @@
 
 
 #include <i2c_LCD.h>
-
-//#define LCD_SLAVE_ADDR 0x4E>>1 // change this according to your device setup
-#define LCD_SLAVE_ADDR 0x27 // This is the same as 0x4E>>1
+#include <sys/unistd.h>
 
 esp_err_t err;
 
-static const char *TAG = "LCD";
+static const char *TAG = "i2c_LCD";
 
-QueueHandle_t characterQueue;
-
-
-void lcd_send_cmd (char cmd)
+void lcd_send_cmd (struct LCD_Setup LCD_cfg, char cmd)
 {
   	char u_cmd, l_cmd;
 	uint8_t cmd_t[4];
@@ -39,12 +38,14 @@ void lcd_send_cmd (char cmd)
 	cmd_t[2] = l_cmd|0x0C;  // Lower 4 bits are 1100. VEE(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=0
 	cmd_t[3] = l_cmd|0x08;  // Lower 4 bits are 1000. VEE(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=0
 
-
-	err = i2c_master_write_to_device(i2c_port_num, LCD_SLAVE_ADDR, cmd_t, 4, 1000);
+	// Transmit / Write to the device
+	int len = 4;
+	err = i2c_master_transmit(LCD_cfg.device_handle, cmd_t, len, -1); // -1 means wait forever. This call returns ESP_ERR_INVALID_STATE.
+	
 	if (err!=0) ESP_LOGI(TAG, "Error writing command to LCD");
 }
 
-void lcd_send_data (char data)
+void lcd_send_data (struct LCD_Setup LCD_cfg, char data)
 {
 	char u_data, l_data;
 	uint8_t data_t[4];
@@ -61,17 +62,19 @@ void lcd_send_data (char data)
 	data_t[2] = l_data|0x0D;  // Lower 4 bits are 1101. VEE(P3)=1, EN(P2)=1, RW(P1)=0, RS(P0)=1.
 	data_t[3] = l_data|0x09;  // Lower 4 bits are 1001. VEE(P3)=1, EN(P2)=0, RW(P1)=0, RS(P0)=1.
 
-	err = i2c_master_write_to_device(i2c_port_num, LCD_SLAVE_ADDR, data_t, 4, 1000);
+	// Transmit / Write to the device
+	int len = 4;
+	err = i2c_master_transmit(LCD_cfg.device_handle, data_t, len, -1); // -1 means wait forever. This call returns ESP_ERR_INVALID_STATE.
 	if (err!=0) ESP_LOGI(TAG, "Error writing data to LCD");
 }
 
-void lcd_clear (void)
+void lcd_clear (struct LCD_Setup LCD_cfg)
 {
-	lcd_send_cmd (0x01);
+	lcd_send_cmd (LCD_cfg, 0x01);
 	usleep(5000);
 }
 
-void lcd_put_cur(int row, int col)
+void lcd_put_cur(struct LCD_Setup LCD_cfg,int row, int col)
 {
 	switch (row)
 	{
@@ -82,7 +85,7 @@ void lcd_put_cur(int row, int col)
 		col |= 0xC0;
 		break;
 	}
-	lcd_send_cmd (col);
+	lcd_send_cmd(LCD_cfg, col);
 }
 
 
@@ -94,79 +97,101 @@ void lcd_put_cur(int row, int col)
  *
  */
 
-void lcd_init (i2c_port_t port_num)
+void lcd_init (struct LCD_Setup LCD_cfg)
 {
-	i2c_port_num = port_num;
 	// 4 bit initialisation
 	usleep(50000);  // wait for >40ms
-	lcd_send_cmd (0x30);
+	lcd_send_cmd (LCD_cfg, 0x30);
 	usleep(5000);  // wait for >4.1ms
-	lcd_send_cmd (0x30);
+	lcd_send_cmd (LCD_cfg, 0x30);
 	usleep(200);  // wait for >100us
-	lcd_send_cmd (0x30);
+	lcd_send_cmd (LCD_cfg, 0x30);
 	usleep(10000);
-	lcd_send_cmd (0x20);  // 4bit mode
+	lcd_send_cmd (LCD_cfg, 0x20);  // 4bit mode
 	usleep(10000);
 
   	// display initialisation
-	lcd_send_cmd (0x28); // Function set --> DL=0 (4 bit mode), N = 1 (2 line display) F = 0 (5x8 characters)
+	lcd_send_cmd (LCD_cfg, 0x28); // Function set --> DL=0 (4 bit mode), N = 1 (2 line display) F = 0 (5x8 characters)
 	usleep(1000);
-	lcd_send_cmd (0x08); //Display on/off control --> D=0,C=0, B=0  ---> display off
+	lcd_send_cmd (LCD_cfg, 0x08); //Display on/off control --> D=0,C=0, B=0  ---> display off
 	usleep(1000);
-	lcd_send_cmd (0x01);  // clear display
+	lcd_send_cmd (LCD_cfg, 0x01);  // clear display
 	usleep(1000);
 	usleep(1000);
-	lcd_send_cmd (0x06); //Entry mode set --> I/D = 1 (increment cursor) & S = 0 (no shift)
+	lcd_send_cmd (LCD_cfg, 0x06); //Entry mode set --> I/D = 1 (increment cursor) & S = 0 (no shift)
 	usleep(1000);
-	lcd_send_cmd (0x0C); //Display on/off control --> D = 1, C and B = 0. (Cursor and blink, last two bits)
+	lcd_send_cmd (LCD_cfg, 0x0C); //Display on/off control --> D = 1, C and B = 0. (Cursor and blink, last two bits)
 	usleep(1000);
+
+	xTaskCreate(LCD_Queue_Receiver_Task, "LCD_Queue_Receiver_Task", 2048, &LCD_cfg, 1, NULL);
+	ESP_LOGI(TAG, "Created LCD_Queue_Receiver_Task");
+
+	xTaskCreate(LCD_Counter_Task, "LCD_Counter_Task", 2048, &LCD_cfg, 1, NULL);
+	ESP_LOGI(TAG, "Created LCD_Counter_Task");
+
 }
 
-void lcd_send_string (char *str)
+void lcd_send_string (struct LCD_Setup LCD_cfg, char *str)
 {
-	while (*str) lcd_send_data (*str++);
+	while (*str) lcd_send_data (LCD_cfg, *str++);
 }
 
-void write_string_on_LCD(int lineNo, int colNo, char *str)
+void write_string_on_LCD(struct LCD_Setup LCD_cfg, int lineNo, int colNo, char *str)
 {
-	lcd_put_cur(lineNo, colNo);
-	lcd_send_string("				"); // Erases the existing content fully
+	lcd_put_cur(LCD_cfg, lineNo, colNo);
+	lcd_send_string(LCD_cfg, "				"); // Erases the existing content fully
 
-	lcd_put_cur(lineNo, colNo);
-	lcd_send_string(str);
+	lcd_put_cur(LCD_cfg, lineNo, colNo);
+	lcd_send_string(LCD_cfg, str);
 }
 
-void write_hex_on_LCD(int lineNo, int colNo, uint8_t hex)
+void write_hex_on_LCD(struct LCD_Setup LCD_cfg, int lineNo, int colNo, uint8_t hex)
 {
 	char buffer[16];
 	sprintf(buffer, "0x%02X", hex); // display hexadecimal
-
-	lcd_put_cur(lineNo, colNo);
-	lcd_send_string(buffer);
+	
+	lcd_put_cur(LCD_cfg, lineNo, colNo);
+	lcd_send_string(LCD_cfg, buffer);
 }
 
 
-void LCD_Receiver_Task(void *params)
+void LCD_Queue_Receiver_Task(void *params)
 {
+
+	struct LCD_Setup * LCD_cfg_ptr = (struct LCD_Setup *)params;
+	struct LCD_Setup LCD_cfg = * LCD_cfg_ptr;
+
+	QueueHandle_t myQueue = LCD_cfg.keyQueue;
+	ESP_LOGI(TAG, "Now in LCD queue receiver task");
 	while (true)
 	{
-		char keyPressed = 0;
-
-		xQueueReceive(characterQueue, &keyPressed, ( TickType_t ) 0); // put the key found in the queue
-		if (keyPressed != 0)
+		char keyPressed = 0; // This is the real statement
+		xQueueReceive(myQueue, &keyPressed, ( TickType_t ) 0); // take the key found in the queue
+		if (keyPressed != 0) // if a key is found
 		{
 			char buffer[16];
-			sprintf(buffer, "Last pressed %c", keyPressed); // display hexadecimal
-			write_string_on_LCD(1, 0, buffer); // display it on line 2 of the LCD though as string
+			sprintf(buffer, "Last pressed %c", keyPressed); // display hexadecimal  // This is the real statement
+			write_string_on_LCD(LCD_cfg, 1, 0, buffer); // display it on line 2 of the LCD though as string
 		}
-
 	}
 	vTaskDelete(NULL); // added per https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32 at the end of the function to gracefully end the task:
 }
 
-
-void attach_queue_to_LCD(QueueHandle_t keyQueue)
+void LCD_Counter_Task(void *params)
 {
-	xTaskCreate(LCD_Receiver_Task, "LCD_Receiver_Task", 2048, NULL, 1, NULL);
-	characterQueue = keyQueue; // this queue holds the keys pressed. Its size as 32, is the total number of characters on a 1602 LCD display
+	// This tasks autonomously displays elapsed time as a counter on the top line of the LCD. It does not depend on any queue, interrupts or triggers
+	struct LCD_Setup * LCD_cfg_ptr = (struct LCD_Setup *)params;
+	struct LCD_Setup LCD_cfg = * LCD_cfg_ptr;
+
+	ESP_LOGI(TAG, "Now in LCD_Counter_Task task");
+	char elapsed_count = 1; 
+	while (true)
+	{
+		char buffer[16];
+		sprintf(buffer, "Counter %d", elapsed_count++);
+		write_string_on_LCD(LCD_cfg, 0, 0, buffer); // display it on line 1 of the LCD though as string
+		ESP_LOGI(TAG, "Wrote counter on LCD 1st line");
+		vTaskDelay( 500); // Delay and count next
+	}
+	vTaskDelete(NULL); // added per https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32 at the end of the function to gracefully end the task:
 }
