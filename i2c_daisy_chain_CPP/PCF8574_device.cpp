@@ -6,15 +6,6 @@
  */
 
 #include <PCF8574_device.hpp>
-#include <esp_timer.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-#include <esp_log.h>
-#include <esp_err.h>
-#include <esp_timer.h>
-#include <driver/i2c_master.h>
-#include <unistd.h>
-
 
 static PCF8574_IO_Expander connectedExpander;
 static long blinkDuration;
