@@ -67,7 +67,7 @@ Change `portTICK_RATE_MS` to `portTICK_PERIOD_MS`
 
 **Note:** Migrating from legacy`#include <driver/i2c.h>` to the new `#include <driver/i2c_master.h>` would apply based on the version of the `esp-idf` being used. For e.g. The following were performed for the application code to take advantage of the newer driver in `esp-idf v5.3.2`.
 
-1. Based on whether `I2C_NUM0` or `I2C_NUM1` are used on the ESP32 for the master bus, an `i2c bus handle` is obtained by providing more configuration settings such as `sda` and `scl` pin numnbers
+1. Based on whether `I2C_0` or `I2C_1` are used on the ESP32 for the master bus, an `i2c bus handle` is obtained by providing more configuration settings such as `sda` and `scl` pin numbers
 2. Various devices are configured with their `HEX addresses` and other appropriate settings and their `device handle` is obtained. The `device handle` is used to add the device to the `i2c bus` on its `i2c bus handle`
 3. Functions in various programs that use the devices are refactored to use either `bus handles` or `device handles` rather than directly use `I2c_NUM` or `HEX addresses of devices`
 4. Values are passed to functions as `struct` (to mimic an object like approach)
