@@ -186,19 +186,28 @@ This approach ***assumes the user's home to be the location*** of the Espressif_
 `rm -rf ~/ESP32-workspace/ # Remove the ESP32 workspace if needed`
 
 ### If Espressif-IDE needs to be uninstalled
-`rm -rf ~/Espressif-IDE/ # Remove the Espressif IDE`
+
+`ls -l ~/Espressif-IDE/ # List the Espressif IDE installation folder in the user's $HOME`
+
+`rm -rf ~/Espressif-IDE/ # Remove the Espressif IDE installation folder in the user's $HOME if Espressif IDE needs to be removed`
 
 `sudo rm /usr/share/applications/Espressif-IDE.desktop # Remove the Espressif IDE desktop file`
 
-`ls -l /usr/local/bin/espressif-ide # Remove the symbolic link to the Espressif IDE desktop file`
+`ls -l /usr/local/bin/espressif-ide # List the symbolic link to the Espressif IDE desktop file`
+
+`sudo rm /usr/local/bin/espressif-ide # Remove the symbolic link to the Espressif IDE desktop file`
 
 ### If Eclipse-IDE needs to be uninstalled
-`rm -rf eclipse-installation/ # Remove the Eclipse IDE if Eclipse needs to be removed`
 
-`sudo rm /usr/share/applications/eclipse.desktop # Remove the Eclipse IDE desktop file if Eclipse needs to be removed`
+`ls -l ~/eclipse-installation/ # List the Eclipse IDE installation folder in the user's $HOME`
 
-`ls -l /usr/local/bin/eclipse-ide # Remove the symbolic link to the Eclipse IDE desktop file if Eclipse needs to be removed`
+`rm -rf ~/eclipse-installation/ # Remove the Eclipse IDE installation folder in the user's $HOME if Eclipse needs to be removed`
 
+`sudo rm /usr/share/applications/eclipse.desktop # Remove the Eclipse IDE desktop file`
+
+`ls -l /usr/local/bin/eclipse-ide # List the symbolic link to the Eclipse IDE desktop file`
+
+`sudo rm /usr/local/bin/eclipse-ide # Remove the symbolic link to the Eclipse IDE desktop file`
 
 ## References
 
