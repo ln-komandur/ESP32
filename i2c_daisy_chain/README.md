@@ -22,25 +22,28 @@ This project __Daisy Chains__ the following devices with __PCF8574 / PCF8574T I/
  	4. uses some rudimentary logic to handle __debouncing key strokes__ by deciphering the key pressed as soon as and only after an interrupt has occured. After the key has been deciphered, the next interrupt is processed.
   	5. reads which key is pressed by masking the keypad's rows and columns 
 8. Writes to an LCD1602
-	1. At LCD Address = __0x27__ _// The same as 0x4E>>1_
-	2. Writes a standard text on the first line
- 	3. Writes the key strokes pressed on the second line
+	1. At LCD_SLAVE_ADDR = __0x27__ _// The same as 0x4E>>1_
+	2. Displays an incremental counter on the first line
+ 	3. Displays the last key pressed on the second line
 
 
 ## The 3 devices in this project
-1. A string of LED lights is connected to a PCF8574 IO Expander. The code that runs this device
-	1. runs an independent task which does not take any interrupts or uses any queues
- 	1. to blink the LEDs at a certain frequency, the independent task does not use delay, wait or sleep. It instead compares the timestamp from the last blink to change the (new) byte to be written on to the LED.
-1. A 1602 LCD (16 characters on 2 rows) which has an inbuilt PCF8574 IO Expander. The code that runs this device runs 2 tasks and 1 queue (which it shares with the keypad)
-	1. An independent task that counts from 0 to 255 and displays it on the 1st row of the LCD. It uses `vTaskDelay()` to increment the counter
- 	1. Another task that picks a key input on the keypad from a common queue and displays it on the 2nd row of the LCD.
-1. A passive (has no power of its own) membrane keypad that uses the interrupt pin on the PCF8574 IO Expander. The code that runs this device
-	1. Uses 2 queues
- 		1. One interrupt queue to detect and record interrupts (triggered by key presses)
-     		1. One task to monitor the interrupt queue
-     		1. Functions to detect the key pressed after the interrupt. They use masking bytes to detect the row and columns pressed
-		1. One key queue into which the detected key press is put in, which it shares with the LCD
 
+The 3 devices in this project implement and help learn the following capabilities of the __ESP32__ and __esp-idf__ to use in other use cases involving _tasks_, _queues_ , and _interrupts_.
+
+1. A string of LED lights is connected to a PCF8574 IO Expander. The code in `a_byte_of_LEDs.c` that runs this device
+	1. runs an independent task `void blink_LEDs_Task(void *params)` which does not take any interrupts or uses any queues
+ 	1. to blink the LEDs at a certain frequency, `void blink_LEDs_Task(void *params)` does not use `delay`, `wait` or `sleep`. It instead computes the `time elapsed` from the last blink and decides to change the (new) byte to be written on to the LED and blink.
+1. A 1602 LCD (16 characters on 2 rows) which has an inbuilt _PCF8574 IO Expander_. The code that runs this device in `i2c_LCD.c` runs 2 tasks, one of which that depends on 1 queue (which is shares with the keypad)
+	1. The first one is an independent task `void LCD_Counter_Task(void *params)` that counts from 0 to 255 and displays it on the 1st row of the LCD. It uses `vTaskDelay()` to increment the counter
+ 	1. The second task `void LCD_Queue_Receiver_Task(void *params)` picks a key input on the keypad from a common queue (`keyQueue`) and displays it on the 2nd row of the LCD.
+1. A passive (does not need power supplied to it) membrane keypad that uses the interrupt pin on the _PCF8574 IO Expander_. The code in `i2c-matrix-keypad.c` that runs this device
+	1. uses 2 queues
+ 		1. One interrupt queue `interruptQueue` to detect and record interrupts (triggered by key presses)
+	   	1. One key queue `keyQueue` into which the detected key press is put in and shared with the LCD task for picking up the key
+     	1. runs one task `void Key_Ctrl_Task(void *params)` to monitor the interrupt queue `interruptQueue`
+     		1. Many functions to detect the key press that caused the interrupt. They use masking bytes to detect the row and columns that intersect at the key pressed in the keypad 
+		
 
  
 ### References and courtesy credits
@@ -60,7 +63,7 @@ This project __Daisy Chains__ the following devices with __PCF8574 / PCF8574T I/
 7. [Scanning for i2c devices](https://gist.github.com/herzig/8d4c13d8b81a77ac86481c6c1306bb12)
 8. [GPIO interrupts](https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/)
 9. [Using FreeRTOS tasks](https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32)
-10. Enabling the _internal_ __pullup resistor__ and disabling the  _internal_ __pulldown resistor__ on the input pin. The interrupt pin 'INT' from PCF8574 is connected to GPIO15 of ESP32. ‘INPUT_PIN’ is used to read the digital input from pin number 15 in _the code_.
+10. Enabling the _internal_ __pullup resistor__ and disabling the  _internal_ __pulldown resistor__ on the input pin. The interrupt pin 'INT' from PCF8574 is connected to GPIO15 of ESP32. ‘INTERRUPT_PIN’ is used to read the digital input from pin number 15.
    - [_The interrupt open-drain output pin is active LOW.  It is normally pulled HIGH using a pull-up resistor and is driven low by the PCF8574 when any of the inputs change state. This signals the MCU to poll the part to see what is going on. If connecting this pin, enable the internal pull-up resistor on the MCU or add an external pull-up of 10K or so._](https://www.mischianti.org/2019/01/02/pcf8574-i2c-digital-i-o-expander-fast-easy-usage/)
    - [_As we have already configured a pulldown resistor on this GPIO, there is __no need to add a physical resistor__ ourselves._](https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/)
    - [_Warning: There are no internal pullups you have to supply your own resistors._](https://www.best-microcontroller-projects.com/pcf8574.html)
