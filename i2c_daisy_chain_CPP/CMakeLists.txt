@@ -6,7 +6,7 @@ idf_component_register(
 	    i2c_mast_handler.cpp
 	    PCF8574_IO_Expander.cpp         # list the source files of this component
 	    PCF8574_device.cpp  
-	    main.cpp 
+	    i2c_daisy_chain_main_CPP.cpp 
     INCLUDE_DIRS        . # optional, add here public include directories
     PRIV_INCLUDE_DIRS   # optional, add here private include directories
     REQUIRES            # optional, list the public requirements (component names)
