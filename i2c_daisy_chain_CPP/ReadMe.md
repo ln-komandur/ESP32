@@ -1,4 +1,4 @@
-# What's in the CPP Code?
+# What's in the C++ Code?
 
 ## Current capabilities
 The C++ version of i2c daisy chaining currently only 
