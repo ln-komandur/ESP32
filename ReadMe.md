@@ -214,5 +214,10 @@ This approach ***assumes the user's home to be the location*** of the Espressif_
 ### Eclipse with GitHub
 [Tutorial on how to use Eclipse with GitHub](https://github.com/maxkratz/How-to-Eclipse-with-Github)
 
+### ESP32-DevKitC V4 - User Guide
+[ESP32-DevKitC V4 - User Guide](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32/esp32-devkitc/user_guide.html#get-started-esp32-devkitc-board-front)
+
+[ESP32-DevKitC V4 - User Guide - downloadable PDF](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32/esp-dev-kits-en-master-esp32.pdf)
+
 
 
