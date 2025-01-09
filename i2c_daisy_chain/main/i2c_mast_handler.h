@@ -14,6 +14,9 @@
 #include <driver/i2c_master.h>
 #include <freertos/FreeRTOS.h>
 
+#ifndef HEADER_i2c_mast_handler_H_ // Include guard to prevent multiple inclusion / conditional compilation
+#define HEADER_i2c_mast_handler_H_
+
 #define MAX_NO_OF_I2C_DEVICES 128 // This is the maximum number of I2C devices that can be connected
 
 
@@ -27,3 +30,5 @@ i2c_master_bus_handle_t get_i2c_bus_handle(int i2c_num);
  * Returns a pointer to an array of i2c_device_addresses for the given bus handle
  */
 uint8_t* get_connected_i2c_device_addresses(i2c_master_bus_handle_t bus_handle);
+
+#endif //HEADER
