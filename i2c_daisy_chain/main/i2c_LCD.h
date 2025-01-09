@@ -16,6 +16,9 @@
 #include <driver/i2c_master.h>
 #include <unistd.h>
 
+#ifndef HEADER_i2c_LCD_H_ // Include guard to prevent multiple inclusion / conditional compilation
+#define HEADER_i2c_LCD_H_
+
 
 struct LCD_Setup {
 	i2c_master_dev_handle_t device_handle; // holds the device handle to the LCD
@@ -42,3 +45,4 @@ void LCD_Queue_Receiver_Task(void *params); // A task that pools a queue to find
 
 void LCD_Counter_Task(void *params); // An independent task that display a counter on the 1st line of the LCD
 
+#endif //HEADER
