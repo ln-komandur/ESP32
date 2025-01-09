@@ -173,23 +173,27 @@ void Key_Ctrl_Task(void *params) // this function will be called when interrupt 
 
 	while (true)
 	{
-		ESP_LOGI(TAG, "IF xQueueReceive(interruptQueue ... has something in it");
+		ESP_LOGI(TAG, "WAITING: IF xQueueReceive(interruptQueue ... has something in it");
 		if (xQueueReceive(interruptQueue, &pinNumber, portMAX_DELAY))
 		{
 			ESP_LOGI(TAG, "THEN do pinState = gpio_get_level(kpd_cfg.interruptPin)");
 			int pinState = gpio_get_level(kpd_cfg.interruptPin);
 			ESP_LOGI(TAG, "GOT  pinState");
 
-			printf("GPIO%d state is %d. isKeyBeingRead %d\n", pinNumber, pinState, isKeyBeingRead);
+			printf("GPIO%d Pin state is %d. isKeyBeingRead is %d\n", pinNumber, pinState, isKeyBeingRead);
 
 			if (pinState == 0) // only when pin goes down (Falling edge)
 			{
 				isKeyBeingRead = true; // block more items from being added to the queue until this key is found
-				printf("isKeyBeingRead is blocked %d\n", isKeyBeingRead);
-				ESP_LOGI(TAG, "Key Pressed on PCF8574 keypad ");
+				printf("Key Released. Pin gone down (Falling edge). isKeyBeingRead is set to true = %d\n", isKeyBeingRead);
+				ESP_LOGI(TAG, "Key Released on PCF8574 keypad. Pin gone down (Falling edge). isKeyBeingRead is set to true");
 				find_key(kpd_cfg);
 				isKeyBeingRead = false; // reset flag so that the next key press can be added to the queue
 				printf("GPIO%d was pressed %d times. Pin state is %d. isKeyBeingRead is released %d\n", pinNumber, ++count, pinState, isKeyBeingRead);
+			}
+			else
+			{
+				ESP_LOGI(TAG, "Key is Pressed but not yet released. Discarding the interrupt and will wait for the next interrupt on key release");
 			}
 		}
 		else
