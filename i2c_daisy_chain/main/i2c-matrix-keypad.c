@@ -246,6 +246,12 @@ void init_keypad(struct passive_Matrix_keyPad_Setup kpd_cfg)
 	 * The first parameter is the GPIO pin number which is ‘INTERRUPT_PIN’ in our case.
 	 * The second parameter is the trigger type which is set as ‘GPIO_INTR_NEGEDGE’ (falling)
 	 * which means the interrupt will be triggered when the the state of the pin changes from HIGH to LOW.
+	 * We use 'GPIO_INTR_NEGEDGE' because, as soon as an interrupt is triggered (i.e. falling edge is detected)
+	 * we need the rows and columns of the key pad to remain connected so that we can apply masking bytes on 
+	 * rows and columns and find their connection (intersection) to then find the key pressed. 
+	 * If we had used ''GPIO_INTR_POSEDGE', when we get around to reading the interrupt, the condition that 
+	 * caused the interrupt would have gone, we won't know where the rows and columns of the key pad were 
+	 * connected and there's no way to find out the key pressed.
 	 * Refer falling edge per https://www.best-microcontroller-projects.com/pcf8574.html
 	 */
 	
