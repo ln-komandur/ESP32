@@ -17,6 +17,11 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
+
+#ifndef HEADER_a_byte_of_LEDs_H_ // Include guard to prevent multiple inclusion / conditional compilation
+#define HEADER_a_byte_of_LEDs_H_
+
+
 /*
  * Initialize LED blinking task
  * Creates a task with a 
@@ -44,3 +49,5 @@ extern long blinkDuration; // in microseconds
 extern i2c_port_t i2c_port_num; 
 
 extern esp_err_t err;
+
+#endif //HEADER
