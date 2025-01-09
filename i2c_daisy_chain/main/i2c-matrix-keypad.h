@@ -17,7 +17,7 @@
 #include <driver/i2c_master.h>
 #include <driver/gpio.h>
 
-#ifndef HEADER_i2c_matrix_keypad_H_ // Include guard to prevent multiple inclusion
+#ifndef HEADER_i2c_matrix_keypad_H_ /// Include guard to prevent multiple inclusion / conditional compilation
 #define HEADER_i2c_matrix_keypad_H_
 
 extern esp_err_t err;
@@ -34,4 +34,4 @@ void set_keypad_pins(struct passive_Matrix_keyPad_Setup kpdCfg, uint8_t data);
 void find_key(struct passive_Matrix_keyPad_Setup kpdCfg);
 void Key_Ctrl_Task(void *params); // this function will be called when interrupt happens.
 
-#endif
+#endif //HEADER
