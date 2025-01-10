@@ -89,7 +89,7 @@ __Note:__ In the above circuit, on GPIO15, an additional external pullup resisto
 
 __Note:__ 
 1. Jumpers set for different addresses on 2 PCF8574 modules
-2. The purple wire on the matrix keypad ribbon is a dummy
+2. The purple wire dangling on the left of the matrix keypad ribbon is a dummy, and it is also not required
 
 
 ### 2. 3 PCF8574's daisy chained and connected to the i2c bus
