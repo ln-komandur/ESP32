@@ -1,17 +1,22 @@
-menu "Example Configuration"
+# menu for i2c Daicy Chain example
+menu "i2c Daicy Chain Configuration"
 
-    config I2C_MASTER_SCL
-        int "SCL GPIO Num"
-        default 6 if IDF_TARGET_ESP32C3
-        default 19 if IDF_TARGET_ESP32 || IDF_TARGET_ESP32S2 || IDF_TARGET_ESP32S3
+    config PCF8574_SLAVE_ADDR
+        hex "PCF8574 Slave Address"
+        default 0x21
         help
-            GPIO number for I2C Master clock line.
+            A0 jumper to ground on PCF8574 expander.
 
-    config I2C_MASTER_SDA
-        int "SDA GPIO Num"
-        default 5 if IDF_TARGET_ESP32C3
-        default 18 if IDF_TARGET_ESP32 || IDF_TARGET_ESP32S2 || IDF_TARGET_ESP32S3
+    config PCF8574_SLAVE_KPD_ADDRESS
+        hex "PCF8574 Slave Keypad Address"
+        default 0x20 
         help
-            GPIO number for I2C Master data line.
+            No jumper set for keypad on PCF8574 expander.
+
+    config LCD_SLAVE_ADDR
+        hex "LCD Slave Address"
+        default 0x27
+        help
+            This is the same as 0x4E>>1. It is hard wired in the device. Change this according to your device setup.
 
 endmenu
