@@ -11,13 +11,16 @@
  *
  */
 
-
 #include <i2c_LCD.h>
 #include <sys/unistd.h>
+
+#define COUNTER_MS	1000 // In how many milliseconds should the counter be refreshed
 
 esp_err_t err;
 
 static const char *TAG = "i2c_LCD";
+
+
 
 void lcd_send_cmd (struct LCD_Setup LCD_cfg, char cmd)
 {
@@ -193,7 +196,7 @@ void LCD_Counter_Task(void *params)
 		sprintf(buffer, "Counter %d", elapsed_count++);
 		write_string_on_LCD(LCD_cfg, 0, 0, buffer); // display it on line 1 of the LCD though as string
 		ESP_LOGI(TAG, "Wrote counter on LCD 1st line");
-		vTaskDelay( 500); // Delay and count next
+		vTaskDelay( COUNTER_MS / portTICK_PERIOD_MS); // Delay for COUNTER_MS and count next. Since vTaskDelay takes only xTicksToDelay as argument, it has to be divided by portTICK_PERIOD_MS which is the number of milliseconds a scheduler TICK takes
 	}
 	vTaskDelete(NULL); // added per https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32 at the end of the function to gracefully end the task:
 }
