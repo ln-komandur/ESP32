@@ -72,3 +72,4 @@ Change `portTICK_RATE_MS` to `portTICK_PERIOD_MS`
 3. Functions in various programs that use the devices are refactored to use either `bus handles` or `device handles` rather than directly use `I2c_NUM` or `HEX addresses of devices`
 4. Values are passed to functions as `struct` (to mimic an object like approach)
 5. Many settings such as `I2C_NUM0` or `I2C_NUM1`, `HEX addresses` of devices, `pin numbers` etc. are maintained in the main program (where the `app_main` function is present) from where buses and devices are configured and handled
+6. In the legacy `i2c.h`, the `i2c_master_read_from_device(...)` and `i2c_master_write_to_device(...)` functions take the last argument as `ticks_to_wait`. Therefore, a conversion from milliseconds is usually done as `TIMEOUT_MS/portTICK_RATE_MS`. Whereas with `i2c_master.h`, the `i2c_master_receive` and `i2c_master_transmit` take the last argument  `xfer_timeout_ms` in __milliseconds__.
