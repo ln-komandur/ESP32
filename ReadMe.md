@@ -133,7 +133,7 @@ Here is from where the IDE was upgraded to version 3.1.0
 
 ![Open Espressif -> ESP-IDF Manager](3-Open%20ESP-IDF%20Manager.png "Open Espressif -> ESP-IDF Manager")
 
-### 5-Download ESP-IDF
+### 5-Download ESP-IDF and install it
 ![Download ESP-IDF](4-Download%20ESP-IDF.png "Click Add ESP-IDF, Select Version and Directory to download")
 
 **Note:** ESP-IDF comes with a `60-openocd.rules` file which the *ESP-IDF Manager* will copy to `/etc/udev/rules.d/` 
@@ -163,6 +163,36 @@ And after clicking **No** the Tool will be activated with the existing OpenOCD r
 ![Tool Activated with the existing OpenOCD rules file](4d-Tool%20activated%20with%20existing%20OpenOCD%20rules.png "Tool Activated with the existing OpenOCD rules file")
 
 
+### Go to the terminal and continue the ESP-IDF installation
+
+`cd ~/esp-idf-v* # Go to the esp-idf installation for that version`
+
+`chmod +x install.sh # Give execute permissions to install.sh`
+
+`chmod +x export.sh  # Give execute permissions to export.sh`
+
+`chmod +x /tools/idf.py # Give execute permissions to idf.py inside the tools directory`
+
+`./install.sh # Execute ./install.sh at the esp-idf installation directory`
+
+`./install.sh # Execute install.sh at the esp-idf installation directory` and get the following result
+
+```
+Successfully installed idf-component-manager-2.1.2
+All done! You can now run:
+
+  . ./export.sh
+```
+
+`. ./export.sh # Execute install.sh at the esp-idf installation directory` and get the following result
+
+```
+Done! You can now compile ESP-IDF projects.
+Go to the project directory and run:
+
+  idf.py build
+```
+
 ### 6-Create New Espressif IDF project
 
 ![File -> New -> Espressif Project](5-New%20Espressif%20IDF-Project.png "File -> New -> Espressif Project")
@@ -170,6 +200,13 @@ And after clicking **No** the Tool will be activated with the existing OpenOCD r
 
 ![New IDF Project dialog](5a-New%20IDF%20Project%20dialog.png "New IDF Project dialog")
 
+#### Building the project from the terminal
+
+`cd ~/<your-ESP32-workspace-name>/<the-project-name>/ # Go to your workspace and to the project directory inside it`
+
+`idf.py create-manifest # Create a manifest file (main/idf_component.yml) that defines the dependencies of the project.`
+
+`idf.py build # Build the project <the-project-name>`
 
 ## How to uninstall?
 
