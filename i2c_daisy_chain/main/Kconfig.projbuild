@@ -18,5 +18,11 @@ menu "i2c Daicy Chain Configuration"
         default 0x27
         help
             This is the same as 0x4E>>1. It is hard wired in the device. Change this according to your device setup.
-
+            
+    config ESP32_PIN_CONNECTED_TO_KEYPAD_INTERRUPT
+        int "ESP32 PIN Connected to Keypad Interrupt"
+        default 15
+        help
+            The interrupt pin 'INT' from PCF8574 is connected to GPIO15 of ESP32 to read the interrupt from that pin number.
+            
 endmenu
