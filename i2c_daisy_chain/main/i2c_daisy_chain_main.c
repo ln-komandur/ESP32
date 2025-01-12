@@ -17,9 +17,9 @@
 #include <PCF8574_IO_Expander.h>
 
 #define I2C_NUM I2C_NUM_0 // The I2C hardware module (or I2C port) in the ESP32 being used to facilitate I2C communication. Can use I2C_NUM_0 or I2C_NUM_1.
-#define PCF8574_SLAVE_ADDR 0x21 // A0 jumper to ground
-#define PCF8574_SLAVE_KPD_ADDRESS 0x20 // No jumper set for keypad on PCF8574 expander
-#define LCD_SLAVE_ADDR 0x27 // This is the same as 0x4E>>1 // change this according to your device setup
+#define PCF8574_SLAVE_ADDR CONFIG_PCF8574_SLAVE_ADDR // A0 jumper to ground
+#define PCF8574_SLAVE_KPD_ADDRESS CONFIG_PCF8574_SLAVE_KPD_ADDRESS // No jumper set for keypad on PCF8574 expander
+#define LCD_SLAVE_ADDR CONFIG_LCD_SLAVE_ADDR // This is the same as 0x4E>>1 // change this according to your device setup
 
 #define ESP32_PIN_CONNECTED_TO_KEYPAD_INTERRUPT 15 // The interrupt pin 'INT' from PCF8574 is connected to GPIO15 of ESP32.
 // ESP32_PIN_CONNECTED_TO_KEYPAD_INTERRUPT’ is used to read the digital input from pin number 15.
