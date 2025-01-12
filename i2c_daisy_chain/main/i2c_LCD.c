@@ -193,7 +193,7 @@ void LCD_Counter_Task(void *params)
 	while (true)
 	{
 		char buffer[16];
-		sprintf(buffer, "Counter %d", elapsed_count++);
+		sprintf(buffer, "Counter %d   ", elapsed_count++);
 		write_string_on_LCD(LCD_cfg, 0, 0, buffer); // display it on line 1 of the LCD though as string
 		ESP_LOGI(TAG, "Wrote counter on LCD 1st line");
 		vTaskDelay( COUNTER_MS / portTICK_PERIOD_MS); // Delay for COUNTER_MS and count next. Since vTaskDelay takes only xTicksToDelay as argument, it has to be divided by portTICK_PERIOD_MS which is the number of milliseconds a scheduler TICK takes
