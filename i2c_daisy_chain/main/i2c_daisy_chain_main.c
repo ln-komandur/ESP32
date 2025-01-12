@@ -48,7 +48,7 @@ void app_main(void)
 		int len = 24;
 		char buffer[len];
 		sprintf(buffer, "i2c device at: 0x%02X\n", connectedAddresses[address]); // Load the address into the buffer and print
-		printf("%s", buffer);
+		ESP_LOGI(TAG, "i2c device at: %s", buffer);
 	}
 	
 	
