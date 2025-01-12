@@ -175,7 +175,7 @@ void LCD_Queue_Receiver_Task(void *params)
 			char buffer[16];
 			sprintf(buffer, "Last pressed %c", keyPressed); // display hexadecimal  // This is the real statement
 			write_string_on_LCD(LCD_cfg, 1, 0, buffer); // display it on line 2 of the LCD though as string
-			ESP_LOGI(TAG, "Wrote keyPressed on LCD 2nd line");
+			ESP_LOGI(TAG, "Wrote keyPressed on LCD 2nd line. Last pressed %c", keyPressed);
 
 		}
 	}
