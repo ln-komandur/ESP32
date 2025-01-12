@@ -60,9 +60,12 @@ uint8_t get_keypad_pins(struct passive_Matrix_keyPad_Setup kpdCfg)
 	
 	// This happens in the IO expander when reading data using it
 	// Receive / Read from the device
-	i2c_master_receive(kpdCfg.device_handle, rx_data, 1, TIMEOUT_MS/portTICK_PERIOD_MS); // -1 for timeout means wait forever.
+	err = i2c_master_receive(kpdCfg.device_handle, rx_data, 1, TIMEOUT_MS); // -1 for timeout means wait forever.
 
-	ESP_LOGI(TAG, "get_keypad_pins. About to return byte found");
+	if (err!=0)	
+		ESP_LOGI(TAG, "Error in getting data from PCF8574 keypad");
+	else
+		ESP_LOGI(TAG, "get_keypad_pins successful. About to return byte found");
 
 	return rx_data[0]; // there is only one element in this array. Return it.
 }
@@ -76,7 +79,7 @@ void set_keypad_pins(struct passive_Matrix_keyPad_Setup kpdCfg, uint8_t data)
 	data_t[0] = data;
 	
 	// Transmit / Write to the device
-	err = i2c_master_transmit(device_handle, data_t, len, 1000); // -1 means wait forever. This call returns ESP_ERR_INVALID_STATE.
+	err = i2c_master_transmit(device_handle, data_t, len, TIMEOUT_MS); // -1 means wait forever. This call returns ESP_ERR_INVALID_STATE.
 
 	if (err!=0)	
 		ESP_LOGI(TAG, "Error in sending data to PCF8574 keypad");
