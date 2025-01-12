@@ -187,8 +187,7 @@ void Key_Ctrl_Task(void *params) // this function will be called when interrupt 
 			if (pinState == 0) // only when pin goes down (Falling edge)
 			{
 				isKeyBeingRead = true; // block more items from being added to the queue until this key is found
-				printf("Key Released. Pin gone down (Falling edge). isKeyBeingRead is set to true = %d\n", isKeyBeingRead);
-				ESP_LOGI(TAG, "Key Released on PCF8574 keypad. Pin gone down (Falling edge). isKeyBeingRead is set to true");
+				ESP_LOGI(TAG, "Key Released on PCF8574 keypad. Pin gone down (Falling edge). isKeyBeingRead is set to true = %d\n", isKeyBeingRead);
 				find_key(kpd_cfg);
 				isKeyBeingRead = false; // reset flag so that the next key press can be added to the queue
 				ESP_LOGI(TAG, "GPIO%d was pressed %d times. Pin state is %d. isKeyBeingRead is released %d\n", pinNumber, ++count, pinState, isKeyBeingRead);
