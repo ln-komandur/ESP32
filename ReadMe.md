@@ -163,36 +163,6 @@ And after clicking **No** the Tool will be activated with the existing OpenOCD r
 ![Tool Activated with the existing OpenOCD rules file](4d-Tool%20activated%20with%20existing%20OpenOCD%20rules.png "Tool Activated with the existing OpenOCD rules file")
 
 
-### Go to the terminal and continue the ESP-IDF installation
-
-`cd ~/esp-idf-v* # Go to the esp-idf installation for that version`
-
-`chmod +x install.sh # Give execute permissions to install.sh`
-
-`chmod +x export.sh  # Give execute permissions to export.sh`
-
-`chmod +x /tools/idf.py # Give execute permissions to idf.py inside the tools directory`
-
-`./install.sh # Execute ./install.sh at the esp-idf installation directory`
-
-`./install.sh # Execute install.sh at the esp-idf installation directory` and get the following result
-
-```
-Successfully installed idf-component-manager-2.1.2
-All done! You can now run:
-
-  . ./export.sh
-```
-
-`. ./export.sh # Execute install.sh at the esp-idf installation directory` and get the following result
-
-```
-Done! You can now compile ESP-IDF projects.
-Go to the project directory and run:
-
-  idf.py build
-```
-
 ### 6-Create New Espressif IDF project
 
 ![File -> New -> Espressif Project](5-New%20Espressif%20IDF-Project.png "File -> New -> Espressif Project")
