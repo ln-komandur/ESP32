@@ -3,7 +3,6 @@
  *
  *  Created on: Jan 1, 2025
  *      Author: Ln-Komandur
- * The LCD 1602A is based on the Hitachi HD44780 LCD controller.
  * Good reference 
  * - https://www.makeriot2020.com/index.php/2020/10/05/using-i2c-with-a-4x4-matrix-keypad/
  * - https://embeddedexplorer.com/esp32-i2c-tutorial/
@@ -29,9 +28,6 @@ struct passive_Matrix_keyPad_Setup {
 };
 
 void init_keypad(struct passive_Matrix_keyPad_Setup kpd_Config); // this will assign the i2c port, and initialize data pins as well as interrupt pin
-uint8_t get_keypad_pins(struct passive_Matrix_keyPad_Setup kpdCfg);
-void set_keypad_pins(struct passive_Matrix_keyPad_Setup kpdCfg, uint8_t data);
-void find_key(struct passive_Matrix_keyPad_Setup kpdCfg);
 void Key_Ctrl_Task(void *params); // this function will be called when interrupt happens.
 
 #endif //HEADER
