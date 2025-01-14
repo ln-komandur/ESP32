@@ -114,6 +114,54 @@ __Note:__
 __Note:__ 
 1. Internal pullup is enabled in the code as well
 
+## Everytime you need to execute idf.py for the  project
+
+Open the terminal and execute teh following
+
+`cd ~/esp-idf-v* # Go to the esp-idf installation for that version`
+
+`chmod +x install.sh # Give execute permissions to install.sh`
+
+`chmod +x export.sh  # Give execute permissions to export.sh`
+
+`chmod +x /tools/idf.py # Give execute permissions to idf.py inside the tools directory`
+
+`./install.sh # Execute ./install.sh at the esp-idf installation directory`
+
+`./install.sh # Execute install.sh at the esp-idf installation directory` and get the following result
+
+```
+Successfully installed idf-component-manager-2.1.2
+All done! You can now run:
+
+  . ./export.sh
+```
+
+`. ./export.sh # Execute install.sh at the esp-idf installation directory` and get the following result
+
+```
+Done! You can now compile ESP-IDF projects.
+Go to the project directory and run:
+
+  idf.py build
+```
+
+## Suppress Watchdog errors when executing
+
+The following error that Tasks/Users did not reset the watchdog in time for Idle tasks in either CPU may be seen in the console when executing the program after flashing. 
+
+![Task Watchdog triggered on Idle CPU tasks](Task%20Watchdog%20triggered%20on%20Idle%20CPU%20tasks.png)
+
+Edit the menuconfig for your project to suppress the above error
+
+`cd ~/<your-ESP32-workspace-name>/<the-project-name>/ # Go to your workspace and to the project directory inside it`
+
+`idf.py menuconfig # Open the menuconfig for <the-project-name>`
+
+If using esp-idf-v5.3.2, then go to __`Component config`__ -> __`ESP System Settings`__ and Disable __`Watch CPUx Idle Task`__ under __`Task Watchdog Timer`__ for both CPUs, __Save and Exit__
+
+![Disable "Watch CPUx Idle Task" under Watchdog timer](Watchdog%20-%20Watch%20CPUx%20Idle%20Task.png)
+
 ## More
 
 [Importing to Espressif-IDE as Espressif IDF Project](Importing%20to%20Espressif-IDE%20as%20Espressif%20IDF%20Project.md)
