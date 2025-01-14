@@ -3,7 +3,6 @@
  *
  *  Created on: Jan 1, 2025
  *      Author: Ln-Komandur
- * The LCD 1602A is based on the Hitachi HD44780 LCD controller.
  * Good reference 
  * - https://www.makeriot2020.com/index.php/2020/10/05/using-i2c-with-a-4x4-matrix-keypad/
  * - https://embeddedexplorer.com/esp32-i2c-tutorial/
@@ -28,8 +27,6 @@ char keys [4][4] = {
 }; // Reference - https://www.makeriot2020.com/index.php/2020/10/05/using-i2c-with-a-4x4-matrix-keypad/
 
 
-static bool isKeyBeingRead = false;
-
 // the below are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
 QueueHandle_t interruptQueue;
 
@@ -38,28 +35,21 @@ QueueHandle_t interruptQueue;
  * The 1st is ‘xQueue’ which is the queue handle on which the item is to be posted.
  * In our case it is ‘interuptQueue.’
  * The second parameter is the ‘pvItemToQueue’ which is the pointer to the item that is placed on the queue.
- * In our case it is ‘&pinNumber.’ The third parameter is the ‘pxHigherPriorityTaskWoken’ which is NULL in our case.
+ * In our case it is ‘&intrpt_Q_Val.’ The third parameter is the ‘pxHigherPriorityTaskWoken’ which is NULL in our case.
  */
 static void IRAM_ATTR gpio_interrupt_handler(void *args)
 {
-	if (!isKeyBeingRead) // if a key is not being read, then add an item to the queue
-	{
-		int pinNumber = (int)args;
-		xQueueSendFromISR(interruptQueue, &pinNumber, NULL);
-		// Don't use ESP_LOGx from ISRs. If you must, you can use ESP_EARLY_LOG* instead, but it's preferred to not log in ISRs at all as you'd want those to last as short as possible. It will reboot with "lock_acquire_generic at /home/meander/esp-idf-v5.3.2/components/newlib/locks.c:133"
-	}
+	int intrpt_Q_Val = (int)args; // We can put value you in this. We have a dummy value
+	xQueueSendFromISR(interruptQueue, &intrpt_Q_Val, NULL);
 	// Don't use ESP_LOGx from ISRs. If you must, you can use ESP_EARLY_LOG* instead, but it's preferred to not log in ISRs at all as you'd want those to last as short as possible. It will reboot with "lock_acquire_generic at /home/meander/esp-idf-v5.3.2/components/newlib/locks.c:133"
-
 }
 
 uint8_t get_keypad_pins(struct passive_Matrix_keyPad_Setup kpdCfg) 
 {
-	//  Reference https://embeddedexplorer.com/esp32-i2c-tutorial/
-	//  Reading from read_from_PCF8574_pins
+	//  Reading from read_from_PCF8574_pins . Reference https://embeddedexplorer.com/esp32-i2c-tutorial/
 	uint8_t rx_data[1];
 	
-	// This happens in the IO expander when reading data using it
-	// Receive / Read from the device
+	// Receive / Read from the device. This happens in the IO expander
 	err = i2c_master_receive(kpdCfg.device_handle, rx_data, 1, TIMEOUT_MS); // -1 for timeout means wait forever.
 
 	if (err!=0)	
@@ -70,94 +60,19 @@ uint8_t get_keypad_pins(struct passive_Matrix_keyPad_Setup kpdCfg)
 	return rx_data[0]; // there is only one element in this array. Return it.
 }
 
-void set_keypad_pins(struct passive_Matrix_keyPad_Setup kpdCfg, uint8_t data)
-{
-	i2c_master_dev_handle_t device_handle = kpdCfg.device_handle;
-	int len = 1;
 
-	uint8_t data_t[len];
-	data_t[0] = data;
-	
-	// Transmit / Write to the device
-	err = i2c_master_transmit(device_handle, data_t, len, TIMEOUT_MS); // -1 means wait forever. This call returns ESP_ERR_INVALID_STATE.
-
-	if (err!=0)	
-		ESP_LOGI(TAG, "Error in sending data to PCF8574 keypad");
-	else
-		ESP_LOGI(TAG, "set_keypad_pins successful");
-
-}
-
-void find_key(struct passive_Matrix_keyPad_Setup kpdCfg)
-{
-	uint8_t byteOfColumns; //  used for storing what is read from PCF8574 keypad
-	uint8_t bitSetOnColumn = 0;
-	//uint8_t bufferToLogger[1]; 
-	int col = 0;
-	ESP_LOGI(TAG, "find_key() ; byteOfColumns = get_keypad_pins()");
-	byteOfColumns = get_keypad_pins(kpdCfg);
-	ESP_LOGI(TAG, "found the column: byteOfColumns by get_keypad_pins(kpdCfg) ");
-	
-	// find the column
-	bitSetOnColumn = (255 - byteOfColumns)&0xf0;
-	ESP_LOGI(TAG, "find_key() ;  bitSetOnColumn");
-
-	// set that column to 1 and others to 0
-	switch (bitSetOnColumn) {
-		case 128: 	// bitSetOnColumn = 0x80: 10000000. byteOfColumns = 01110000 = 112 = 0x70
-			col = 1; break;
-		case 64: 	// bitSetOnColumn = 0x40: 01000000. byteOfColumns = 10110000 = 176 = 0xb0
-			col = 2; break;
-		case 32: 	// bitSetOnColumn = 0x20: 00100000. byteOfColumns = 11010000 = 208 = 0xd0
-			col = 3; break;
-		case 16: 	// bitSetOnColumn = 0x10: 00010000. byteOfColumns = 11100000 = 224 = 0xe0
-			col = 4; break;
-	}
-	ESP_LOGI(TAG, "set_keypad_pins(0x0f) - set all row pins high now");
-	
-	set_keypad_pins(kpdCfg, 0x0f); // set all row pins high now
-	ESP_LOGI(TAG, "find the row");
-
-	// find the row
-	uint8_t byteOfRows; //  used for storing what is read from PCF8574 keypad
-	ESP_LOGI(TAG, "byteOfRows = get_keypad_pins()");
-	byteOfRows = get_keypad_pins(kpdCfg);
-
-	uint8_t bitSetOnRow;
-	bitSetOnRow = (15 - byteOfRows)&0x0f;
-	char keyPressed = 0;
-	switch (bitSetOnRow) {
-		case 8: 	// bitSetOnRow = 0x08: 00001000. byteOfRows = 00000111 = 7 = 0x07
-			keyPressed = keys[col-1][0];break;
-		case 4: 	// bitSetOnRow = 0x04: 00000100. byteOfRows = 00001011 = 11 = 0x0b
-			keyPressed = keys[col-1][1];break;
-		case 2: 	// bitSetOnRow = 0x02: 00000010. byteOfRows = 00001101 = 13 = 0x0d
-			keyPressed = keys[col-1][2];break;
-		case 1: 	// bitSetOnRow = 0x01: 00000001. byteOfRows = 00001110 = 14 = 0x0e
-			keyPressed = keys[col-1][3];break;
-	}
-	ESP_LOGI(TAG, "fOUNd the row, and then xQueueSend to keyQueue");
-
-	xQueueSend(kpdCfg.keyQueue, &keyPressed, ( TickType_t ) 0); // after finding the key, put it in the keyqueue so that the LCD can pick it up
-	ESP_LOGI(TAG, "set_keypad_pins(0xf0) -> write 11110000 and re-initialize the keypad");
-	set_keypad_pins(kpdCfg, 0xf0); // write 11110000 and re-initialize the keypad as both the column and the row are found by now
-}
-
-
-
-/* Inside this function, we first create two integer variables ‘pinNumber’ and ‘count’ and
- * set their value to 0. Then inside the infinite while function, we check if an item is
+/* Inside this function, we first create an integer variable ‘intrpt_Q_Val’ and set its value
+ * to 0. Then inside the infinite while function, we check if an item is
  * received from the queue by using the xQueueReceive() function. This function takes in
  * three parameters. The first parameter is the ‘xQueue’ which is the queue handle from which
  * the item is to be received. It is ‘interuptQueue’ in our case. The second parameter is the
  * ‘pvBuffer’ which is the pointer to the buffer into which the received item will be copied.
- * In our case it is ‘&pinNumber.’ The third parameter is the ‘xTicksToWait’ which is the
+ * In our case it is ‘&intrpt_Q_Val.’ The third parameter is the ‘xTicksToWait’ which is the
  * maximum amount of time the task should block waiting for an item to receive should the
  * queue be empty at the time of the call. In our case it is set as ‘portMAX_DELAY.’
  * Thus, when the interrupt occurs then gpio_set_level() function is called to set the level of
  * the LED_PIN according to the level of the INTERRUPT_PIN.
- * At this time the ESP-IDF terminal prints the message that the GPIO was pressed,
- * its state, the pin Number and count.
+ * At this time the ESP-IDF terminal prints the message that the GPIO was pressed.
  * The above are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
  * It also calls the showKeyPressed() function to display the key
  */
@@ -165,32 +80,62 @@ void find_key(struct passive_Matrix_keyPad_Setup kpdCfg)
 
 void Key_Ctrl_Task(void *params) // this function will be called when interrupt happens.
 {
-	struct passive_Matrix_keyPad_Setup * kpd_cfg_ptr = (struct passive_Matrix_keyPad_Setup *)params;
-	struct passive_Matrix_keyPad_Setup kpd_cfg = * kpd_cfg_ptr;
+	struct passive_Matrix_keyPad_Setup kpd_cfg = * (struct passive_Matrix_keyPad_Setup *)params;
 
-	int pinNumber = 0;
-	int count = 0;
+	int intrpt_Q_Val = 0; // We can put value you in this. We have a dummy value
 	
 	ESP_LOGI(TAG, "Key_Ctrl_Task(void *params) ");
-
 
 	while (true)
 	{
 		ESP_LOGI(TAG, "WAITING: IF xQueueReceive(interruptQueue ... has something in it");
-		if (xQueueReceive(interruptQueue, &pinNumber, portMAX_DELAY))
+		if (xQueueReceive(interruptQueue, &intrpt_Q_Val, portMAX_DELAY))
 		{
 			ESP_LOGI(TAG, "THEN do pinState = gpio_get_level(kpd_cfg.interruptPin)");
-			int pinState = gpio_get_level(kpd_cfg.interruptPin);
-			ESP_LOGI(TAG, "GOT  pinState");
-			ESP_LOGI(TAG, "GPIO%d Pin state is %d. isKeyBeingRead is %d\n", pinNumber, pinState, isKeyBeingRead);
 
-			if (pinState == 0) // only when pin goes down (Falling edge)
+			if (gpio_get_level(kpd_cfg.interruptPin) == 0) // only when pin goes down (Falling edge)
 			{
-				isKeyBeingRead = true; // block more items from being added to the queue until this key is found
-				ESP_LOGI(TAG, "Key Released on PCF8574 keypad. Pin gone down (Falling edge). isKeyBeingRead is set to true = %d\n", isKeyBeingRead);
-				find_key(kpd_cfg);
-				isKeyBeingRead = false; // reset flag so that the next key press can be added to the queue
-				ESP_LOGI(TAG, "GPIO%d was pressed %d times. Pin state is %d. isKeyBeingRead is released %d\n", pinNumber, ++count, pinState, isKeyBeingRead);
+				ESP_LOGI(TAG, "Key Released on PCF8574 keypad. Pin gone down (Falling edge). Finding column from 1 to 4");
+
+				int col = 0;
+
+				// set that column to 1 and others to 0
+				switch ((255 - get_keypad_pins(kpd_cfg))&0xf0) {
+					case 128: 	// bitSetOnColumn = 0x80: 10000000. byteOfColumns = 01110000 = 112 = 0x70
+						col = 1; break;
+					case 64: 	// bitSetOnColumn = 0x40: 01000000. byteOfColumns = 10110000 = 176 = 0xb0
+						col = 2; break;
+					case 32: 	// bitSetOnColumn = 0x20: 00100000. byteOfColumns = 11010000 = 208 = 0xd0
+						col = 3; break;
+					case 16: 	// bitSetOnColumn = 0x10: 00010000. byteOfColumns = 11100000 = 224 = 0xe0
+						col = 4; break;
+				}
+				ESP_LOGI(TAG, "set_keypad_pins(0x0f) - set all row pins high now with 0x0f");
+				
+				// set all row pins high now
+				err = i2c_master_transmit(kpd_cfg.device_handle, (uint8_t []){0x0f}, 1, TIMEOUT_MS); // -1 means wait forever. This call returns ESP_ERR_INVALID_STATE.
+
+				ESP_LOGI(TAG, "finding the row");
+				switch ((15 - get_keypad_pins(kpd_cfg))&0x0f) { // 15 is 00001111
+					case 8: 	// bitSetOnRow = 0x08: 00001000. byteOfRows = 00000111 = 7 = 0x07
+						xQueueSend(kpd_cfg.keyQueue, &keys[col-1][0], ( TickType_t ) 0); // after finding the key, put it in the keyqueue so that the LCD can pick it up
+						break;
+					case 4: 	// bitSetOnRow = 0x04: 00000100. byteOfRows = 00001011 = 11 = 0x0b
+						xQueueSend(kpd_cfg.keyQueue, &keys[col-1][1], ( TickType_t ) 0); // after finding the key, put it in the keyqueue so that the LCD can pick it up				
+						break;
+					case 2: 	// bitSetOnRow = 0x02: 00000010. byteOfRows = 00001101 = 13 = 0x0d
+						xQueueSend(kpd_cfg.keyQueue, &keys[col-1][2], ( TickType_t ) 0); // after finding the key, put it in the keyqueue so that the LCD can pick it up
+						break;
+					case 1: 	// bitSetOnRow = 0x01: 00000001. byteOfRows = 00001110 = 14 = 0x0e
+						xQueueSend(kpd_cfg.keyQueue, &keys[col-1][3], ( TickType_t ) 0); // after finding the key, put it in the keyqueue so that the LCD can pick it up	
+						break;
+				}
+				ESP_LOGI(TAG, "FOUND the row, and CALLED xQueueSend and SEND to keyQueue set_keypad_pins(0xf0) -> write 11110000 and re-initialize the keypad");
+				// write 11110000 and re-initialize the keypad as both the column and the row are found by now
+				// Transmit / Write to the device
+				err = i2c_master_transmit(kpd_cfg.device_handle, (uint8_t []){0xf0}, 1, TIMEOUT_MS); // -1 means wait forever. This call returns ESP_ERR_INVALID_STATE.
+
+				ESP_LOGI(TAG, "GPIO%d was pressed", intrpt_Q_Val);
 			}
 			else
 			{
@@ -208,9 +153,9 @@ void Key_Ctrl_Task(void *params) // this function will be called when interrupt 
 
 void init_keypad(struct passive_Matrix_keyPad_Setup kpd_cfg) 
 {
-	set_keypad_pins(kpd_cfg, 0xf0); // write 11110000
+	// Initialize 11110000 on the keypad pins to detect the columns
+	err = i2c_master_transmit(kpd_cfg.device_handle, (uint8_t []){0xf0}, 1, TIMEOUT_MS); // -1 means wait forever. This call returns ESP_ERR_INVALID_STATE.
 	ESP_LOGI(TAG, "set_keypad_pins to 0xf0 = 11110000");
-
 
 	// the below are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
 	/*
@@ -272,8 +217,9 @@ void init_keypad(struct passive_Matrix_keyPad_Setup kpd_cfg)
 	 */
 	gpio_install_isr_service(0);
 	ESP_LOGI(TAG, "gpio_install_isr_service");
-
-	gpio_isr_handler_add(kpd_cfg.interruptPin, gpio_interrupt_handler, (void *)kpd_cfg.interruptPin);
+	
+	int dummy_Val_For_intrpt_Q = 1;
+	gpio_isr_handler_add(kpd_cfg.interruptPin, gpio_interrupt_handler, (void *)dummy_Val_For_intrpt_Q);
 	ESP_LOGI(TAG, "gpio_isr_handler_add");
 
 	// the above are from https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/
