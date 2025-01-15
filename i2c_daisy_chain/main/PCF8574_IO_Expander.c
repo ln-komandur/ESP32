@@ -22,7 +22,8 @@ i2c_master_dev_handle_t get_i2c_device_handle(i2c_master_bus_handle_t bus_handle
 	    .dev_addr_length = I2C_ADDR_BIT_LEN_7,
 	    .device_address = dev_address,
 	    .scl_speed_hz = 400000,
-	    .scl_wait_us = 5 * 1000, // BQ27441 can stretch up to 4ms, use 5ms to be safe. From https://github.com/espressif/esp-idf/issues/14401
+	    .scl_wait_us = 0, // Clock stretch set to 0 to use default register value per https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/peripherals/i2c.html 
+	    //.scl_wait_us = 5 * 1000, // BQ27441 can stretch up to 4ms, use 5ms to be safe. From https://github.com/espressif/esp-idf/issues/14401
 	};
 	// Add the device to the master bus
 	i2c_master_bus_add_device(bus_handle, &pcf8574_cfg, &device_handle);
