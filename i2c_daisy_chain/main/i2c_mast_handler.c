@@ -15,7 +15,7 @@
 #include <stdint.h>
 
 // I2C Clock Speed - standard mode: 100 kbit/s, full speed: 400 kbit/s,... per https://www.i2c-bus.org/speed/
-#define MSTR_CLK_SPD		100000 //  400KHz solve'D' https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters
+//#define MSTR_CLK_SPD		100000 //  400KHz solve'D' https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters
 
 static const char *TAG = "i2c_mast_handler";
 
