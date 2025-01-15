@@ -83,7 +83,7 @@ void init_LED_blink(i2c_master_dev_handle_t device_handle, uint8_t initByte, lon
 {
 	blinkDuration = duration;
 	startByte = initByte;
-	xTaskCreate(blink_LEDs_Task, "blink_LEDs_Task", 2048, &device_handle, 1, NULL);
+	xTaskCreate(&blink_LEDs_Task, "blink_LEDs_Task", 2048, &device_handle, 1, NULL);
 	ESP_LOGI(TAG, "Created blink LEDs task");
 
 }
