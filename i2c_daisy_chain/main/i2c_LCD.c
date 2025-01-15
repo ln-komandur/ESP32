@@ -126,10 +126,10 @@ void lcd_init (struct LCD_Setup LCD_cfg)
 	lcd_send_cmd (LCD_cfg, 0x0C); //Display on/off control --> D = 1, C and B = 0. (Cursor and blink, last two bits)
 	usleep(1000);
 
-	xTaskCreate(LCD_Queue_Receiver_Task, "LCD_Queue_Receiver_Task", 2048, &LCD_cfg, 1, NULL);
+	xTaskCreate(&LCD_Queue_Receiver_Task, "LCD_Queue_Receiver_Task", 2048, &LCD_cfg, 1, NULL);
 	ESP_LOGI(TAG, "Created LCD_Queue_Receiver_Task");
 
-	xTaskCreate(LCD_Counter_Task, "LCD_Counter_Task", 2048, &LCD_cfg, 1, NULL);
+	xTaskCreate(&LCD_Counter_Task, "LCD_Counter_Task", 2048, &LCD_cfg, 1, NULL);
 	ESP_LOGI(TAG, "Created LCD_Counter_Task");
 
 }
