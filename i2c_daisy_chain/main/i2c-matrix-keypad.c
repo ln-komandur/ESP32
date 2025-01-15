@@ -210,7 +210,7 @@ void init_keypad(struct passive_Matrix_keyPad_Setup kpd_cfg)
 	interruptQueue = xQueueCreate(10, sizeof(int));
 	ESP_LOGI(TAG, "interruptQueue = xQueueCreate(10, sizeof(int))");
 	
-	xTaskCreate(Key_Ctrl_Task, "Key_Ctrl_Task", 2048, &kpd_cfg, 1, NULL);
+	xTaskCreate(&Key_Ctrl_Task, "Key_Ctrl_Task", 2048, &kpd_cfg, 1, NULL);
 	ESP_LOGI(TAG, "xTaskCreate(Key_Ctrl_Task,2048,&kpd_cfg,1,NULL)");
 	/* Install the interrupt service routine with the flags for interrupt allocation
 	 * Add the ISR handler for the INTERRUPT_PIN using gpio_isr_handler_add()
