@@ -23,6 +23,6 @@ menu "i2c Daicy Chain Configuration"
         int "ESP32 PIN Connected to Keypad Interrupt"
         default 15
         help
-            The interrupt pin 'INT' from PCF8574 is connected to GPIO15 of ESP32 to read the interrupt from that pin number.
+            The interrupt pin 'INT' from PCF8574 is connected to GPIO15 of ESP32 (as it has a  WEAK INTERNAL PULLUP) to read the interrupt from that pin number.
             
 endmenu
