@@ -85,9 +85,14 @@ void Key_Ctrl_Task(void *params) // this function will be called when interrupt 
 	int intrpt_Q_Val = 0; // We can put value you in this. We have a dummy value
 	
 	ESP_LOGI(TAG, "Key_Ctrl_Task(void *params) ");
+	UBaseType_t uxHighWaterMark; // Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
 
 	while (true)
 	{
+	    /* Inspect our own high water mark on entering the task. */
+        uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL ); // Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
+        
+        
 		ESP_LOGI(TAG, "WAITING: IF xQueueReceive(interruptQueue ... has something in it");
 		if (xQueueReceive(interruptQueue, &intrpt_Q_Val, portMAX_DELAY))
 		{
@@ -146,6 +151,12 @@ void Key_Ctrl_Task(void *params) // this function will be called when interrupt 
 		{
 			ESP_LOGI(TAG, "Key NOT Pressed on PCF8574 keypad ");
 		}
+		/* Calling the function will have used some stack space, we would 
+       	therefore now expect uxTaskGetStackHighWaterMark() to return a 
+       	value lower than when it was called on entering the task. */
+        uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL );
+		ESP_LOGI(TAG, "Key_Ctrl_Task uxHighWaterMark = %u", uxHighWaterMark); // Refer - https://www.freertos.org/FreeRTOS_Support_Forum_Archive/July_2019/freertos_Understanding_uxTaskGetStackHighWaterMark_results_51c44e8598j.html
+
 	}
 	vTaskDelete(NULL); // added per https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32 at the end of the function to gracefully end the task:
 }
@@ -210,8 +221,8 @@ void init_keypad(struct passive_Matrix_keyPad_Setup kpd_cfg)
 	interruptQueue = xQueueCreate(10, sizeof(int));
 	ESP_LOGI(TAG, "interruptQueue = xQueueCreate(10, sizeof(int))");
 	
-	xTaskCreate(&Key_Ctrl_Task, "Key_Ctrl_Task", 2048, &kpd_cfg, 1, NULL);
-	ESP_LOGI(TAG, "xTaskCreate(Key_Ctrl_Task,2048,&kpd_cfg,1,NULL)");
+	xTaskCreate(&Key_Ctrl_Task, "Key_Ctrl_Task", 2560, &kpd_cfg, 1, NULL);
+	ESP_LOGI(TAG, "xTaskCreate(Key_Ctrl_Task,2560,&kpd_cfg,1,NULL)");
 	/* Install the interrupt service routine with the flags for interrupt allocation
 	 * Add the ISR handler for the INTERRUPT_PIN using gpio_isr_handler_add()
 	 */
