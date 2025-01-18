@@ -89,9 +89,10 @@ void Key_Ctrl_Task(void *params) // this function will be called when interrupt 
 
 	while (true)
 	{
-	    /* Inspect our own high water mark on entering the task. */
-        uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL ); // Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
-        
+	    /* Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark 
+	    * Optionally inspect our own high water mark on entering the task.
+	    */
+        // uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL ); // Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
         
 		ESP_LOGI(TAG, "WAITING: IF xQueueReceive(interruptQueue ... has something in it");
 		if (xQueueReceive(interruptQueue, &intrpt_Q_Val, portMAX_DELAY))
@@ -151,11 +152,16 @@ void Key_Ctrl_Task(void *params) // this function will be called when interrupt 
 		{
 			ESP_LOGI(TAG, "Key NOT Pressed on PCF8574 keypad ");
 		}
-		/* Calling the function will have used some stack space, we would 
-       	therefore now expect uxTaskGetStackHighWaterMark() to return a 
-       	value lower than when it was called on entering the task. */
-        uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL );
-		ESP_LOGI(TAG, "Key_Ctrl_Task uxHighWaterMark = %u", uxHighWaterMark); // Refer - https://www.freertos.org/FreeRTOS_Support_Forum_Archive/July_2019/freertos_Understanding_uxTaskGetStackHighWaterMark_results_51c44e8598j.html
+		/* 
+		Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
+		Calling the function will have used some stack space, we would therefore now expect uxTaskGetStackHighWaterMark() to return a 
+       	value lower than when it was called on entering the task. 
+       	
+       	A task may query its own high water mark by passing NULL as the xTask parameter for the handle of the task being queried.
+       	*/
+        uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL ); // Refer - https://www.freertos.org/FreeRTOS_Support_Forum_Archive/July_2019/freertos_Understanding_uxTaskGetStackHighWaterMark_results_51c44e8598j.html
+		
+		ESP_LOGI(TAG, "Key_Ctrl_Task uxHighWaterMark = %u", uxHighWaterMark); 
 
 	}
 	vTaskDelete(NULL); // added per https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32 at the end of the function to gracefully end the task:
