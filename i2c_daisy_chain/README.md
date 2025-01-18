@@ -47,10 +47,11 @@ The 3 devices in this project implement and help learn the following capabilitie
 
  
 ### References and courtesy credits
-1. [ESP32-DevKitC V4 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/v3.3/get-started/get-started-devkitc.html)
-2. [PCF8574 GPIO Extender - Overview, Addressing, Finding address using i2c scanner, Using the Interrupt pin](https://how-to-videos.wonderhowto.com/forum/pcf8574-gpio-extender-with-arduino-and-nodemcu-0192441/)
-3. [Reading from PCF8574 pins / i2c Tutorial](https://embeddedexplorer.com/esp32-i2c-tutorial/)
-4. The LCD 1602A is based on the Hitachi HD44780 LCD controller. Refer
+1. [ESP32-DevKitC V4 Getting Started Guide](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32/esp32-devkitc/user_guide.html#what-you-need)
+   - Shows __GPIO15__ to have a __WPU__ (Internal _Weak PullUp_) that we enable when connecting to the interrupt pin on the PCF8574 
+3. [PCF8574 GPIO Extender - Overview, Addressing, Finding address using i2c scanner, Using the Interrupt pin](https://how-to-videos.wonderhowto.com/forum/pcf8574-gpio-extender-with-arduino-and-nodemcu-0192441/)
+4. [Reading from PCF8574 pins / i2c Tutorial](https://embeddedexplorer.com/esp32-i2c-tutorial/)
+5. The LCD 1602A is based on the Hitachi HD44780 LCD controller. Refer
    - https://mil.ufl.edu/3744/docs/lcdmanual/commands.html#Sda 
    - [Interfacing LCD in 4-bit mode with 8051](https://exploreembedded.com/wiki/Interfacing_LCD_in_4-bit_mode_with_8051)
    - [RS=0 is to select command register](https://blog.embeddedexpert.io/?p=600)
@@ -58,12 +59,13 @@ The 3 devices in this project implement and help learn the following capabilitie
    - [Pin connection order in the notation LCD connection (to PCF8574 pin) is D7(P7), D6(P6), D5(P5), D4(P4), VEE(P3), EN(P2), RW (P1), RS (P0)](https://www.instructables.com/HD44780-LCD-to-I2C-adapter-board-for-the-Bus-Pirat/)
    - [The VEE pin regulates the display's contrast, via a changeable POT that can supply 0 to 5V](https://www.elprocus.com/lcd-16x2-pin-configuration-and-its-working/)
    - [Command set of the LCD 1602A which is based on the Hitachi HD44780 LCD controller](https://www.sparkfun.com/datasheets/LCD/HD44780.pdf) - The initialisation pattern is shown in page 46 of the datasheet
-5. [i2c Clock speed](https://www.i2c-bus.org/speed/)
-6. [i2c LCD Displaying Weird Characters - 400KHz SolveD](https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters)
-7. [Scanning for i2c devices](https://gist.github.com/herzig/8d4c13d8b81a77ac86481c6c1306bb12)
-8. [GPIO interrupts](https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/)
-9. [Using FreeRTOS tasks](https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32)
-10. Enabling the _internal_ __pullup resistor__ and disabling the  _internal_ __pulldown resistor__ on the input pin. The interrupt pin 'INT' from PCF8574 is connected to GPIO15 of ESP32. ‘INTERRUPT_PIN’ is used to read the digital input from pin number 15.
+6. [i2c Clock speed](https://www.i2c-bus.org/speed/)
+7. [i2c LCD Displaying Weird Characters - 400KHz SolveD](https://arduino.stackexchange.com/questions/19150/i2c-lcd-displaying-weird-characters)
+8. [Scanning for i2c devices](https://gist.github.com/herzig/8d4c13d8b81a77ac86481c6c1306bb12)
+9. [GPIO interrupts](https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/)
+10. [Using FreeRTOS tasks](https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32)
+    - Avoiding `***ERROR*** A stack overflow in task <some task name> has been detected.` and `Rebooting...` by allocating the right stack size for tasks by checking the [uxHighWaterMark](https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark)
+12. Enabling the _internal_ __pullup resistor__ and disabling the  _internal_ __pulldown resistor__ on the input pin. The interrupt pin 'INT' from PCF8574 is connected to GPIO15 of ESP32. ‘INTERRUPT_PIN’ is used to read the digital input from pin number 15.
    - [_The interrupt open-drain output pin is active LOW.  It is normally pulled HIGH using a pull-up resistor and is driven low by the PCF8574 when any of the inputs change state. This signals the MCU to poll the part to see what is going on. If connecting this pin, enable the internal pull-up resistor on the MCU or add an external pull-up of 10K or so._](https://www.mischianti.org/2019/01/02/pcf8574-i2c-digital-i-o-expander-fast-easy-usage/)
    - [_As we have already configured a pulldown resistor on this GPIO, there is __no need to add a physical resistor__ ourselves._](https://esp32tutorials.com/esp32-gpio-interrupts-esp-idf/)
    - [_Warning: There are no internal pullups you have to supply your own resistors._](https://www.best-microcontroller-projects.com/pcf8574.html)
