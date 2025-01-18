@@ -48,7 +48,7 @@ The 3 devices in this project implement and help learn the following capabilitie
  
 ### References and courtesy credits
 1. [ESP32-DevKitC V4 Getting Started Guide](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32/esp32-devkitc/user_guide.html#what-you-need)
-   - Shows __GPIO15__ to have a __WPU__ (Internal _Weak PullUp_) that we enable when connecting to the interrupt pin on the PCF8574 
+   - Shows __GPIO15__ to have a __WPU__ (Internal _Weak PullUp_ resistor) that can enabled through the code when connecting it to the INT _(interrupt)_ pin on the PCF8574 
 3. [PCF8574 GPIO Extender - Overview, Addressing, Finding address using i2c scanner, Using the Interrupt pin](https://how-to-videos.wonderhowto.com/forum/pcf8574-gpio-extender-with-arduino-and-nodemcu-0192441/)
 4. [Reading from PCF8574 pins / i2c Tutorial](https://embeddedexplorer.com/esp32-i2c-tutorial/)
 5. The LCD 1602A is based on the Hitachi HD44780 LCD controller. Refer
