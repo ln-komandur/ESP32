@@ -168,12 +168,13 @@ void LCD_Queue_Receiver_Task(void *params)
 	ESP_LOGI(TAG, "Now in LCD queue receiver task");
 	
 	UBaseType_t uxHighWaterMark; // Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
+    /* Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark 
+    * Optionally inspect our own high water mark on entering the task.
+    */
+    // uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL ); // Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
 
 	while (true)
 	{
-	    /* Inspect our own high water mark on entering the task. */
-        uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL ); // Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
-
 		char keyPressed = 0; // This is the real statement
 		xQueueReceive(myQueue, &keyPressed, ( TickType_t ) 0); // take the key found in the queue
 		if (keyPressed != 0) // if a key is found
@@ -182,6 +183,14 @@ void LCD_Queue_Receiver_Task(void *params)
 			sprintf(buffer, "Last pressed %c", keyPressed); // display hexadecimal  // This is the real statement
 			write_string_on_LCD(LCD_cfg, 1, 0, buffer); // display it on line 2 of the LCD though as string
 			ESP_LOGI(TAG, "Wrote keyPressed on LCD 2nd line. Last pressed %c", keyPressed);
+			/* 
+			Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
+			Calling the function will have used some stack space, we would therefore now expect uxTaskGetStackHighWaterMark() to return a 
+	       	value lower than when it was called on entering the task. 
+	       	
+	       	A task may query its own high water mark by passing NULL as the xTask parameter for the handle of the task being queried.
+	       	*/
+	        uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL ); // Refer - https://www.freertos.org/FreeRTOS_Support_Forum_Archive/July_2019/freertos_Understanding_uxTaskGetStackHighWaterMark_results_51c44e8598j.html
 			ESP_LOGI(TAG, "LCD_Queue_Receiver_Task uxHighWaterMark = %u", uxHighWaterMark); // Refer - https://www.freertos.org/FreeRTOS_Support_Forum_Archive/July_2019/freertos_Understanding_uxTaskGetStackHighWaterMark_results_51c44e8598j.html
 		}
 	}
@@ -197,17 +206,27 @@ void LCD_Counter_Task(void *params)
 	ESP_LOGI(TAG, "Now in LCD_Counter_Task task");
 	char elapsed_count = 1; 
 	UBaseType_t uxHighWaterMark; // Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
+    /* Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark 
+    * Optionally inspect our own high water mark on entering the task.
+    */
+    // uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL ); // Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
 
 	while (true)
 	{
-	    /* Inspect our own high water mark on entering the task. */
-        uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL ); // Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
-
 		char buffer[16];
 		sprintf(buffer, "Counter %d   ", elapsed_count++);
 		write_string_on_LCD(LCD_cfg, 0, 0, buffer); // display it on line 1 of the LCD though as string
 		ESP_LOGI(TAG, "Wrote counter on LCD 1st line");
 		vTaskDelay( COUNTER_MS / portTICK_PERIOD_MS); // Delay for COUNTER_MS and count next. Since vTaskDelay takes only xTicksToDelay as argument, it has to be divided by portTICK_PERIOD_MS which is the number of milliseconds a scheduler TICK takes
+		/* 
+		Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
+		Calling the function will have used some stack space, we would therefore now expect uxTaskGetStackHighWaterMark() to return a 
+       	value lower than when it was called on entering the task. 
+       	
+       	A task may query its own high water mark by passing NULL as the xTask parameter for the handle of the task being queried.
+       	*/
+        uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL ); // Refer - https://www.freertos.org/FreeRTOS_Support_Forum_Archive/July_2019/freertos_Understanding_uxTaskGetStackHighWaterMark_results_51c44e8598j.html
+
 		ESP_LOGI(TAG, "LCD_Counter_Task uxHighWaterMark = %u", uxHighWaterMark); // Refer - https://www.freertos.org/FreeRTOS_Support_Forum_Archive/July_2019/freertos_Understanding_uxTaskGetStackHighWaterMark_results_51c44e8598j.html
 	}
 	vTaskDelete(NULL); // added per https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32 at the end of the function to gracefully end the task:
