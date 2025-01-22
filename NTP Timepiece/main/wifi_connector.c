@@ -1,4 +1,4 @@
-// Referenced from from https://esp32tutorials.com/esp32-web-server-esp-idf/
+// Referenced from https://esp32tutorials.com/esp32-web-server-esp-idf/
 
 #include <wifi_connector.h>
 
