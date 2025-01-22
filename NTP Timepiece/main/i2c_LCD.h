@@ -20,27 +20,22 @@
 #define HEADER_i2c_LCD_H_
 
 
-struct LCD_Setup {
-	i2c_master_dev_handle_t device_handle; // holds the device handle to the LCD
-	QueueHandle_t keyQueue; // this queue holds the keys pressed. Its size as 32, is the total number of characters on a 1602 LCD display
-};
+i2c_master_dev_handle_t get_i2c_device_handle(i2c_master_bus_handle_t bus_handle, uint8_t device_address); // get the device handle
 
-void lcd_init (struct LCD_Setup LCD_cfg);   // initialize lcd at the device handle
+void lcd_init (i2c_master_dev_handle_t LCD_dev_handle);   // initialize lcd at the device handle
 
-void lcd_send_cmd (struct LCD_Setup LCD_cfg, char cmd);  // send command to the lcd
+void lcd_send_cmd (i2c_master_dev_handle_t LCD_dev_handle, char cmd);  // send command to the lcd
 
-void lcd_send_data (struct LCD_Setup LCD_cfg, char data);  // send data to the lcd
+void lcd_send_data (i2c_master_dev_handle_t LCD_dev_handle, char data);  // send data to the lcd
 
-void lcd_send_string (struct LCD_Setup LCD_cfg, char *str);  // send string to the lcd
+void lcd_send_string (i2c_master_dev_handle_t LCD_dev_handle, char *str);  // send string to the lcd
 
-void lcd_put_cur(struct LCD_Setup LCD_cfg,int row, int col);  // put cursor at the entered position row (0 or 1), col (0-15);
+void lcd_put_cur(i2c_master_dev_handle_t LCD_dev_handle,int row, int col);  // put cursor at the entered position row (0 or 1), col (0-15);
 
-void lcd_clear (struct LCD_Setup LCD_cfg); // Clears the LCD
+void lcd_clear (i2c_master_dev_handle_t LCD_dev_handle); // Clears the LCD
 
-void write_string_on_LCD(struct LCD_Setup LCD_cfg, int lineNo, int colNo, char *str); // Writes a string onto the LCD
+void write_string_on_LCD(i2c_master_dev_handle_t LCD_dev_handle, int lineNo, int colNo, char *str); // Writes a string onto the LCD
 
-void write_hex_on_LCD(struct LCD_Setup LCD_cfg, int lineNo, int colNo, uint8_t hex); // Writes a HEX onto the LCD
-
-void LCD_Refresh_Every_Second(void *params); // An independent task that display a counter on the 1st line of the LCD
+void write_hex_on_LCD(i2c_master_dev_handle_t LCD_dev_handle, int lineNo, int colNo, uint8_t hex); // Writes a HEX onto the LCD
 
 #endif //HEADER
