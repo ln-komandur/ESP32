@@ -1,4 +1,4 @@
-// Referenced from https://esp32tutorials.com/esp32-web-server-esp-idf/
+// Referenced and modified from https://esp32tutorials.com/esp32-web-server-esp-idf/
 
 #include "esp_wifi.h"
 #include "esp_log.h"
@@ -18,7 +18,6 @@
 #define WIFI_FAIL_BIT BIT1
 
 void init_nvs_flash(void);
-
 void connect_wifi(void);
 
 #endif //HEADER
