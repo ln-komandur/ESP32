@@ -31,10 +31,17 @@ menu "NTP Configuration"
         default 10000
         help
             Milli seconds to wait to sync with NTP server.
-
+    # Refer - https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv
     config TIME_ZONE
         string "Time Zone"
-        default "GMT+8"
+        default "CST6CDT"
         help
             Time zone of this clock.
+
+    config LCD_SLAVE_ADDR
+        hex "LCD Slave Address"
+        default 0x27
+        help
+            This is the same as 0x4E>>1. It is hard wired in the device. Change this according to your device setup.
+
 endmenu
