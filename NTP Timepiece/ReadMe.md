@@ -10,17 +10,12 @@ Unless required by applicable law or agreed to in writing, this
 software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied.*
 
-
-# From Examples
-
-[Refer this one](https://github.com/espressif/esp-idf/tree/master/examples/protocols/sntp)
-
-[Refer this one too](https://developer.espressif.com/blog/getting-started-with-wifi-on-esp-idf/)
-
-References from 
+# References from Examples as below
 
 [esp32tutorials.com esp32-sntp-esp-idf-synchronize-time-ntp](https://esp32tutorials.com/esp32-sntp-esp-idf-synchronize-time-ntp/)
 
 [esp32tutorials.com esp32-web-server-esp-idf](https://esp32tutorials.com/esp32-web-server-esp-idf/)
 
 [espressif esp-idf - examples protocols sntp](https://github.com/espressif/esp-idf/tree/master/examples/protocols/sntp)
+
+[getting started with wifi on esp idf](https://developer.espressif.com/blog/getting-started-with-wifi-on-esp-idf/)
