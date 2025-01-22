@@ -3,7 +3,8 @@
 
 idf_component_register(
     SRCS
-    	# i2c_LCD.c
+    	i2c_mast_handler.c
+    	i2c_LCD.c
     	wifi_connector.c 
     	my_ntp_clock_main.c         # list the source files of this component
     INCLUDE_DIRS        . # optional, add here public include directories
