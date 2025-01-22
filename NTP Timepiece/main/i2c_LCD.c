@@ -20,9 +20,25 @@ esp_err_t err;
 
 static const char *TAG = "i2c_LCD";
 
+i2c_master_dev_handle_t get_i2c_device_handle(i2c_master_bus_handle_t bus_handle, uint8_t dev_address)
+{
+	i2c_master_dev_handle_t device_handle;
 
+	// Configure the device at a certain address
+	i2c_device_config_t pcf8574_cfg = {
+	    .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+	    .device_address = dev_address,
+	    .scl_speed_hz = 400000,
+	    .scl_wait_us = 0, // Clock stretch set to 0 to use default register value per https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/peripherals/i2c.html 
+	    //.scl_wait_us = 5 * 1000, // BQ27441 can stretch up to 4ms, use 5ms to be safe. From https://github.com/espressif/esp-idf/issues/14401
+	};
+	// Add the device to the master bus
+	i2c_master_bus_add_device(bus_handle, &pcf8574_cfg, &device_handle);
+	ESP_LOGI(TAG, "get_i2c_device_handle: Got a Device Handle: About to return that DEVICE handle");
+	return device_handle; // Return the device handle
+}
 
-void lcd_send_cmd (struct LCD_Setup LCD_cfg, char cmd)
+void lcd_send_cmd (i2c_master_dev_handle_t LCD_dev_handle, char cmd)
 {
   	char u_cmd, l_cmd;
 	uint8_t cmd_t[4];
@@ -43,12 +59,12 @@ void lcd_send_cmd (struct LCD_Setup LCD_cfg, char cmd)
 
 	// Transmit / Write to the device
 	int len = 4;
-	err = i2c_master_transmit(LCD_cfg.device_handle, cmd_t, len, -1); // -1 means wait forever. This call returns ESP_ERR_INVALID_STATE.
+	err = i2c_master_transmit(LCD_dev_handle, cmd_t, len, -1); // -1 means wait forever. This call returns ESP_ERR_INVALID_STATE.
 	
 	if (err!=0) ESP_LOGI(TAG, "Error writing command to LCD");
 }
 
-void lcd_send_data (struct LCD_Setup LCD_cfg, char data)
+void lcd_send_data (i2c_master_dev_handle_t LCD_dev_handle, char data)
 {
 	char u_data, l_data;
 	uint8_t data_t[4];
@@ -67,17 +83,17 @@ void lcd_send_data (struct LCD_Setup LCD_cfg, char data)
 
 	// Transmit / Write to the device
 	int len = 4;
-	err = i2c_master_transmit(LCD_cfg.device_handle, data_t, len, -1); // -1 means wait forever. This call returns ESP_ERR_INVALID_STATE.
+	err = i2c_master_transmit(LCD_dev_handle, data_t, len, -1); // -1 means wait forever. This call returns ESP_ERR_INVALID_STATE.
 	if (err!=0) ESP_LOGI(TAG, "Error writing data to LCD");
 }
 
-void lcd_clear (struct LCD_Setup LCD_cfg)
+void lcd_clear (i2c_master_dev_handle_t LCD_dev_handle)
 {
-	lcd_send_cmd (LCD_cfg, 0x01);
+	lcd_send_cmd (LCD_dev_handle, 0x01);
 	usleep(5000);
 }
 
-void lcd_put_cur(struct LCD_Setup LCD_cfg,int row, int col)
+void lcd_put_cur(i2c_master_dev_handle_t LCD_dev_handle,int row, int col)
 {
 	switch (row)
 	{
@@ -88,7 +104,7 @@ void lcd_put_cur(struct LCD_Setup LCD_cfg,int row, int col)
 		col |= 0xC0;
 		break;
 	}
-	lcd_send_cmd(LCD_cfg, col);
+	lcd_send_cmd(LCD_dev_handle, col);
 }
 
 
@@ -100,94 +116,54 @@ void lcd_put_cur(struct LCD_Setup LCD_cfg,int row, int col)
  *
  */
 
-void lcd_init (struct LCD_Setup LCD_cfg)
+void lcd_init (i2c_master_dev_handle_t LCD_dev_handle)
 {
 	// 4 bit initialisation
 	usleep(50000);  // wait for >40ms
-	lcd_send_cmd (LCD_cfg, 0x30);
+	lcd_send_cmd (LCD_dev_handle, 0x30);
 	usleep(5000);  // wait for >4.1ms
-	lcd_send_cmd (LCD_cfg, 0x30);
+	lcd_send_cmd (LCD_dev_handle, 0x30);
 	usleep(200);  // wait for >100us
-	lcd_send_cmd (LCD_cfg, 0x30);
+	lcd_send_cmd (LCD_dev_handle, 0x30);
 	usleep(10000);
-	lcd_send_cmd (LCD_cfg, 0x20);  // 4bit mode
+	lcd_send_cmd (LCD_dev_handle, 0x20);  // 4bit mode
 	usleep(10000);
 
   	// display initialisation
-	lcd_send_cmd (LCD_cfg, 0x28); // Function set --> DL=0 (4 bit mode), N = 1 (2 line display) F = 0 (5x8 characters)
+	lcd_send_cmd (LCD_dev_handle, 0x28); // Function set --> DL=0 (4 bit mode), N = 1 (2 line display) F = 0 (5x8 characters)
 	usleep(1000);
-	lcd_send_cmd (LCD_cfg, 0x08); //Display on/off control --> D=0,C=0, B=0  ---> display off
+	lcd_send_cmd (LCD_dev_handle, 0x08); //Display on/off control --> D=0,C=0, B=0  ---> display off
 	usleep(1000);
-	lcd_send_cmd (LCD_cfg, 0x01);  // clear display
+	lcd_send_cmd (LCD_dev_handle, 0x01);  // clear display
 	usleep(1000);
 	usleep(1000);
-	lcd_send_cmd (LCD_cfg, 0x06); //Entry mode set --> I/D = 1 (increment cursor) & S = 0 (no shift)
+	lcd_send_cmd (LCD_dev_handle, 0x06); //Entry mode set --> I/D = 1 (increment cursor) & S = 0 (no shift)
 	usleep(1000);
-	lcd_send_cmd (LCD_cfg, 0x0C); //Display on/off control --> D = 1, C and B = 0. (Cursor and blink, last two bits)
+	lcd_send_cmd (LCD_dev_handle, 0x0C); //Display on/off control --> D = 1, C and B = 0. (Cursor and blink, last two bits)
 	usleep(1000);
-
-	xTaskCreate(&LCD_Refresh_Every_Second, "LCD_Counter_Task", 2048, &LCD_cfg, 1, NULL);
-	ESP_LOGI(TAG, "Created LCD_Counter_Task");
+	ESP_LOGI(TAG, "Initialized LCD");
 
 }
 
-void lcd_send_string (struct LCD_Setup LCD_cfg, char *str)
+void lcd_send_string (i2c_master_dev_handle_t LCD_dev_handle, char *str)
 {
-	while (*str) lcd_send_data (LCD_cfg, *str++);
+	while (*str) lcd_send_data (LCD_dev_handle, *str++);
 }
 
-void write_string_on_LCD(struct LCD_Setup LCD_cfg, int lineNo, int colNo, char *str)
+void write_string_on_LCD(i2c_master_dev_handle_t LCD_dev_handle, int lineNo, int colNo, char *str)
 {
-	lcd_put_cur(LCD_cfg, lineNo, colNo);
-	lcd_send_string(LCD_cfg, "				"); // Erases the existing content fully
+	lcd_put_cur(LCD_dev_handle, lineNo, colNo);
+	lcd_send_string(LCD_dev_handle, "				"); // Erases the existing content fully
 
-	lcd_put_cur(LCD_cfg, lineNo, colNo);
-	lcd_send_string(LCD_cfg, str);
+	lcd_put_cur(LCD_dev_handle, lineNo, colNo);
+	lcd_send_string(LCD_dev_handle, str);
 }
 
-void write_hex_on_LCD(struct LCD_Setup LCD_cfg, int lineNo, int colNo, uint8_t hex)
+void write_hex_on_LCD(i2c_master_dev_handle_t LCD_dev_handle, int lineNo, int colNo, uint8_t hex)
 {
 	char buffer[16];
 	sprintf(buffer, "0x%02X", hex); // display hexadecimal
 	
-	lcd_put_cur(LCD_cfg, lineNo, colNo);
-	lcd_send_string(LCD_cfg, buffer);
-}
-
-
-
-
-void LCD_Refresh_Every_Second(void *params)
-{
-	// This tasks autonomously displays elapsed time as a counter on the top line of the LCD. It does not depend on any queue, interrupts or triggers
-	struct LCD_Setup * LCD_cfg_ptr = (struct LCD_Setup *)params;
-	struct LCD_Setup LCD_cfg = * LCD_cfg_ptr;
-
-	ESP_LOGI(TAG, "Now in LCD_Counter_Task task");
-	char elapsed_count = 1; 
-	UBaseType_t uxHighWaterMark; // Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
-    /* Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark 
-    * Optionally inspect our own high water mark on entering the task.
-    */
-    // uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL ); // Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
-
-	while (true)
-	{
-		char buffer[16];
-		sprintf(buffer, "Counter %d   ", elapsed_count++);
-		write_string_on_LCD(LCD_cfg, 0, 0, buffer); // display it on line 1 of the LCD though as string
-		ESP_LOGI(TAG, "Wrote counter on LCD 1st line");
-		vTaskDelay( REFRESH_MS / portTICK_PERIOD_MS); // Delay for COUNTER_MS and count next. Since vTaskDelay takes only xTicksToDelay as argument, it has to be divided by portTICK_PERIOD_MS which is the number of milliseconds a scheduler TICK takes
-		/* 
-		Refer - https://www.freertos.org/Documentation/02-Kernel/04-API-references/03-Task-utilities/04-uxTaskGetStackHighWaterMark
-		Calling the function will have used some stack space, we would therefore now expect uxTaskGetStackHighWaterMark() to return a 
-       	value lower than when it was called on entering the task. 
-       	
-       	A task may query its own high water mark by passing NULL as the xTask parameter for the handle of the task being queried.
-       	*/
-        uxHighWaterMark = uxTaskGetStackHighWaterMark( NULL ); // Refer - https://www.freertos.org/FreeRTOS_Support_Forum_Archive/July_2019/freertos_Understanding_uxTaskGetStackHighWaterMark_results_51c44e8598j.html
-
-		ESP_LOGI(TAG, "LCD_Counter_Task uxHighWaterMark = %u", uxHighWaterMark); // Refer - https://www.freertos.org/FreeRTOS_Support_Forum_Archive/July_2019/freertos_Understanding_uxTaskGetStackHighWaterMark_results_51c44e8598j.html
-	}
-	vTaskDelete(NULL); // added per https://stackoverflow.com/questions/63634917/freertos-task-should-not-return-esp32 at the end of the function to gracefully end the task:
+	lcd_put_cur(LCD_dev_handle, lineNo, colNo);
+	lcd_send_string(LCD_dev_handle, buffer);
 }
