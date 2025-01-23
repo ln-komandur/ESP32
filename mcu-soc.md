@@ -4,10 +4,11 @@
 | OS                         | General Purpose OS like Linux | Don't know                              | Real Time OS (e.g. FreeRTOS)        |
 | Response times             | Having a full blown OS like Linux slows it down| ??                     | FreeRTOS works great                |
 | IDE                        | Don't know                    | Arduino IDE, Eclipse, Scratch etc.      | Arduino IDE, Eclipse, VS Code etc.  |
-| Pins                       | Don't know                    | Limited number                          | Limited number but supports i2c bus |
+| Pins                       | Quite a few                   | Limited number                          | Limited number but supports i2c bus |
+| Supported Protocols (i2c, i2s, etc.) | Depends                       | Depends                                 | Depends                             |
 | Connectivity               | Supports Wifi/BT/BLE          | Wifi/BT/BLE need additional HW          | Built-in Wifi/BT/BLE                |
 | Dev Framework              | Don't know                    | ??                                      | ESP-IDF is rich                     |
 | Libraries                  | Don't know                    | Specific to peripheral devices          | Specific to peripheral devices      |
 | Target group               | Intermediate to Advanced      | Beginner to intermediate                | Intermediate to Advanced            |
 | Languages                  | MicroPython, C, C++           | MicroPython, C, C++                     | MicroPython, C, C++                 |
-| Programming Approach       | MicroPython, C, C++           | setup() and loop() methods simply programming       | FreeRTOS supports Multitasking (threading), queues etc. ESP-IDF support interrupt handling |
+| Programming Approach       | MicroPython, C, C++           | setup() and loop() methods simplify programming       | FreeRTOS supports Multitasking (threading), queues etc. ESP-IDF supports interrupt handling |
