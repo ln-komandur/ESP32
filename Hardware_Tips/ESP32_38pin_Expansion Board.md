@@ -1,6 +1,7 @@
 # Overview
 This expansion baseboard takes **38-pin ESP32 DevKitC v4** type development modules and brings the I/O out to a series of headers along with power and ground.
 
+![ESP32_38pin Expansion Board](ESP32_38pin_Expansion_Board.jpeg)
 
 # Key Features
 
@@ -42,5 +43,5 @@ Supports 4 ways to power the ESP32 module. **Only one** of them should be used a
     - However, since the 3.3V pin is powered by the regulator on the ESP32 module, it will not read any power unless an ESP32 module is connected to the baseboard
 
 ### Notes on Baseboard 3.3V Power
-1. The 3.3V power on the baseboard is provided by the 3.3V regulator on the ESP32 module. Typically, the current drawn off this regulator **should not exceed 250mA**
+1. The 3.3V power on the baseboard is provided by the 3.3V regulator on the ESP32 module. Typically, the current drawn off this regulator **should not exceed 250mA**. Without an ESP32 module mounted on the baseboard, there will be no 3.3V power available.
 1. **Bear in mind** that the ESP32 is a 3.3V logic level compatible only device. Therefore the Logic-high voltage for the signal pin will only be 3.3V irrespective of the position of this jumper
