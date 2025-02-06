@@ -45,3 +45,6 @@ Supports 4 ways to power the ESP32 module. **Only one** of them should be used a
 ### Notes on Baseboard 3.3V Power
 1. The 3.3V power on the baseboard is provided by the 3.3V regulator on the ESP32 module. Typically, the current drawn off this regulator **should not exceed 250mA**. Without an ESP32 module mounted on the baseboard, there will be no 3.3V power available.
 1. **Bear in mind** that the ESP32 is a 3.3V logic level compatible only device. Therefore the Logic-high voltage for the signal pin will only be 3.3V irrespective of the position of this jumper
+
+### References
+[Product Description from protosupplies](https://protosupplies.com/product/esp32-s-expansion-board-38-pin/)
